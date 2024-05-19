@@ -451,13 +451,10 @@
 
 
         $(document).on('change', '.areaChange', function(e) {
-            alert();
             e.preventDefault();
             var that = $( this );
             var url  = that.attr('data-url');
             var id   = that.val()
-
-            alert();
 
             $.ajax({
                 url : url,
