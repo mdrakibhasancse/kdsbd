@@ -1,0 +1,13 @@
+{
+    "name": "cp/menupage",
+    "description": "Menu & Page system for laravel cms",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "M K Masud Hasan",
+            "email": "masudbdm@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
