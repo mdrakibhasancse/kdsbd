@@ -43,11 +43,11 @@
                         </div>
                             
                         <div class="social-icons mb-3 mb-lg-0">
-                            <a href="#" class="social-icon social-facebook" target="_blank"><i
+                            <a href="{{ $ws->fb_url }}" class="social-icon social-facebook" target="_blank"><i
                                     class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="social-icon social-twitter" target="_blank"><i
+                            <a href="{{ $ws->twitter_url }}" class="social-icon social-twitter" target="_blank"><i
                                     class="fab fa-twitter"></i></a>
-                            <a href="#" class="social-icon social-linkedin" target="_blank"><i
+                            <a href="{{ $ws->linkedin_url }}" class="social-icon social-linkedin" target="_blank"><i
                                     class="fab fa-linkedin-in"></i></a>
                         </div>
                     </div>
