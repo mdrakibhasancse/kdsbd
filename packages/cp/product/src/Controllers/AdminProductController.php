@@ -1102,4 +1102,14 @@ class AdminProductController extends Controller
         toast('Order Item Successfully Deleted', 'success');
         return redirect()->back();
     }
+
+
+    public function orderPrint(Order $order)
+    {
+        $items = $order->orderItems()->get();
+        return view('product::admin.orders.orderPrint', [
+            'order' => $order,
+            'items' => $items,
+        ]);
+    }
 }

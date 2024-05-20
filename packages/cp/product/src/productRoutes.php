@@ -269,4 +269,9 @@ Route::group(['middleware' => ['web', 'auth', 'role:admin'], 'prefix' => 'admin'
         'uses' => 'Cp\Product\Controllers\AdminProductController@orderItemDelete',
         'as' => 'admin.orderItemDelete'
     ]);
+
+    Route::get('invoice/print/{order}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@orderPrint',
+        'as' => 'admin.orderPrint'
+    ]);
 });

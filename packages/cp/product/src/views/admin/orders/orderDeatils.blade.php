@@ -11,10 +11,12 @@
     <div class="row w3-animate-zoom">
         <div class="col-md-11 mx-auto">
             <div class="card mb-2 shadow-lg">
-                <div class="card-header px-2 py-2">
+                <div class="card-header py-2">
                     <h3 class="card-title w3-small text-bold text-muted pt-1"><i
                     class="fas fa-sitemap text-primary"></i> Order Details (OrderId: &nbsp;  {{$order->id }})</h3>
-                    <div class="card-tools w3-small"></div>
+                    <div class="card-tools w3-small">
+                        <a class="btn btn-primary btn-xs" target="_blank" href="{{ route('admin.orderPrint', $order->id) }}"><i class="fas fa-print w3-small"></i> Print</a>
+                    </div>
                 </div>
             </div>
 
@@ -40,7 +42,7 @@
                                     Order Info<br>
                                     Order Id: {{$order->id}}<br>
                                     Order Date: {{$order->created_at->format('d/m/Y')}}<br>
-                                    Order By: {{$order->user->name}}
+                                    Order By: {{$order->user->name ?? ''}}
                                 </address>
                                 </div>
                             </div>
@@ -87,6 +89,7 @@
                             <h3 class="card-title">
                             Order Items
                             </h3>
+                            
                         </div>
                         <div class="card-body">
                             <table class="table table-bordered table-striped">
@@ -130,7 +133,7 @@
                 
                                     <td colspan="4" class="text-right font-weight-bold">Sub Total</td>
                                     <td class="font-weight-bold">
-                                        {{$item->sum('total_cost') }}
+                                        {{$order->total_amount }}
                                     </td>
                                     <td></td>
                                     
@@ -293,7 +296,8 @@
                                     <td>{{$payment->payment_date}}</td>
                                     <td>{{$payment->transaction_id}}</td>
                                     <td>{{$payment->paid_amount}}</td>
-                                </tr>                                   @endforeach                   
+                                </tr>
+                                @endforeach                   
                             <tbody>
                             </table>
                         </div>
