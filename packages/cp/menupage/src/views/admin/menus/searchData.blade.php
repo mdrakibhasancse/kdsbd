@@ -8,7 +8,8 @@
        @else
        <i class="far fa-square w3-light-gray" style="cursor: move;"></i> 
        @endif 
-       <span class="text-muted w3-small">{{ $menu->name ?? "" }} </span>
+       <span class="text-muted w3-small">Name English: <strong>{{ $menu->name_en ?? "" }}</strong> </span>
+       @if($menu->name_bn) | <span class="text-muted w3-small">Name (বাংলা): <strong>{{ $menu->name_bn }}</strong> </span>@endif
        &nbsp;
             
 
@@ -27,10 +28,7 @@
             <i class="fas fa-edit text-muted"></i>
         </a>
 
-       
-
         <i class="float-right mr-2 w3-tiny text-muted">{{$menu->type ?? ""}}</i>
-
 
         @if($menu->link)
           <a target="_blank" href="{{ url($menu->link) }}" class="badge mt-1  badge-primary mr-2 btn float-right">View</a>
@@ -45,10 +43,22 @@
             <form action="{{route('admin.menuUpdate',$menu)}}" method="POST">
                 @csrf
                 <dl class="row">
-                    <dt class="col-sm-3 w3-small text-right">Menu Name: <span class="text-danger">*</span></dt>
+                    <dt class="col-sm-3 w3-small text-right">Name Engish: <span class="text-danger">*</span></dt>
                     <dd class="col-sm-9">
-                        <input type="text" class="form-control form-control-sm" value="{{$menu->name}}" name="name" required>
+                        <input type="text" class="form-control form-control-sm" value="{{$menu->name_en}}" name="name_en" required>
                     </dd>
+
+                    <dt class="col-sm-3 w3-small text-right">Name (বাংলা): <span class="text-danger"></span></dt>
+                    <dd class="col-sm-9">
+                        <input type="text" class="form-control form-control-sm" value="{{$menu->name_bn}}" name="name_bn">
+                    </dd>
+
+                    <dt class="col-sm-3 w3-small text-right">Slug: <span class="text-danger"></span></dt>
+                    <dd class="col-sm-9">
+                        <input type="text" class="form-control form-control-sm" value="{{ $menu->slug }}" name="slug" required>
+                    </dd>
+
+
                     <dt class="col-sm-3 w3-small text-right">Menu Type: <span class="text-danger">*</span></dt>
                     <dd class="col-sm-9">
                         
@@ -75,10 +85,6 @@
                         @if($menu->active == 1) checked @endif>
                         <button type="submit" class="btn btn-primary btn-xs float-right">Update</button>
                     </dd>
-
-
-
-                    
                         
                 </dl>
             </form>
@@ -91,3 +97,7 @@
     <h3 >No menu Found</h3>
 </div>
 @endforelse
+
+
+
+

@@ -8,14 +8,11 @@
 
 @section('content') 
 <section class="content py-3">
-
-    <div class="col-md-11 w3-animate-zoom mx-auto">
-
+    <div class="col-md-11 mx-auto">
             <div class="card mb-2 shadow-lg">
                 <div class="card-header px-2 py-2">
-                    <h3 class="card-title w3-small text-bold text-muted pt-1"> <i
-                            class="fas fa-file text-info"></i> Page-ID#{{ $page->id }} <i
-                            class="w3-tiny">({{ $page->localeNameShow() }})</i></h3>
+                    <h3 class="card-title w3-small text-bold text-muted" style="padding-top: 3px;"> <i class="fas fa-file text-info"></i> Page Edit: Page_id#{{ $page->id }} <i class="w3-tiny">({{ $page->name_en }})</i> @if($page->name_en)<i  class="w3-tiny">({{ $page->name_bn}})</i>@endif</h3>
+
                     <div class="card-tools w3-small">
 
                         @if ($page->link)
@@ -27,19 +24,16 @@
                         @else
                             <button class="copyboard btn btn-xs badge badge-primary text-white"
                                 data-id="{{ $page->id }}"
-                                data-text="{{ route('page', ['id' => $page->id])}}">
+                                data-text="{{ route('page', $page->slug)}}">
                                 Copy url
                             </button>
                             <a target="_blank"
-                                href="{{ route('page', ['id' => $page->id])}}"
+                                href="{{ route('page', $page->slug)}}"
                                 class="badge badge-primary ">View</a>
                         @endif
 
                         <a class="btn-outline-primary btn btn-xs py-1"
                             href="{{ route('admin.pageEdit',$page)}}">Edit Page</a>
-
-                        <a href="" class="btn-create-from btn btn-primary btn-xs pull-right mr-1 py-1"><i
-                                class="fas fa-plus-square"></i> Create New Part</a>
 
                         <a href="{{route('admin.pagesAll')}}"
                             class="btn btn-outline-secondary btn-xs pull-right mr-1 py-1">Pages</a>
@@ -71,7 +65,8 @@
                                     @else
                                         <i class="far fa-square w3-light-gray" style="cursor: move;"></i>
                                     @endif
-                                    <span class="text-muted w3-small">{{ $item->name ?? '' }}
+                                    <span class="text-muted w3-small">{{ $item->name_en ?? '' }}
+                                     @if($item->name_en) | ({{ $item->name_en }})@endif
                                     </span>
                                     <a title="Delete" class="btn btn-default btn-xs float-right ml-1" onclick="return confirm('Do you really want to delete?')" href="{{ route('admin.pageItemDelete',$item)}}"><i class="fas fa-times-circle text-danger"></i></a>
                                     <a title="Edit" class="btn btn-default btn-xs float-right" href="{{ route('admin.pageItemEdit',$item)}}"> <i class="fas fa-edit text-muted"></i></a>
@@ -82,7 +77,7 @@
                     </div>
                 </div>
             </div>
-            <div class="w3-animate-zoom card-create-form-toggle mx-auto">
+            <div class="mx-auto">
                 <div class="card mb-2 shadow-lg">
                     <div class="card-header px-2 py-2">
                         <h3 class="card-title w3-small text-bold text-muted pt-1"> <i
@@ -99,36 +94,48 @@
                                   <form method="post" action="{{route('admin.pageItemStore')}}">
                                    @csrf
                                     <input type="hidden" name="page_id" value="{{ $page->id }}">
-                                    @foreach (Cp\Language\Models\Language::where('active', 1)->get() as $key => $language)
+                                 
                                     <div class="form-group">
-                                        <label for="title">Title {{$language->title}}</label>
-                                        <input type="text" name="name[{{$language->language_code}}]" value="" class="form-control" placeholder="Enter Name {{$language->title}}" onkeyup="makeSlug(this.value)">
-                                        @error('name')
+                                        <label for="name_en">Title English</label>
+                                        <input type="text" name="name_en" value="" class="form-control" placeholder="Name English">
+                                        @error('name_en')
                                         <span style="color:red">{{ $message }}</span>
                                         @enderror
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="">Excerpt {{$language->title}}</label>
-                                        <textarea name="excerpt[{{$language->language_code}}]" id="excerpt" class="form-control" rows="3" placeholder="Enter Excerpt {{$language->title}}">{{old('excerpt')}}</textarea>
+                                        <label for="name_bn">Title (বাংলা)</label>
+                                        <input type="text" name="name_bn" value="" class="form-control" placeholder="Name (বাংলা)">
+                                      
                                     </div>
+
 
                                     <div class="form-group">
-                                        <label for="">Description {{$language->title}}</label>
-                                        <textarea name="description[{{$language->language_code}}]" class="summernote form-control"  rows="5" placeholder="Enter Description {{$language->title}}">{{old('description')}}</textarea>
+                                        <label for="description_en">Description English</label>
+                                        <textarea name="description_en" class="summernote form-control"  rows="5" placeholder="Description English">{{old('description_en')}}</textarea>
+                                        @error('description_en')
+                                        <span style="color:red">{{ $message }}</span>
+                                        @enderror
                                     </div>
 
-                                    @endforeach
+
+                                  
+                                    <div class="form-group">
+                                        <label for="description_bn">Description (বাংলা)</label>
+                                        <textarea name="description_bn" class="summernote form-control"  rows="5" placeholder="Description English">{{old('description_bn')}}</textarea>
+                                    </div>
+
+                              
 
                                     <div class="form-row mt-n2 mb-n3">
                                         <div class="col-md-6"></div>
                                             <div class="form-group input-group-sm col-md-2 w3-small pt-3">
-                                                <input class="form-check-input"  type="checkbox" name="active" {{  old('active') == 1 ? 'checked' : '' }}>
+                                                <input class="form-check-input"  type="checkbox" name="active" {{  old('active') == 1 ? 'checked' : '' }} checked>
                                                 <label for="active" role="button">Active</label>
                                             </div>
 
                                             <div class="form-group input-group-sm col-md-2 w3-small pt-3">
-                                                <input class="form-check-input" type="checkbox" name="editor" {{  old('editor') == 1 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="checkbox" name="editor" {{  old('editor') == 1 ? 'checked' : '' }} checked>
                                                 <label for="editor" role="button">Editor</label>
                                                
                                             </div>

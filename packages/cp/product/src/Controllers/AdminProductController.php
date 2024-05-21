@@ -770,8 +770,8 @@ class AdminProductController extends Controller
 
         $product->name_en    = $request->name_en ;
         $product->name_bn    = $request->name_bn;
-        $product->slug = getSlug($request->name_en,  $product,  boolval($request->name_en));
-         $product->price   = $request->price ?? 0.00;
+        $product->slug = getSlug($request->slug,  $product,  boolval($request->slug));
+        $product->price   = $request->price ?? 0.00;
         $product->discount  = $request->discount ?? 0.00;
         $product->discount_price = $request->discount ?? 0.00;
         $product->final_price = $request->price - $product->discount;

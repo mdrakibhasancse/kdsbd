@@ -8,7 +8,7 @@
 
 @section('content')
 <section class="content py-3">
-    <div class="row w3-animate-zoom">
+    <div class="row">
         <div class="col-md-11 mx-auto">
             <div class="card mb-2 shadow-lg">
                 <div class="card-header px-2 py-2">
@@ -24,15 +24,20 @@
                     <form class="" action="{{route('admin.menuStore')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-row ">
-                            <div class="form-group input-group-sm w3-small col-md-3">
-                                <label class="text-muted" for="name">Name </label>
-                                <input type="text" name="name" value="{{ old('name')}}" id="name" placeholder="Name..."  class="form-control" required>
+                            <div class="form-group input-group-sm w3-small col-md-6">
+                                <label class="text-muted" for="name_en">Name English</label>
+                                <input type="text" name="name_en" value="{{ old('name_en')}}" id="name_en" placeholder="Name English..."  class="form-control" required>
                                 @error('name')
                                   <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
+
+                            <div class="form-group input-group-sm w3-small col-md-6">
+                                <label for="name_bn">Name (বাংলা)</label>
+                                <input type="text" name="name_bn" value="{{old('name_bn')}}" class="form-control" placeholder="Name (বাংলা)">
+                            </div>
                          
-                            <div class="form-group input-group-sm col-md-3 w3-small">
+                            <div class="form-group input-group-sm col-md-4 w3-small">
                               <label for="">Menu Type</label>
                               <select name="type" id="type" class="form-control">
                                   <option value="">select menu type</option>
@@ -45,17 +50,12 @@
                               @enderror
                             </div>
 
-                           <div class="form-group input-group-sm w3-small col-md-3">
+                           <div class="form-group input-group-sm w3-small col-md-4">
                                 <label class="text-muted" for="link">Link</label>
                                 <input type="text" name="link" value="{{ old('link')}}" id="link" class="form-control"
                                     placeholder="https://example.com/go"> <br>
                             </div>
                             
-                            <div class="form-group input-group-sm col-md-1 w3-small mt-4 active_checkbox">
-                                <input class="form-check-input" name="active" type="checkbox" id="active">
-                                <label for="active" role="button">Active</label>
-                            </div>
-
                             <div class="form-group input-group-sm w3-small col-md-2 mt-1">
                                 <label for=""> &nbsp; </label>
                                 <button type="submit" class="btn btn-primary btn-xs btn-block py-2">Submit</button>
@@ -133,8 +133,6 @@
                 $(".copyboard").text('Copy url');
                 $(this).text('Coppied!');
                 var copyText = $(this).attr('data-text');
-                alert(copyText);
-
                 var textarea = document.createElement("textarea");
                 textarea.textContent = copyText;
                 textarea.style.position = "fixed";

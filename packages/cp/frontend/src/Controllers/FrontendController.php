@@ -11,6 +11,7 @@ use Cp\Product\Models\Branch;
 use Cp\Product\Models\BranchArea;
 use Cp\Product\Models\Order;
 use Cp\Product\Models\OrderItem;
+use Cp\Menupage\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Auth;
@@ -569,4 +570,21 @@ class FrontendController extends Controller
         alert()->success('Order Successfully');
         return redirect()->back();
     }
+
+
+
+    
+    public function sitemap()
+    {
+        // $data['pages'] = Page::where('active', true)->get();
+        return response()->view('frontend::welcome.sitemap')->header('Content-Type', 'text/xml');
+    }
+
+    public function page($slug)
+    {
+        $data['page'] = Page::whereActive(true)->where('slug', $slug)->first();
+        return view('frontend::welcome.page', $data);
+    }
+
+    
 }

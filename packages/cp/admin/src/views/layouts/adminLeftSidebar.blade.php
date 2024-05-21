@@ -20,7 +20,7 @@
         </li>
 
         @includeIf('userrole::admin.layouts.adminUserRoleLeftSidebar')
-        {{-- @includeIf('menupage::admin.layouts.adminMenupageLeftSidebar') --}}
+        @includeIf('menupage::admin.layouts.adminMenupageLeftSidebar')
         @includeIf('product::admin.layouts.adminProductLeftSidebar')
         @includeIf('media::admin.layouts.adminMediaLeftSidebar')
         @includeIf('slider::admin.layouts.adminSliderLeftSidebar')

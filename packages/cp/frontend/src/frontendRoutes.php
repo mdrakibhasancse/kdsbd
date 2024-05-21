@@ -86,6 +86,17 @@ Route::group(['middleware' => ['web']], function () {
         'as' => 'cartRemoveItem'
     ]);
 
+
+    Route::get('/sitemap.xml', [
+        'uses' => 'Cp\Frontend\Controllers\FrontendController@sitemap',
+        'as' => 'sitemap'
+    ]);
+
+    Route::get('/page/{slug?}', [
+        'uses' => 'Cp\Frontend\Controllers\FrontendController@page',
+        'as' => 'page'
+    ]);
+
    
 
 });

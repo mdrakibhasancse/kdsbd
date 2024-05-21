@@ -10,7 +10,7 @@
             @endif
 
             <span class="text-muted w3-small"> ID:<b>{{ $page->id }}</b>,
-              Page Title: <b>{{ $page->localeNameShow() }}</b> 
+              Title English: <b>{{ $page->name_en}}</b> @if($page->name_en) | Title (বাংলা): <b>{{ $page->name_bn}}</b>@endif
             </span>
             &nbsp;
 
@@ -23,11 +23,11 @@
                     <a target="_blank" href="{{ $page->link }}" class="badge badge-primary">View</a>
                 @else
                     <button class="copyboard border-0 badge badge-primary text-white" data-id="{{ $page->id }}"
-                    data-text="{{ route('page', ['id' => $page->id])}}">
+                    data-text="{{ route('page', $page->slug)}}">
                     Copy url
                     </button>
                     <a target="_blank"
-                    href="{{ route('page', ['id' => $page->id])}}"
+                    href="{{ route('page', $page->slug)}}"
                     class="badge badge-primary">View</a>
                 @endif
 
@@ -35,6 +35,7 @@
                 <a class="btn btn-primary btn-xs" href="{{route('admin.pageItemCreate',$page->id)}}">
                     Page Parts <small>({{ $page->pageItems()->count() }})</small>
                 </a>
+
                 <a title="Edit" class="btn btn-default btn-xs"
                 href="{{ route('admin.pageEdit', $page)}}"><i class="fas fa-edit"></i></a>
 

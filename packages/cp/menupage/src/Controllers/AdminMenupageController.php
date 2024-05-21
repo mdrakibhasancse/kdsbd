@@ -27,14 +27,15 @@ class AdminMenupageController extends Controller
     {
         menuSubmenu('menupage', 'menusAll');
         $request->validate([
-            'name' => 'string|required',
+            'name_en' => 'string|required',
             'type' => 'string|required',
         ]);
 
         $menu =  new Menu();
-        $menu->name = $request->name;
+        $menu->name_en = $request->name_en;
+        $menu->name_bn = $request->name_bn;
+        $menu->slug = getSlug($request->name_en,  $menu,  boolval($request->name_en));
         $menu->type = $request->type;
-        $menu->active = $request->active ? 1 : 0;
         $menu->link = $request->link ?: null;
         $menu->addedby_id = Auth::id();
         $menu->save();
@@ -65,11 +66,13 @@ class AdminMenupageController extends Controller
         // dd($request->all());
         menuSubmenu('menupage', 'menusAll');
         $request->validate([
-            'name' => 'string|required',
+            'name_en' => 'string|required',
             'type' => 'string|required',
         ]);
 
-        $menu->name        = $request->name;
+        $menu->name_en = $request->name_en;
+        $menu->name_bn = $request->name_bn;
+        $menu->slug = getSlug($request->slug,  $menu,  boolval($request->slug));
         $menu->type        = $request->type;
         $menu->active      = $request->active ? 1 : 0;
         $menu->link        = $request->link ?? null;
@@ -116,12 +119,15 @@ class AdminMenupageController extends Controller
     {
 
         menuSubmenu('menupage', 'pagesAll');
-        // $request->validate([
-        //     'name' => 'string|required',
-        // ]);
+        $request->validate([
+            'name_en' => 'string|required',
+        ]);
         $page  = new Page();
-        $page->name  = $request->name;
-        $page->excerpt = $request->excerpt;
+        $page->name_en = $request->name_en;
+        $page->name_bn = $request->name_bn;
+        $page->slug = getSlug($request->name_en,  $page,  boolval($request->name_en));
+        $page->excerpt_en = $request->excerpt_en;
+        $page->excerpt_bn = $request->excerpt_bn;
         $page->link  = $request->link ?? null;
         $page->active = $request->active ? 1 : 0;
         $page->addedby_id = Auth::id();
@@ -147,14 +153,15 @@ class AdminMenupageController extends Controller
     public function pageUpdate(Request $request, Page $page)
     {
         menuSubmenu('menupage', 'pagesAll');
-        // $request->validate([
-        //     'name' => 'string|required',
-        // ]);
+        $request->validate([
+            'name_en' => 'string|required',
+        ]);
 
-        // dd($request->all());
-
-        $page->name        = $request->name;
-        $page->excerpt     = $request->excerpt;
+        $page->name_en = $request->name_en;
+        $page->name_bn = $request->name_bn;
+        $page->slug = getSlug($request->slug,  $page,  boolval($request->slug));
+        $page->excerpt_en = $request->excerpt_en;
+        $page->excerpt_bn = $request->excerpt_bn;
         $page->active = $request->active ? 1 : 0;
         $page->link        = $request->link ?: null;
         $page->editedby_id = Auth::id();
@@ -201,22 +208,19 @@ class AdminMenupageController extends Controller
     public function pageItemStore(Request $request)
     {
 
-        // $request->validate([
-        //     'name' => 'required',
-        //     'description' => 'required',
-        // ]);
-
-        // dd($request->all());
-
+        $request->validate([
+            'name_en' => 'required',
+            'description_en' => 'required',
+        ]);
         $pageItem = new PageItem();
-        $pageItem->page_id     = $request->page_id;
-        $pageItem->name        = $request->name;
-        $pageItem->description = $request->description;
-       
+        $pageItem->page_id        = $request->page_id;
+        $pageItem->name_en        = $request->name_en;
+        $pageItem->name_bn        = $request->name_bn;
+        $pageItem->description_en = $request->description_en;
+        $pageItem->description_bn = $request->description_bn;
         $pageItem->editor = $request->editor ? 1 : 0;
         $pageItem->active = $request->active ? 1 : 0;
         $pageItem->addedby_id = Auth::id();
-        // dd($pageItem);
         $pageItem->save();
 
         toast('PageItem successfully created', 'success');
@@ -240,13 +244,16 @@ class AdminMenupageController extends Controller
 
 
         $request->validate([
-            'name' => 'required',
-            'description' => 'required',
+            'name_en' => 'required',
+            'description_en' => 'required',
         ]);
 
         $pageItem->page_id     = $request->page_id;
-        $pageItem->name        = $request->name;
-        $pageItem->description = $request->description;
+        $pageItem->page_id        = $request->page_id;
+        $pageItem->name_en        = $request->name_en;
+        $pageItem->name_bn        = $request->name_bn;
+        $pageItem->description_en = $request->description_en;
+        $pageItem->description_bn = $request->description_bn;
         $pageItem->editor = $request->editor ? 1 : 0;
         $pageItem->active = $request->active ? 1 : 0;
         $pageItem->editedby_id = Auth::id();

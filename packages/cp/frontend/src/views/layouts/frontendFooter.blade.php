@@ -66,7 +66,6 @@
                                 </li>
                                 <li><a href="#">Track Your Order</a></li>
                                 <li><a href="#">Payment Methods</a></li>
-                                <li><a href="#">Privacy</a></li>
                             </ul>
                         </div>
                     </div>
@@ -76,10 +75,11 @@
                         <div class="widget widget-sm">
                             <h4 class="widget-title">About</h4>
                             <ul class="links">
-                                <li><a href="#">Terms And Conditions</a></li>
-                                <li><a href="#">Privacy policy</a></li>
-                                <li><a href="#">Return Policy</a></li>
-                                <li><a href="#">Site Map</a></li>
+                                <li><a href="{{asset('/')}}page/terms-and-conditions">Terms And Conditions</a></li>
+                                <li><a href="{{asset('/')}}page/support-policy">Support Policy</a></li>
+                                <li><a href="{{asset('/')}}page/return-policy">Return Policy</a></li>
+                                <li><a href="{{asset('/')}}page/privacy-policy">Privacy policy</a></li>
+                               
                             </ul>
                         </div>
                     </div>
@@ -89,7 +89,8 @@
                         <div class="widget widget-sm">
                             <h4 class="widget-title">Features</h4>
                             <ul class="links">
-                                <li><a href="#">FAQs</a></li>
+                                {{-- <li><a href="#">FAQs</a></li> --}}
+                                <li><a href="{{ route('sitemap')}}">Site Map</a></li>
                             </ul>
                         </div>
                     </div>

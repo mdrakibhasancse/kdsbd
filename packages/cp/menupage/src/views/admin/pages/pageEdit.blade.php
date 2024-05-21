@@ -8,11 +8,11 @@
 @section('content')
 <section class="content py-3">
   <div class="row">
-    <div class="col-md-11 w3-animate-zoom mx-auto">
+    <div class="col-md-11 mx-auto">
         <div class="card mb-2 shadow-lg">
             <div class="card-header px-2 py-2">
                  <h3 class="card-title w3-small text-bold text-muted" style="padding-top: 3px;"> <i class="fas fa-file text-info"></i> Page Edit: Page_id#{{ $page->id }} <i
-                class="w3-tiny">({{ $page->localeNameShow() }})</i></h3>
+                class="w3-tiny">({{ $page->name_en }})</i> @if($page->name_en)<i  class="w3-tiny">({{ $page->name_bn}})</i>@endif</h3>
                 <div class="card-tools w3-small">
                     <a href="{{ route('admin.menusAll')}}"
                     class="btn btn-outline-primary btn-xs pull-right mr-2 py-1"><i class="fas fa-plus-square"></i> Menus</a>
@@ -23,28 +23,42 @@
             <div class="card-body px-3 pb-0 pt-1 w3-light-gray">
                   <form action="{{ route('admin.pageUpdate',$page->id)}}" method="POST">
                     @csrf
-                    <div class="form-row">
+                     <div class="form-row">
                         
-                    @foreach (Cp\Language\Models\Language::where('active', 1)->get() as $key => $language)
+    
                         <div class="form-group input-group-sm w3-small col-md-6">
-                          <label class="text-muted" for="name">Page Name {{$language->title}}</label>
-                          <input type="text" name="name[{{$language->language_code}}]" value="{{ $page->localeName($language->language_code) }}" class="form-control" placeholder="Enter name {{$language->title}}">
-                            @error('name')
+                          <label for="name_en">Name English</label>
+                          <input type="text" name="name_en" id="name_en" value="{{ $page->name_en ?? old('name_en')}}" class="form-control" placeholder="Name English">
+                            @error('name_en')
                             <span style="color:red">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <div class="form-group input-group-sm w3-small col-md-6">
-                          <label class="text-muted" for="">Excerpt {{$language->title}}</label>
-                          <textarea name="excerpt[{{$language->language_code}}]" id="excerpt" class="form-control" rows="1" placeholder="Enter Excerpt {{$language->excerpt}}">{{ $page->localeExcerpt($language->language_code)  }}</textarea>
+                          <label for="name_bn">Name (বাংলা):</label>
+                          <input type="text" name="name_bn" id="name_bn" value="{{ $page->name_bn ?? old('name_bn')}}" class="form-control" placeholder="Name (বাংলা)">    
                         </div>
 
-                     @endforeach
+                        <div class="form-group input-group-sm w3-small col-md-6">
+                          <label for="excerpt_en">Excerpt English</label>
+                          <textarea name="excerpt_en" id="excerpt_en" class="form-control" rows="1" placeholder="Enter Excerpt English">{{ $page->excerpt_en ?? old('excerpt_en')}}</textarea>
+                        </div>
 
-                        <div class="form-group input-group-sm w3-small col-md-12">
+                        <div class="form-group input-group-sm w3-small col-md-6">
+                          <label for="excerpt_bn">Excerpt (বাংলা)</label>
+                          <textarea name="excerpt_bn" id="excerpt_bn" class="form-control" rows="1" placeholder="Excerpt (বাংলা)">{{ $page->excerpt_bn ?? old('excerpt_bn')}}</textarea>
+                        </div>
+
+                
+                        <div class="form-group input-group-sm w3-small col-md-6">
+                          <label for="excerpt_bn">Slug</label>
+                           <input type="text" name="slug" id="slug" value="{{ $page->slug ?? old('slug')}}" class="form-control" placeholder="slug">  
+                        </div>
+
+                        <div class="form-group input-group-sm w3-small col-md-6">
                             <label for="link" class="text-muted">Link (URL) </label>
                             <input type="text" step="1" class="form-control"
-                            id="link" name="link" value="{{ $page->link}}" placeholder="https://example.com/go">
+                            id="link" name="link" placeholder="https://example.com/go">
                         </div>
                     </div>
 
@@ -63,7 +77,7 @@
                                               <label class="w3-small">
                                               <input type="checkbox" name="menus[]"
                                                 value="{{ $menu->id }}" {{ in_array($menu->id,$page->menus()->pluck('menu_id')->toArray()) ? 'checked': " "}}>
-                                                {{ $menu->name }} <span
+                                                {{ $menu->name_en }} <span
                                                 class="w3-tiny">({{ $menu->type }})</span></label>
                                             </div>
                                         @endforeach

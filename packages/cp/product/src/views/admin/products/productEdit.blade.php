@@ -41,6 +41,11 @@
                                         <input type="text" name="name_bn" value="{{$product->name_bn ?? old('name_bn')}}" class="form-control" placeholder="Name (বাংলা)">
                                     </div>
 
+                                    <div class="form-group">
+                                        <label for="description" class="">Slug</label>
+                                        <input type="slug" name="slug" value="{{ $product->slug }}" id="slug" placeholder="slug" class="form-control" required>
+                                    </div>
+
 
                                     <div class="form-group">
                                         <label for="price">Price</label>

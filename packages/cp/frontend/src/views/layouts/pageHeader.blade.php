@@ -179,7 +179,7 @@
                 <ul class="menu">
                     @if(request()->cookie('area_name'))
                     <li class="">
-                        <a href="javascript:void(0)" class="font-weight-bold">Offers 
+                        <a href="{{route('offerProducts')}}" class="font-weight-bold">Offers 
                             &nbsp;<span class="w3-deep-orange w3-round px-3 py-1">{{branchWiseOfferProducts()}}</span>
                         </a>
                     </li>
