@@ -35,7 +35,7 @@
 
                     @else
 
-                    <a href="{{ route('location', ['location-modal-open']) }}" class="btn-icon px-5 py-2 w3-button w3-round w3-light-gray w3-hover-green font-weight-bold w3-small location-modal-lg" style="line-height: 30px">
+                    <a href="{{ route('location', ['location-modal-open']) }}" class="btn-icon px-5 py-2 w3-button w3-round w3-deep-orange w3-hover-indigo font-weight-bold w3-small location-modal-lg" style="line-height: 30px">
                     <i class="icon-shopping-cart"></i>&nbsp;<span>ADD TO CART</span></a>
                     @endif
                    

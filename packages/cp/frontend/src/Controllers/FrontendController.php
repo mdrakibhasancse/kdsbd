@@ -55,6 +55,31 @@ class FrontendController extends Controller
     }
 
 
+    public function offerProducts(Request $request)
+    {
+        $name = request()->cookie('area_name');
+        $area = BranchArea::where('name_en',  $name)->first();
+        if($area){
+            $branch = $area->branch;
+            $products = $branch->products()->where('discount', '>', 0.00)->simplePaginate(8);
+            $nextPageUrl = $products->nextPageUrl() ?: null;
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'view' => view('frontend::welcome.includes.productItems', ['products' => $products])->render(),
+                    'nextPageUrl' => $nextPageUrl,
+                ]);
+            }
+
+            return view('frontend::welcome.offerProducts',compact('products' , 'nextPageUrl'));
+        }else{
+            return back();
+        }
+  
+       
+    }
+
+
 
     public function registerModal(Request $request)
     {

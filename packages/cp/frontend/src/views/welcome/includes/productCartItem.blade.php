@@ -22,6 +22,6 @@
 @else
 
 <input class="product_qty" type="hidden" name="product_qty" value="1">
-<a title="Add To Cart" class="btn-icon px-5 py-2 w3-button w3-round w3-light-gray w3-hover-indigo font-weight-bold w3-small addToCatdesignBtn addToCart" data-url="{{ route('addToCart', $product)}}"><i class="icon-shopping-cart"></i>&nbsp;<span>ADD TO CART</span></a>
+<a title="Add To Cart" class="btn-icon px-5 py-2 w3-button w3-deep-orange w3-round w3-hover-indigo font-weight-bold w3-small addToCatdesignBtn addToCart" data-url="{{ route('addToCart', $product)}}"><i class="icon-shopping-cart"></i>&nbsp;<span>ADD TO CART</span></a>
 
 @endif

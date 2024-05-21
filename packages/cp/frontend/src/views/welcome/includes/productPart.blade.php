@@ -34,7 +34,7 @@
         </div>
 
         @else
-        <a href="{{ route('location', ['location-modal-open']) }}" class="btn-icon px-5 py-2 w3-button w3-hover-indigo w3-round w3-light-gray font-weight-bold w3-small location-modal-lg" style="line-height: 30px"><i class="icon-shopping-cart"></i>&nbsp;<span>ADD TO CART</span></a>
+        <a href="{{ route('location', ['location-modal-open']) }}" class="btn-icon px-5 py-2 w3-button w3-round w3-deep-orange w3-hover-indigo font-weight-bold w3-small location-modal-lg" style="line-height: 30px"><i class="icon-shopping-cart"></i>&nbsp;<span>ADD TO CART</span></a>
         @endif
         </div>
     </div><!-- End .product-details -->

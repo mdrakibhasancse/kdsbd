@@ -10,7 +10,7 @@ use Cp\Product\Models\BranchArea;
 use Cp\Media\Models\Media;
 use Cp\Product\Models\Branch;
 use Cp\Product\Models\BranchCat;
-use Cp\Product\Models\BranchSubCat;
+use Cp\Product\Models\BranchSubcat;
 use Cp\Product\Models\Product;
 use Cp\Product\Models\ProductFile;
 use Cp\Product\Models\Order;

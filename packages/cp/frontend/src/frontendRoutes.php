@@ -48,6 +48,12 @@ Route::group(['middleware' => ['web']], function () {
     ]);
     
 
+    Route::get('/offer/products', [
+        'uses' => 'Cp\Frontend\Controllers\FrontendController@offerProducts',
+        'as' => 'offerProducts'
+    ]);
+
+
     Route::get('/product/{slug}/{id}', [
         'uses' => 'Cp\Frontend\Controllers\FrontendController@product',
         'as' => 'product'

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Cp\WebsiteSetting\Models\WebsiteSetting;
 use Cp\Product\Models\Cart;
-use Cp\PaymentSystem\Models\BusinessSetting;
+use Cp\Product\Models\BranchArea;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
 
@@ -289,9 +289,18 @@ function cartSessionToUser()
 }
 
 
+function branchWiseOfferProducts(){
 
-
-
+  $name = request()->cookie('area_name');
+  $area = BranchArea::where('name_en',  $name)->first();
+  if($area){
+    $branch = $area->branch;
+    $products = $branch->products()->where('discount', '>', 0.00)->count();
+    return $products;
+  }else{
+    return  0;
+  }
+}
 
 
 function smsUrl($to, $otp)
