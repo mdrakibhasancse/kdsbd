@@ -141,7 +141,7 @@
 
    
 
-    <div class="container py-4">
+    {{-- <div class="container py-4">
         <div class="row">
             <div class="col-6 col-lg-2 mb-1">
               <div class="info-box w3-white w3-border w3-border-indigo w3-hover-border-green w3-round-large py-1 px-1">
@@ -212,7 +212,7 @@
 
             
         </div>
-    </div>
+    </div> --}}
 
     
 

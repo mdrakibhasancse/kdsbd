@@ -243,7 +243,10 @@
                             </div>
                              @else
                                <div class="dropdown-cart-action">
-                                <a href="{{ route('registerModal', ['register-modal-open']) }}" class="btn btn-dark btn-block register-modal-lg">Checkout</a>
+                                {{-- <a href="{{ route('registerModal', ['register-modal-open']) }}" class="btn btn-dark btn-block register-modal-lg">Checkout</a> --}}
+                                <a  class="btn w3-indigo btn-block" data-target="#modal_register"  data-toggle="modal" >
+                                    Checkout
+                                </a>
                                </div>
                             @endif
                             <!-- End .dropdown-cart-total -->

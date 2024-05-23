@@ -176,7 +176,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="acc-name">First name <span class="required">*</span></label>
-                                                    <input type="text" class="form-control" placeholder="Enter Name" value="{{$user->name ?? old('name')}}"
+                                                    <input type="text" class="form-control w3-medium" placeholder="Enter Name" value="{{$user->name ?? old('name')}}"
                                                          name="name" required />
                                                 </div>
                                             </div>
@@ -185,7 +185,7 @@
                                                 <div class="form-group">
                                                     <label for="acc-lastname">Mobile <span
                                                     class="required">*</span></label>
-                                                    <input type="text" class="form-control" id="mobile"
+                                                    <input type="text" class="form-control w3-medium" id="mobile"
                                                     name="mobile" value="{{$user->mobile ?? old('mobile')}}"placeholder="Enter mobile number" required />
                                                 </div>
                                             </div>
@@ -196,7 +196,7 @@
 
                                         <div class="form-group mb-4">
                                             <label for="email">Email address <span class="required">*</span></label>
-                                            <input type="email" class="form-control" id="email" name="email" value="{{$user->email ?? old('email')}}"
+                                            <input type="email" class="form-control w3-medium" id="email" name="email" value="{{$user->email ?? old('email')}}"
                                                 placeholder="example@gmail.com" required />
                                         </div>
 
@@ -205,19 +205,19 @@
 
                                             <div class="form-group">
                                                 <label for="old_password">Current Password</label>
-                                                <input type="password" class="form-control" id="old_password"
+                                                <input type="password" class="form-control w3-medium" id="old_password"
                                                     name="old_password" />
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="new_password">New Password</label>
-                                                <input type="password" class="form-control" id="new_password"
+                                                <input type="password" class="form-control w3-medium" id="new_password"
                                                     name="new_password" />
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="confirm_password">Confirm New Password</label>
-                                                <input type="password" class="form-control" id="confirm_password"
+                                                <input type="password" class="form-control w3-medium" id="confirm_password"
                                                     name="confirm_password" />
                                             </div>
                                         </div>

@@ -78,6 +78,15 @@
             text-align: center;
         }
 
+        .select2-container .select2-selection--single {
+            height: 38px !important;
+        }
+
+        .select2-container--bootstrap4 .select2-selection--single .select2-selection__rendered {
+            padding-top: 0.5rem !important;
+        }
+
+
         
      </style>
 
@@ -133,7 +142,10 @@
             @if(Auth::check())
             <a href="{{route('user.dashboard')}}"><i class="icon-user-2"></i>  Account</a>
             @else
-            <a href="{{ route('registerModal', ['register-modal-open']) }}" class="register-modal-lg"><i class="icon-user-2"></i> Account</a>
+            {{-- <a href="{{ route('registerModal', ['register-modal-open']) }}" class="register-modal-lg"><i class="icon-user-2"></i> Account</a> --}}
+            <a class="" data-target="#modal_register"  data-toggle="modal" style="cursor: pointer">
+               <i class="icon-user-2"></i> Account
+            </a>
             @endif
 
         </div>
@@ -250,6 +262,7 @@
 
             $('.select2').select2({
                 theme: 'bootstrap4'
+
             });
             @endif
         });

@@ -61,7 +61,11 @@
                                     @if(Auth::check())
                                     <a href="{{route('user.dashboard')}}">My Account</a>
                                     @else
-                                    <a href="{{ route('registerModal', ['register-modal-open']) }}" class="register-modal-lg">My Account</a>
+
+                                    <a class="" data-target="#modal_register"  data-toggle="modal" style="cursor: pointer">
+                                        My Account
+                                    </a>
+                                    {{-- <a href="{{ route('registerModal', ['register-modal-open']) }}" class="register-modal-lg">My Account</a> --}}
                                     @endif
                                 </li>
                                 <li><a href="#">Track Your Order</a></li>
