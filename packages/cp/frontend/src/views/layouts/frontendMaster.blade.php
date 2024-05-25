@@ -96,6 +96,10 @@
         .select2-container--bootstrap4 .select2-selection--single .select2-selection__rendered {
             padding-top: 0.5rem !important;
         }
+
+        select.form-control:not([size]):not([multiple]) {
+            height: 4rem !important;
+        }
         
 
         
@@ -288,39 +292,6 @@
 
     <script>
         $(document).ready(function(){
-            $(document).on('click', '.location-modal-lg', function(e) {
-                e.preventDefault();
-                var that = $(this),
-                url = that.attr("href");
-                $("#myModalLg").modal({
-                    backdrop: false
-                });
-
-                $.ajax({
-                    url: url,
-                    type: "Get",
-                    cache: false,
-                    dataType: 'json',
-                    beforeSend: function() {
-                        $(".modal-feed").show();
-                    },
-                    complete: function() {
-                        $(".modal-feed").hide();
-                    },
-                }).done(function(data) {
-
-                    $('#modalLargeFeed').empty().append(data);
-
-                    $('.select2').select2({
-                        theme: 'bootstrap4'
-                    });
-
-
-                }).fail(function() {});
-            });
-
-
-
             //delete cart Item
             $(document).on("click",".cartRemoveItem",function() {
                 var that = $(this);
@@ -363,28 +334,6 @@
                     }
                 });
                 }
-            });
-
-
-            $(document).on('click', '.register-modal-lg', function(e) {
-                e.preventDefault();
-                var that = $(this),
-                url = that.attr("href");
-                $("#modal_register").modal({
-                    backdrop: false
-                });
-
-                $.ajax({
-                    url: url,
-                    type: "Get",
-                    cache: false,
-                    dataType: 'json',
-                }).done(function(data) {
-
-                    $('#modalLargeFeed').empty().append(data);
-
-
-                }).fail(function() {});
             });
 
 

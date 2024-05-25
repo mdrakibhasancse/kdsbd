@@ -9,8 +9,13 @@ class Slider extends Model
 {
     use HasFactory;
 
-    public function fi()
+    public function fi_desktop()
     {
-        return $this->featured_image ?: 'not_found.png';
+        return $this->image_desktop ?: 'not_found.png';
+    }
+
+    public function fi_mobile()
+    {
+        return $this->image_mobile ?: 'not_found.png';
     }
 }

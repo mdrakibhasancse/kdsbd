@@ -5,7 +5,7 @@
 <div id="modal_register" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content border-0"  style="background:rgba(0, 0, 0, .4);">
-    <div class="modal-header bg-success border-0" style="height: 60px;">
+    <div class="modal-header border-0" style="height: 60px; background: #0438A8">
       <h5 class="modal-title w3-text-white"><i class="far fa-user-circle"></i> {{ __('Sign in') }}</h5>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
       <span aria-hidden="true" style="color: #fff">&times;</span>

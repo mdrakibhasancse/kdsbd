@@ -34,12 +34,24 @@
                             </div>
                          
                             <div class="form-group input-group-sm w3-small col-md-4 mb-0">
-                                <label class="text-muted"  for="featured_image">Featured Image </label>
-                                <input type="file" name="featured_image" id="featured_image" class="form-control w3-tiny"
+                                <label class="text-muted"  for="image_desktop">Image(Desktop)
+                                     <span class="text-danger">Better size(width:555px and height 370px)</span>
+                                </label>
+                                <input type="file" name="image_desktop" id="image_desktop" class="form-control w3-tiny"
                                     required> 
-                                {{-- <i class="w3-tiny text-muted">(width:960px and height
-                                320px)</i> --}}
-                                @error('featured_image')
+                                @error('image_desktop')
+                                  <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+
+                            <div class="form-group input-group-sm w3-small col-md-4 mb-0">
+                                <label class="text-muted"  for="image_mobile">Image(Mobile)
+                                    <span class="text-danger">Better size(width:200px and height 84px)</span>
+                                </label>
+                                <input type="file" name="image_mobile" id="image_mobile" class="form-control w3-tiny"
+                                    required> 
+                                @error('image_mobile')
                                   <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -50,18 +62,18 @@
                                     placeholder="https://example.com/go"> <br>
                             </div>
 
-                            <div class="form-group input-group-sm w3-small col-md-7">
-                                <label class="text-muted" for="description">Description</label>
-                                <textarea  name="description" id="description"
-                                class="form-control" rows="1" placeholder="Description..." required>{{ old('description')}}</textarea>
+                            <div class="form-group input-group-sm w3-small col-md-4">
+                                <label class="text-muted" for="excerpt">Excerpt</label>
+                                <textarea  name="excerpt" id="excerpt"
+                                class="form-control" rows="1" placeholder="Excerpt..." required>{{ old('excerpt')}}</textarea>
                             </div>
                             
-                            <div class="form-group input-group-sm col-md-2 w3-small mt-4 active_checkbox  ml-4">
+                            <div class="form-group input-group-sm col-md-1 w3-small mt-4 active_checkbox  ml-4">
                                 <input class="form-check-input" name="active" type="checkbox" id="active">
                                 <label for="active" role="button" class="">Active</label>
                             </div>
 
-                            <div class="form-group input-group-sm w3-small col-md-2 ">
+                            <div class="form-group input-group-sm w3-small col-md-2">
                                 <label for=""> &nbsp; </label>
                                 <button type="submit" class="btn btn-primary btn-xs btn-block py-2">Submit</button>
                             </div>

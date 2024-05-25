@@ -81,21 +81,6 @@ class FrontendController extends Controller
     }
 
 
-
-    public function registerModal(Request $request)
-    {
-        $type = $request->type;
-        if ($type == 'register-modal-open') {
-            if ($request->ajax()) {
-                return Response()->json(
-                    View('frontend::welcome.includes.modals.registerModal')->render(),
-                );
-            }
-            return back();
-        }
-    }
-
-
     
     public function categoriesAll(Request $request){
         $categories = ProductCategory::whereActive(true)->latest()->get();
@@ -178,18 +163,7 @@ class FrontendController extends Controller
     }
 
 
-    public function location(Request $request)
-    {
-        $type = $request->type;
-        if ($type == 'location-modal-open') {
-            if ($request->ajax()) {
-                return Response()->json(
-                    View('frontend::welcome.includes.modals.location')->render(),
-                );
-            }
-            return back();
-        }
-    }
+
 
 
     public function areaChange(Request $request)
@@ -556,7 +530,7 @@ class FrontendController extends Controller
                 $orderItem->order_id = $order->id;
                 $orderItem->branch_id = $area->branch_id;
                 $orderItem->user_id = Auth::user()->id;
-                $orderItem->product_id = $cart->id;
+                $orderItem->product_id = $cart->product_id;
                 $orderItem->product_name = $cart->product->name_en;
                 $orderItem->product_price = $cart->product->final_price;
                 $orderItem->quantity = $cart->quantity;

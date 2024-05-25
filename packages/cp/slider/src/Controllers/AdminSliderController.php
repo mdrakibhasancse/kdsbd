@@ -32,7 +32,8 @@ class AdminSliderController extends Controller
             $request->all(),
             [
                 'title' => 'required',
-                'featured_image' => 'required|image',
+                'image_desktop' => 'required|image',
+                'image_mobile' => 'required|image',
             ]
         );
 
@@ -46,17 +47,26 @@ class AdminSliderController extends Controller
 
         $slider = new Slider;
         $slider->title = $request->title;
-        $slider->description = $request->description;
+        $slider->excerpt = $request->excerpt;
         $slider->link = $request->link ?? null;
         $slider->active = $request->active ? 1 : 0;
 
-        if ($request->hasFile('featured_image')) {
+        if ($request->hasFile('image_desktop')) {
 
-            $file = $request->featured_image;
+            $file = $request->image_desktop;
             $ext = "." . $file->getClientOriginalExtension();
             $imageName = rand(111, 555) . time() . $ext;
             Storage::disk('public')->put('sliders/' . $imageName, File::get($file));
-            $slider->featured_image = $imageName;
+            $slider->image_desktop = $imageName;
+        }
+
+        if ($request->hasFile('image_mobile')) {
+
+            $file = $request->image_mobile;
+            $ext = "." . $file->getClientOriginalExtension();
+            $imageName = rand(111, 555) . time() . $ext;
+            Storage::disk('public')->put('sliders/' . $imageName, File::get($file));
+            $slider->image_mobile = $imageName;
         }
 
         $slider->addedBy_id = Auth::id();
@@ -93,20 +103,34 @@ class AdminSliderController extends Controller
         }
 
         $slider->title = $request->title;
-        $slider->description = $request->description;
+        $slider->excerpt = $request->excerpt;
         $slider->link = $request->link ?? null;
         $slider->active = $request->active ? 1 : 0;
 
-        if ($request->hasFile('featured_image')) {
-            $old = 'sliders/' . $slider->featured_image;
+        if ($request->hasFile('image_desktop')) {
+            $old = 'sliders/' . $slider->image_desktop;
             if (Storage::disk('public')->exists($old)) {
                 Storage::disk('public')->delete($old);
             }
-            $file = $request->featured_image;
+            $file = $request->image_desktop;
             $ext = "." . $file->getClientOriginalExtension();
             $imageName = rand(111, 555) . time() . $ext;
             Storage::disk('public')->put('sliders/' . $imageName, File::get($file));
-            $slider->featured_image = $imageName;
+            $slider->image_desktop = $imageName;
+        }
+
+
+        
+        if ($request->hasFile('image_mobile')) {
+            $old = 'sliders/' . $slider->image_mobile;
+            if (Storage::disk('public')->exists($old)) {
+                Storage::disk('public')->delete($old);
+            }
+            $file = $request->image_mobile;
+            $ext = "." . $file->getClientOriginalExtension();
+            $imageName = rand(111, 555) . time() . $ext;
+            Storage::disk('public')->put('sliders/' . $imageName, File::get($file));
+            $slider->image_mobile = $imageName;
         }
 
         $slider->addedBy_id = Auth::id();

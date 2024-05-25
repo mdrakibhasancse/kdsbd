@@ -5,6 +5,7 @@ namespace Cp\Product\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Cp\Product\Models\OrderItem;
 
 class Product extends Model
 {
@@ -27,8 +28,6 @@ class Product extends Model
     }
 
 
-
-
     public function subcategories()
     {
         return $this->belongsToMany(ProductSubCategory::class, 'product_subcats', 'product_id', 'product_subcategory_id');
@@ -49,6 +48,17 @@ class Product extends Model
     public function cart()
     {
         return $this->hasOne(Cart::class);
+    }
+
+
+    public function items()
+    {
+       return $this->hasMany(OrderItem::class, 'product_id');
+    }
+
+    public function hasItem($branch, $order)
+    {
+       return (bool) $this->items()->where('branch_id', $branch)->where('order_id', $order)->count();
     }
 
    

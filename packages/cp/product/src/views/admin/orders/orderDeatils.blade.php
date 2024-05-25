@@ -8,7 +8,7 @@
 
 @section('content') 
 <section class="content py-3">
-    <div class="row w3-animate-zoom">
+    <div class="row">
         <div class="col-md-11 mx-auto">
             <div class="card mb-2 shadow-lg">
                 <div class="card-header py-2">
@@ -25,7 +25,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="card shadow">
-                                <div class="card-body">
+                                <div class="card-body text-center">
+                                    <img  class="w3-100 w3-round" src="{{ route('imagecache', [ 'template'=>'cpxxxs','filename' => $ws->logo() ]) }}" alt="kdsbdLogo">
                                     <address>
                                     {{$ws->website_title}}<br>
                                     {{$ws->contact_address}}<br>
@@ -39,10 +40,14 @@
                             <div class="card shadow">
                                 <div class="card-body">
                                 <address>
-                                    Order Info<br>
+                                   <strong>Order Info</strong><br>
                                     Order Id: {{$order->id}}<br>
                                     Order Date: {{$order->created_at->format('d/m/Y')}}<br>
-                                    Order By: {{$order->user->name ?? ''}}
+                                    Order By: {{$order->user->name ?? ''}} ({{$order->user->mobile ?? ''}})<br>
+                                    Email: {{$order->user->mobile ?? ''}}<br>
+                                    Branch: {{$order->branch->name_en ?? ''}}<br>
+                                    Area: {{$order->area_name ?? ''}}
+                                   
                                 </address>
                                 </div>
                             </div>
@@ -89,6 +94,15 @@
                             <h3 class="card-title">
                             Order Items
                             </h3>
+
+                            <div class="card-tools">
+                               @if($order->due() > 0)
+                                <a href="{{ route('admin.productModalOpen', ['order' => $order, 'product-modal-open']) }}"
+                                        class="btn btn-primary btn-sm product-modal-open"><i
+                                class="fa fa-plus-circle"></i>&nbsp;Add Product
+                                Job</a>
+                                @endif
+                            </div>
                             
                         </div>
                         <div class="card-body">
@@ -100,67 +114,13 @@
                                         <th>Product Price</th>
                                         <th>Quantity</th>
                                         <th>Total Cost</th>
+                                        @if($order->due() > 0)
                                         <td style="width:20px;">Action</td>
+                                        @endif
                                     </tr>
                                 </thead>
-                                <tbody>
-                            
-                                    @foreach($order->orderItems as $item)
-                                    <tr>
-                                        <td style="width: 10px">{{$loop->iteration}}</td>
-                                    
-                                        <td>{{$item->product_name}}</td>
-                                        <td>{{$item->product_price}}</td>
-                                        <td>{{$item->quantity}}</td>
-                                        <td>{{$item->total_cost}}</td>
-                                        <td style="width:20px;">
-                                        <form action="{{ route('admin.orderItemDelete',$item->id)}}" method="post"
-                                        onclick="return confirm('Are you sure to delete?')">
-                                        @csrf
-                                        
-                                        <input type="hidden" name="order_id" value="{{ $order->id }}">
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                        </form>
-                                        </td>
-                                        
-                                    </tr>  
-                                    @endforeach
-
-                                
-                                    <tr>
-                
-                                    <td colspan="4" class="text-right font-weight-bold">Sub Total</td>
-                                    <td class="font-weight-bold">
-                                        {{$order->total_amount }}
-                                    </td>
-                                    <td></td>
-                                    
-                                    </tr>
-
-                                    <tr>
-                
-                                    <td colspan="4" class="text-right font-weight-bold">Paid Amount</td>
-                                    <td class="font-weight-bold">
-                                        {{ $order->paid() }}
-                                    </td>
-                                    <td></td>
-                                    
-                                    </tr>
-
-                                    <tr>
-                
-                                    <td colspan="4" class="text-right font-weight-bold">Due Amount</td>
-                                    <td class="font-weight-bold">
-                                        {{ $order->due() }}.00
-                                    </td>
-                                    <td>
-                                    
-                                    </td>
-                                    
-                                    </tr>
-                                
+                                <tbody class="updateQty">
+                                    @include('product::admin.orders.includes.items')
                                 </tbody>
                                 
                             </table>
@@ -231,7 +191,7 @@
                                     <div class="form-group input-group-sm mb-1 row w3-light-gray">
                                         <label for="paid_amount" class="col-sm-5 col-form-label">Paid Amount</label>
                                         <div class="col-sm-7">
-                                            <input type="number" class="form-control mt-1 form-control-sm " id="paid_amount" value="{{old('paid_amount') ?: $order->due()}}"  name="paid_amount" min="1" step="any" max="{{$order->due()}}" placeholder="Paid Amount" required>
+                                            <input type="number" class="form-control mt-1 form-control-sm orderTotalAmount" id="paid_amount" value="{{old('paid_amount') ?: $order->due()}}"  name="paid_amount" min="1" step="any" max="{{$order->due()}}" placeholder="Paid Amount" required>
                                             @error('paid_amount')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
@@ -312,7 +272,164 @@
         </div>
     </div>
 </section>
+
+
+@include('product::admin.orders.modals.modalLg')
+   
 @endsection
+
+
+@push('js')
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $( document ).ready(function() {
+        $(document).on("click",".updateItem",function() {
+            var that = $( this );
+            var url  = that.attr('data-url');
+        
+            if(that.hasClass('plus')){
+                var cart_qty  = that.attr('data-qty');
+                new_qty = parseInt(cart_qty) + 1;
+            }
+            if(that.hasClass('minus')){
+                var cart_qty  = that.attr('data-qty');
+                if(cart_qty <=1 ){
+                    return false;
+                }
+                new_qty = parseInt(cart_qty) - 1;
+            }
+            
+            $.ajax({
+                url    : url,
+                method : "post",
+                data   : { new_qty : new_qty},
+                success: function(result){
+                    // console.log(result.orderTotalAmount);
+                    $(".orderTotalAmount").val(result.orderTotalAmount);
+                    that.closest('.card-body').find(".updateQty").empty().append(result.view);
+                },error:function(){
+                    alert("Error");
+                }
+            });
+        });
+
+
+        $(document).on('click', '.product-modal-open', function(e) {
+            e.preventDefault();
+            var that = $(this),
+                url = that.attr("href");
+            $("#myModalLg").modal({
+                backdrop: false
+            });
+            $.ajax({
+                url: url,
+                type: "Get",
+                cache: false,
+                dataType: 'json',
+                beforeSend: function() {
+                    $(".modal-feed").show();
+                },
+                complete: function() {
+                    $(".modal-feed").hide();
+                },
+            }).done(function(data) {
+
+                $('#modalLargeFeed').empty().append(data);
+
+            }).fail(function() {});
+        });
+
+
+        $(document).on('keyup', '.brandProductSearchAjax', function(e) {
+            e.preventDefault();
+            var that = $(this);
+            var q = that.val();
+            var url = that.attr('data-search-url');
+            
+            $.ajax({
+                url: url,
+                data : {q:q},
+                method: "GET",
+                success: function (response) {
+                    $(".showProducts").empty().append(response.view);
+                }
+            });
+        });
+
+        
+        $(document).on('click', '.pagination a', function (e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+           
+            $.ajax({
+                url: url,
+                method: "GET",
+                success: function (response) {
+                    $(".showProducts").empty().append(response.view);
+                }
+            });
+        });
+
+
+       
+
+
+
+        $(document).on("change", ".input-select-item", function (e) {
+            if (this.checked) {
+                var that = $(this);
+                var url = that.attr("data-select-url");
+                // alert(url);
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    cache: false,
+                    dataType: 'json',
+                    success: function (response) {
+                        $(".orderTotalAmount").val(response.orderTotalAmount);
+                        $(".updateQty").empty().append(response.view);
+                    },
+                    error: function () {
+                    }
+                });
+            }else {
+                var that = $(this);
+                var url = that.attr("data-unselect-url");
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    cache: false,
+                    dataType: 'json',
+                    success: function (response) {
+                        $(".orderTotalAmount").val(response.orderTotalAmount);
+                        $(".updateQty").empty().append(response.view);
+                    },
+                    error: function () {
+                    }
+                });
+
+            } 
+        });
+    });
+
+    var delay = (function () {
+        var timer = 0;
+        return function (callback, ms) {
+            clearTimeout(timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
+</script>
+
+
+
+
+
+@endpush
 
 
 

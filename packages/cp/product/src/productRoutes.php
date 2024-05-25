@@ -270,8 +270,40 @@ Route::group(['middleware' => ['web', 'auth', 'role:admin'], 'prefix' => 'admin'
         'as' => 'admin.orderItemDelete'
     ]);
 
+
+
+    Route::post('update/qty/{item}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@updateQty',
+        'as' => 'updateQty'
+    ]);
+    
+
     Route::get('invoice/print/{order}', [
         'uses' => 'Cp\Product\Controllers\AdminProductController@orderPrint',
         'as' => 'admin.orderPrint'
     ]);
+
+
+    Route::get('product/modal/open/{order}/type/{type?}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@productModalOpen',
+        'as' => 'admin.productModalOpen'
+    ]);
+
+
+    Route::get('branch/product/search/ajax/{branch}/order/{order}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@branchProductSearchAjax',
+        'as' => 'admin.branchProductSearchAjax'
+    ]);
+
+
+    Route::get('select/branch/{branch}/product/{product}/order/{order}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@selectbranchProduct',
+        'as' => 'admin.selectbranchProduct'
+    ]);
+
+    Route::get('un_select/branch/{branch}/product/{product}/order/{order}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@unSelectbranchProduct',
+        'as' => 'admin.unSelectbranchProduct'
+    ]);
+
 });

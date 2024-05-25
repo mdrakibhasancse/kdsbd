@@ -9,10 +9,6 @@ class CoverPicLarge implements FilterInterface
 {
     public function applyFilter(Image $image)
     {
-        // return $image->fit(810, 300);
-        return  $image->fit(555, 209);
-        // return  $image->insert('img/w.png');
-
-        // return $image->insert('img/w1.png', 'bottom');
+        return  $image->fit(555, 370);
     }
 }

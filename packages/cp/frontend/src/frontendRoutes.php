@@ -8,11 +8,6 @@ Route::group(['middleware' => ['web']], function () {
         'as' => 'welcome'
     ]);
 
-    Route::any('/register/modal/type/{type?}', [
-        'uses' => 'Cp\Frontend\Controllers\FrontendController@registerModal',
-        'as' => 'registerModal'
-    ]);
-
 
     Route::post('/send/otp', [
         'uses' => 'Cp\Frontend\Controllers\FrontendController@sendOtp',
@@ -59,10 +54,7 @@ Route::group(['middleware' => ['web']], function () {
         'as' => 'product'
     ]);
 
-    Route::any('/location/type/{type?}', [
-        'uses' => 'Cp\Frontend\Controllers\FrontendController@location',
-        'as' => 'location'
-    ]);
+  
 
     Route::get('area/change', [
         'uses' => 'Cp\Frontend\Controllers\FrontendController@areaChange',

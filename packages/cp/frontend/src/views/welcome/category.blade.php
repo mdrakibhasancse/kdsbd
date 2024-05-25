@@ -123,7 +123,6 @@
     });
 
     $(document).ready(function(){ 
-
         $(document).on('change', '.areaChange', function(e) {
             e.preventDefault();
             var that = $( this );

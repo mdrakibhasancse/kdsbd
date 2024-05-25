@@ -5,10 +5,15 @@
     <style>
         .owl-carousel.nav-image-center .owl-nav button {
             top: 50% !important;
+            color: #FF5722;
         }
 
         .count-down .product-name {
             top: 0.9rem !important;
+        }
+
+        .owl-theme .owl-nav {
+            color: #0438A8 !important;
         }
     </style>
 @endpush
@@ -16,18 +21,17 @@
     <section class="intro-section">
         <div class="container">
             <div class="row">
+                @if(Agent::isDesktop())
                 <div class="col-lg-9 mb-2">
-                    <div class="home-slider slide-animate owl-carousel owl-theme custom-nav" data-owl-options="{
-                        'loop': true
-                    }">
+                    <div class="home-slider slide-animate owl-carousel owl-theme custom-nav" data-owl-options="{'items': 1, 'loop': true, 'dots': false, 'autoplay': true}">
                         @foreach ($sliders as $slider)
                         <div class="home-slide home-slide-1 banner">
-                            <img class="slide-bg" src="{{ route('imagecache', ['template' => 'cplg', 'filename' => $slider->fi()]) }}" alt="slider image" width="772" height="434">
+                            <img class="slide-bg" src="{{ route('imagecache', ['template' => 'cplg', 'filename' => $slider->fi_desktop()]) }}" alt="slider image">
                             <div class="banner-layer banner-layer-middle banner-layer-right">
                                 <div class="appear-animate" data-animation-name="rotateInUpLeft">
 
-                                    <h2 class="font1 ls-10 text-uppercase text-right w3-text-deep-orange m-b-4">{{$slider->title}}
-                                    </h2>
+                                    {{-- <h2 class="font1 ls-10 text-uppercase text-right w3-text-deep-orange m-b-4">{{$slider->title}}
+                                    </h2> --}}
                                     {{-- <div class="coupon-sale-text">
                                         <h4 class="m-b-2 font1 d-block text-white bg-dark skew-box">Exclusive COUPON
                                         </h4>
@@ -36,8 +40,8 @@
                                         </h5>
                                     </div> --}}
 
-                                    <a href="" class="btn btn-light btn-lg ls-10 w3-text-deep-orange">View All
-                                        Now</a>
+                                    {{-- <a href="" class="btn btn-light btn-lg ls-10 w3-text-deep-orange">View All
+                                        Now</a> --}}
                                 </div>
                             </div>
                             {{-- <div class="banner-layer banner-layer-bottom banner-layer-right">
@@ -66,6 +70,24 @@
                         </div> --}}
                     </div>
                 </div>
+                @else
+                <div class="col-lg-9 mb-2">
+                   <div class="owl-carousel owl-theme nav-inside nav-inside-edge nav-squared nav-with-transparency nav-dark"
+                       data-owl-options="{'items': 1, 'loop': true, 'nav': true, 'dots': false, 'autoplay': true}">
+                         @foreach ($sliders as $slider)
+                        <div>
+                            <div class="img-thumbnail border-0 p-0 d-block">
+                                <img
+                                class="img-fluid border-radius-0"
+                                src="{{ route('imagecache', ['template' => 'cpsm', 'filename' => $slider->fi_mobile()]) }}"
+                                alt=""
+                                />
+                            </div>
+                        </div>
+                         @endforeach
+                    </div>
+                </div>
+                @endif
 
                 <div class="col-lg-3 mb-2">
                     <div class="featured-products-slider owl-carousel owl-theme dot-inside dots-small" data-owl-options="{
@@ -230,172 +252,11 @@
                         {{-- 'loop': true --}}
                     }">
 
-                    {{-- @dd($category->activeProducts()); --}}
-                    @foreach($category->activeBranchProducts()  as $product)
-                        {{-- @dd($product); --}}
-                        @include('frontend::welcome.includes.productPart')
-                    @endforeach
+                 
+                        @foreach($category->activeBranchProducts()  as $product)
+                            @include('frontend::welcome.includes.productPart')
+                        @endforeach
                         
-                    {{--                  
-                        <div class="product-default bg-white w3-border w3-hover-border-green mx-2 py-4">
-                            <figure>
-                                <a href="product.html">
-                                    <img src="img/rocket.png" width="180" height="180" alt="product">
-                                    <img src="img/rocket.png" width="180" height="180" alt="product">
-                                </a>
-
-                                <div class="label-group">
-                                    <div class="product-label label-hot">HOT</div>
-                                </div>
-                            </figure>
-
-                            <div class="product-details">
-                            
-
-                                <h3 class="product-title"> <a href="product.html">Casual Spring Blue Shoes</a> </h3>
-                                <span class="" >
-                                2pc
-                                </span>
-                            
-                                <div class="price-box">
-                                    <span class="old-price">$90.00</span>
-                                    <span class="product-price">$70.00</span>
-                                </div><!-- End .price-box -->
-
-                                <div class="product-action">
-                                    
-                                    <a href="#" class="btn-icon btn-add-cart product-type-simple"><i class="icon-shopping-cart"></i><span>ADD TO CART</span></a>
-                                
-                                </div>
-                            </div><!-- End .product-details -->
-                        </div>
-                    
-                        <div class="product-default bg-white w3-border w3-hover-border-green mx-2 py-4">
-                            <figure>
-                                <a href="product.html">
-                                    <img src="img/rocket.png" width="180" height="180" alt="product">
-                                    <img src="img/rocket.png" width="180" height="180" alt="product">
-                                </a>
-
-                                <div class="label-group">
-                                    <div class="product-label label-hot">HOT</div>
-                                </div>
-                            </figure>
-
-                            <div class="product-details">
-
-                                <h3 class="product-title"> <a href="product.html">Casual Spring Blue Shoes</a> </h3>
-                                <span class="" >
-                                2pc
-                                </span>
-                                <div class="price-box">
-                                    <span class="old-price">$90.00</span>
-                                    <span class="product-price">$70.00</span>
-                                </div><!-- End .price-box -->
-
-                                <div class="product-action">
-                                    <a href="wishlist.html" class="btn-icon-wish" title="wishlist"><i class="icon-heart"></i></a>
-                                    <a href="#" class="btn-icon btn-add-cart product-type-simple"><i class="icon-shopping-cart"></i><span>ADD TO CART</span></a>
-                                    <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View"><i class="fas fa-external-link-alt"></i></a>
-                                </div>
-                            </div><!-- End .product-details -->
-                        </div>
-                        
-                        <div class="product-default bg-white w3-border w3-hover-border-green mx-2 py-4">
-                            <figure>
-                                <a href="product.html">
-                                    <img src="img/rocket.png" width="180" height="180" alt="product">
-                                    <img src="img/rocket.png" width="180" height="180" alt="product">
-                                </a>
-
-                                <div class="label-group">
-                                    <div class="product-label label-hot">HOT</div>
-                                </div>
-                            </figure>
-
-                            <div class="product-details">
-
-                                <h3 class="product-title"> <a href="product.html">Casual Spring Blue Shoes</a> </h3>
-                                <span class="" >
-                                2pc
-                                </span>
-
-                                <div class="price-box">
-                                    <span class="old-price">$90.00</span>
-                                    <span class="product-price">$70.00</span>
-                                </div><!-- End .price-box -->
-
-                                <div class="product-action">
-                                    <a href="wishlist.html" class="btn-icon-wish" title="wishlist"><i class="icon-heart"></i></a>
-                                    <a href="#" class="btn-icon btn-add-cart product-type-simple"><i class="icon-shopping-cart"></i><span>ADD TO CART</span></a>
-                                    <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View"><i class="fas fa-external-link-alt"></i></a>
-                                </div>
-                            </div><!-- End .product-details -->
-                        </div>
-
-                        <div class="product-default bg-white w3-border w3-hover-border-green mx-2 py-4">
-                            <figure>
-                                <a href="product.html">
-                                    <img src="img/rocket.png" width="180" height="180" alt="product">
-                                    <img src="img/rocket.png" width="180" height="180" alt="product">
-                                </a>
-
-                                <div class="label-group">
-                                    <div class="product-label label-hot">HOT</div>
-                                </div>
-                            </figure>
-
-                            <div class="product-details">
-
-                                <h3 class="product-title"> <a href="product.html">Casual Spring Blue Shoes</a> </h3>
-                                <span class="" >
-                                2pc
-                                </span>
-                                <div class="price-box">
-                                    <span class="old-price">$90.00</span>
-                                    <span class="product-price">$70.00</span>
-                                </div><!-- End .price-box -->
-
-                                <div class="product-action">
-                                    <a href="wishlist.html" class="btn-icon-wish" title="wishlist"><i class="icon-heart"></i></a>
-                                    <a href="#" class="btn-icon btn-add-cart product-type-simple"><i class="icon-shopping-cart"></i><span>ADD TO CART</span></a>
-                                    <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View"><i class="fas fa-external-link-alt"></i></a>
-                                </div>
-                            </div><!-- End .product-details -->
-                        </div>
-
-                        <div class="product-default bg-white w3-border w3-hover-border-green mx-2 py-4">
-                            <figure>
-                                <a href="product.html">
-                                    <img src="img/rocket.png" width="180" height="180" alt="product">
-                                    <img src="img/rocket.png" width="180" height="180" alt="product">
-                                </a>
-
-                                <div class="label-group">
-                                    <div class="product-label label-hot">HOT</div>
-                                </div>
-                            </figure>
-
-                            <div class="product-details">
-
-                                <h3 class="product-title"> <a href="product.html">Casual Spring Blue Shoes</a> </h3>
-                                <span class="" >
-                                2pc
-                                </span>
-                                <div class="price-box">
-                                    <span class="old-price">$90.00</span>
-                                    <span class="product-price">$70.00</span>
-                                </div><!-- End .price-box -->
-
-                                <div class="product-action">
-                                    <a href="wishlist.html" class="btn-icon-wish" title="wishlist"><i class="icon-heart"></i></a>
-                                    <a href="#" class="btn-icon btn-add-cart product-type-simple"><i class="icon-shopping-cart"></i><span>ADD TO CART</span></a>
-                                    <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View"><i class="fas fa-external-link-alt"></i></a>
-                                </div>
-                            </div><!-- End .product-details -->
-                        </div>
-
-                    --}}
                     
                     </div>
                 </div>

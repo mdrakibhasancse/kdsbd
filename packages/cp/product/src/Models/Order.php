@@ -36,4 +36,10 @@ class Order extends Model
     {
         return  $this->payments()->sum('paid_amount');
     }
+
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
+    }
 }

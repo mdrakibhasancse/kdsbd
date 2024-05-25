@@ -980,11 +980,8 @@ class AdminProductController extends Controller
       public function productAddStock(Request $request){
 
         $stock = BranchProduct::where('branch_id', $request->branch)->where('product_id', $request->product)->first();
-        
-
         if(request()->ajax())
         {
-
             if($stock)
             {     
              $stock->stock_qty = $request->qty;
@@ -1102,6 +1099,144 @@ class AdminProductController extends Controller
         toast('Order Item Successfully Deleted', 'success');
         return redirect()->back();
     }
+
+
+
+
+    public function updateQty(Request $request)
+    {
+      
+        
+        $item = OrderItem::where('id', $request->item)->update(['quantity' => $request->new_qty]);
+        $item  = OrderItem::find($request->item);
+        $item->total_cost =  $item->product_price *  $item->quantity;
+        $item->save();
+        $order = $item->order;
+        $order->total_amount = $order->orderItems->sum('total_cost');
+        $order->save();
+        $orderItems =  $order->orderItems;
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => true,
+                'orderTotalAmount' =>  $order->total_amount,
+                'message' => 'item is updated to cart!',
+                'view' => View('product::admin.orders.includes.items', [
+                  'order' => $order,
+                  'orderItems' => $orderItems
+                ])->render(),
+            ]);
+        }
+    }
+
+
+
+    public function productModalOpen(Request $request)
+    {
+        $type = $request->type;
+        $order = Order::where('id',$request->order)->first();
+        $branch = $order->branch;
+        $products =  $branch->products()->paginate(30);
+        if ($type == 'product-modal-open') {
+            if ($request->ajax()) {
+                return Response()->json(
+                    View('product::admin.orders.modals.addProductModal', [
+                        'products' =>  $products,
+                        'branch' => $branch,
+                        'order' => $order,
+                    ])->render(),
+                );
+            }
+            return back();
+        }
+    }
+
+
+  
+
+
+    public function branchProductSearchAjax(Request $request)
+    {
+        $branch = Branch::find($request->branch);
+        $order = Order::find($request->order);
+        $q = $request->q;
+        $products = $branch->products()
+        ->where(function($query) use($q) {
+            $query->where('product_id', 'like', '%' . $q . '%')
+            ->orWhere('name_en', 'like', '%' . $q . '%')
+            ->orWhere('unit', 'like', '%' . $q . '%')
+            ->orWhere('final_price', 'like', '%' . $q . '%');
+        })
+        ->paginate(30);
+        $view = view('product::admin.orders.ajax.searchProducts', compact('branch', 'products', 'q', 'order'))->render();
+        
+        return response()->json([
+            'success' => true,
+            'view' => $view
+        ]);
+    }
+
+
+    public function selectbranchProduct(Request $request)
+    {
+        $branch = Branch::find($request->branch);
+        $product = Product::find($request->product);
+        $order = Order::find($request->order);
+        $item = new OrderItem;
+        $item->product_id = $product->id;
+        $item->branch_id = $branch->id;
+        $item->user_id = $order->user_id;
+        $item->order_id = $order->id;
+        $item->quantity = 1;
+        $item->product_name = $product->name_en;
+        $item->product_price = $product->final_price;
+        $item->total_cost = $product->final_price;
+        $item->addedby_id = Auth::id();
+        $item->save();
+
+        $order->total_amount =  $order->total_amount + $item->product_price;
+        $order->save();
+        $orderItems =  $order->orderItems;
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => true,
+                'orderTotalAmount' =>  $order->total_amount,
+                'view' => View('product::admin.orders.includes.items', [
+                    'order' => $order,
+                    'orderItems' => $orderItems,
+                    
+                ])->render(),
+            ]);
+        }
+
+    }
+
+
+
+    public function unSelectbranchProduct(Request $request)
+    {
+        $branch = Branch::find($request->branch);
+        $product = Product::find($request->product);
+        $order = Order::find($request->order);
+
+        $orderItem = $product->items()->where('branch_id', $branch->id)->where('product_id', $product->id)->where('order_id', $order->id)->first();
+
+        $order->total_amount =  $order->total_amount - $orderItem->total_cost;
+        $order->save();
+        $orderItem->delete();
+        $orderItems =  $order->orderItems;
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => true,
+                'orderTotalAmount' =>  $order->total_amount,
+                'view' => View('product::admin.orders.includes.items', [
+                    'order' => $order,
+                    'orderItems' => $orderItems,
+                ])->render(),
+            ]);
+        }
+
+    }
+
 
 
     public function orderPrint(Order $order)

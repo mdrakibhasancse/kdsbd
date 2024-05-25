@@ -224,6 +224,26 @@
     });
     $( document ).ready(function() {
 
+        $(document).on('change', '.areaChange', function(e) {
+            e.preventDefault();
+            var that = $( this );
+            var url  = that.attr('data-url');
+            var id   = that.val()
+            $.ajax({
+                url : url,
+                method : "get",
+                data   : {id : id},
+                success: function(result){
+                    $('.areaLocation').empty().append(result.view);
+                    location.reload();
+
+                },error:function(){
+                
+                }
+            });
+
+        });
+
         $(document).on("click",".updateCartItem",function() {
             var that = $( this );
             var url  = that.attr('data-url');

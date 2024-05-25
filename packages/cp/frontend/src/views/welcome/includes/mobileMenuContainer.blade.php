@@ -51,7 +51,9 @@
 
                         @else
                         <li>
-                           <a href="{{ route('registerModal', ['register-modal-open']) }}" class=" register-modal-lg">Checkout</a>
+                            <a class="btn w3-indigo btn-block" data-target="#modal_register"  data-toggle="modal" >
+                                Checkout
+                            </a>
                         </li>
                         @endif
                         

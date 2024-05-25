@@ -37,7 +37,7 @@
               
 
                 <td>
-                    <img width="30px" height="20px"src="{{ route('imagecache', ['template' => 'sbixs', 'filename' => $slider->fi()]) }}"
+                    <img width="30px" height="20px"src="{{ route('imagecache', ['template' => 'sbixs', 'filename' => $slider->fi_desktop()]) }}"
                     alt="">
                 </td>
 
@@ -94,19 +94,30 @@
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
+
+                                        <div class="form-group input-group-sm w3-small col-md-12 mb-0 mt-2 row">
+                                            <label for="image_desktop">Image (Desktop)
+                                                <span class="text-danger">Better size(width:555px and height 370px)</span>
+                                            </label>
+                                            <div class="col-6">
+                                                <input type="file" name="image_desktop" id="image_desktop">
+                                            </div>
+                                            <div class="col-6">
+                                                <img  src="{{ route('imagecache', ['template' => 'sbixs', 'filename' => $slider->fi_desktop()]) }}" alt="">
+                                            </div>
+                                        </div>
+
                                     
                                         <div class="form-group input-group-sm w3-small col-md-12 mb-0 mt-2 row">
-                                            <label for="featured_image">Featured Image <span>(width:960px and height 20px)</span></label>
+                                            <label for="image_mobile">Image (Mobile)
+                                                <span class="text-danger">Better size(width:200px and height 84px)</span>
+                                            </label>
                                             <div class="col-6">
-                                                <input type="file" name="featured_image" id="featured_image">
+                                                <input type="file" name="image_mobile" id="image_mobile">
                                             </div>
                                             <div class="col-6">
-                                                <img  src="{{ route('imagecache', ['template' => 'sbixs', 'filename' => $slider->fi()]) }}"
-                                                    alt="">
+                                                <img  src="{{ route('imagecache', ['template' => 'sbixs', 'filename' => $slider->fi_mobile()]) }}" alt="">
                                             </div>
-                                            @error('featured_image')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
                                         </div>
 
                                         <div class="form-group input-group-sm w3-small col-md-12 mb-0">
@@ -116,9 +127,9 @@
                                         </div>
                                         
                                         <div class="form-group input-group-sm w3-small col-md-12">
-                                            <label for="tag">Description 
-                                            </label><textarea rows="1" name="description" id="description"
-                                            class="form-control" placeholder="Description Here">{{ $slider->description }}</textarea>
+                                            <label for="tag">Excerpt 
+                                            </label><textarea rows="1" name="excerpt" id="excerpt"
+                                            class="form-control" placeholder="Excerpt Here">{{ $slider->excerpt }}</textarea>
                                         </div>
                                     </div>
                                     <div class="form-row mt-n3 mb-n2">

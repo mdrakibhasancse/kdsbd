@@ -13,6 +13,8 @@
     <tbody class="">
         <?php $i = (($products->currentPage() - 1) * $products->perPage() + 1); ?>
         @forelse ($products as $key => $product)
+
+            
             <tr>
                 <td scope="row">{{ $i++ }}</td>
                 <td scope="row">
