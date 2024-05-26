@@ -26,7 +26,7 @@ class Branch extends Model
 
     public function branchAreas()
     {
-        return $this->hasMany(BranchArea::class, 'Branch_id');
+        return $this->hasMany(BranchArea::class, 'branch_id');
     }
 
 
@@ -44,5 +44,11 @@ class Branch extends Model
     public function subCategories()
     {
         return $this->belongsToMany(ProductSubCategory::class, 'branch_subcats', 'branch_id', 'subcategory_id');
+    }
+
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'branch_id');
     }
 }

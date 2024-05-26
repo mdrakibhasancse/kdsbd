@@ -1247,4 +1247,11 @@ class AdminProductController extends Controller
             'items' => $items,
         ]);
     }
+
+
+
+    public function branchWiseOrderManage(Branch $branch){
+        $orders = $branch->orders()->paginate(30);
+        return view('product::admin.branches.branchWiseOrderList', compact('orders','branch'));
+    }
 }

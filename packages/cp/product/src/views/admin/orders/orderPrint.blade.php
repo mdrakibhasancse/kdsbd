@@ -69,7 +69,7 @@
                 </div>
 
                 <div class="col-4 text-center">
-                    <div class=" p-2 border
+                    <div class="p-1 border
                     @if($order->payment_status == 'unpaid')
                         bg-danger
                     @elseif($order->payment_status == 'paid')
@@ -77,9 +77,9 @@
                     @elseif($order->payment_status == 'partial')
                     w3-light-gray
                     @endif
-                    " style="min-height:100px;">
+                    " style="min-height:67px;">
 
-                    <p class="font-weight-bolder m-0 w3-xxxlarge">
+                    <p class="font-weight-bolder m-0 w3-xxlarge">
                       {{ ucfirst($order->payment_status) }}
                     </p>
 

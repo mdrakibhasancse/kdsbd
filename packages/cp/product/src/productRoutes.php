@@ -306,4 +306,11 @@ Route::group(['middleware' => ['web', 'auth', 'role:admin'], 'prefix' => 'admin'
         'as' => 'admin.unSelectbranchProduct'
     ]);
 
+
+
+    Route::get('branch/wise/{branch}/order/manage', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@branchWiseOrderManage',
+        'as' => 'admin.branchWiseOrderManage'
+    ]);
+
 });
