@@ -145,7 +145,6 @@
             @if(Auth::check())
             <a href="{{route('user.dashboard')}}"><i class="icon-user-2"></i>  Account</a>
             @else
-            {{-- <a href="{{ route('registerModal', ['register-modal-open']) }}" class="register-modal-lg"><i class="icon-user-2"></i> Account</a> --}}
             <a class="" data-target="#modal_register"  data-toggle="modal" style="cursor: pointer">
                <i class="icon-user-2"></i> Account
             </a>
@@ -162,7 +161,8 @@
                 </i>Cart
             </a>
             @else
-            <a href="{{ route('registerModal', ['register-modal-open']) }}" class="register-modal-lg">
+            
+            <a  class="btn w3-indigo btn-block" data-target="#modal_register"  data-toggle="modal" >
                 <i class="icon-shopping-cart position-relative">
                     <span class="cart-count badge-circle totalCartItems">{{totalCartItems()}}</span>
                 </i>Cart
