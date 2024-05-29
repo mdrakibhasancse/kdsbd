@@ -313,4 +313,11 @@ Route::group(['middleware' => ['web', 'auth', 'role:admin'], 'prefix' => 'admin'
         'as' => 'admin.branchWiseOrderManage'
     ]);
 
+
+    Route::get('order/type', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@typeOfOrder',
+        'as' => 'admin.typeOfOrder'
+    ]);
+
+
 });

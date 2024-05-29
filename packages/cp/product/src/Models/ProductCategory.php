@@ -42,4 +42,7 @@ class ProductCategory extends Model
     {
         return $this->hasMany(ProductSubCategory::class)->whereActive(true);
     }
+
+
+    
 }

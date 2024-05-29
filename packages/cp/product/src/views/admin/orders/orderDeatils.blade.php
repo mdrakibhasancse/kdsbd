@@ -99,8 +99,7 @@
                                @if($order->due() > 0)
                                 <a href="{{ route('admin.productModalOpen', ['order' => $order, 'product-modal-open']) }}"
                                         class="btn btn-primary btn-sm product-modal-open"><i
-                                class="fa fa-plus-circle"></i>&nbsp;Add Product
-                                Job</a>
+                                class="fa fa-plus-circle"></i>&nbsp;Add Product</a>
                                 @endif
                             </div>
                             

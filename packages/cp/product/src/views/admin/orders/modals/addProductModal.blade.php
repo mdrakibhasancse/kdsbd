@@ -22,8 +22,7 @@
                 data-search-url="{{route('admin.branchProductSearchAjax',['branch'=>$branch, 'order' => $order])}}" style="border: 2px  solid green;">
 
                 <div class="showProducts">
-                    @include('product::admin.orders.ajax.searchProducts')
-                    
+                  @include('product::admin.orders.ajax.searchProducts')
                 </div>
 
                

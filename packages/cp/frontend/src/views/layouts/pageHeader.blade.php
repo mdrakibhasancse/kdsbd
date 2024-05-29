@@ -9,12 +9,11 @@
                     <div class="header-icon header-search header-search-inline header-search-category w-lg-max text-right mt-0">
                         <a href="#" class="search-toggle" role="button"><i class="icon-search-3"></i></a>
                         <form action="#" method="get">
-                            <div class="header-search-wrapper">
-                                <input type="search" class="form-control" name="q" id="q" placeholder="I'm searching for..." required>
+                             <div class="header-search-wrapper">
+                                <input type="search" class="form-control search" data-url="{{ route('search') }}" name="q" id="q" value="{{ request()->q}}" placeholder="I'm searching for..." required>
                                 <!-- End .select-custom -->
                                 <button class="btn icon-magnifier" title="search" type="submit"></button>
                             </div>
-                            <!-- End .header-search-wrapper -->
                         </form>
                     </div>
                    
@@ -90,19 +89,27 @@
                             </div>
                             <!-- End .dropdown-cart-total -->
 
-                            @if(Auth::check())
-                            <div class="dropdown-cart-action">
-                                <a href="{{route('checkout')}}" class="btn w3-indigo btn-block">Checkout</a>
+                            <div class="chekoutBtn">
+                                @include('frontend::layouts.inc.chekoutBtn')
                             </div>
-                            @else
-                               <div class="dropdown-cart-action">
-                                <a  class="btn w3-indigo btn-block" data-target="#modal_register"  data-toggle="modal">
-                                    Checkout
-                                </a>
-                               </div>
 
-                               
-                            @endif
+                            <div class="">
+                               <a class="btn w3-light-gray rounded my-3 py-1 text-center d-block w3-small">
+                                    <strong>
+                                    <span>Delivery in 100 min</span>
+                                    </strong>
+                                </a>
+
+                                <a class="btn w3-light-gray rounded my-3 py-1 text-center d-block w3-small">
+                                    <strong>
+                                    <span>Delivery time 9am to 6pm</span>
+                                    </strong>
+                                </a>
+
+                                <a href="tel:{{ $ws->contact_mobile }}" class="btn rounded my-1 py-1 text-center d-block text-white w3-deep-orange w3-small">
+                                Call For Order
+                                <i class="icon-phone-2"></i>&nbsp;{{ $ws->contact_mobile }}</a>
+                            </div>
                             <!-- End .dropdown-cart-total -->
                         </div>
                         <!-- End .dropdownmenu-wrapper -->
@@ -115,46 +122,6 @@
     </div>
 
     <div class="header-bottom sticky-header" data-sticky-options="{'mobile': false, 'offset': 684}">
-        {{-- <div class="container">
-            <div class="header-center">
-                <button class="mobile-menu-toggler" type="button">
-                    <i class="fas fa-bars"></i>
-                </button>
-
-                <nav class="main-nav d-none d-lg-flex flex-wrap">
-                    <div class="menu-depart">
-                        <a href="#" class="toggle"><i class="fas fa-bars"></i>Shop by Category
-                        </a>
-
-                        <div class="submenu">
-                            <a href="demo22-shop.html" class="active"><i class="icon-category-home"></i>Home</a>
-
-                            @foreach ($categories as $category)
-                                <a href="{{route("category",$category->slug)}}" class="d-flex">
-                                    <img class="w3-round" src="{{ route('imagecache', ['template' => 'ppxxs', 'filename' => $category->fi()]) }}" alt="">
-                                    &nbsp;&nbsp;&nbsp;
-                                    <span>{{$category->name_en}}</span>
-                                </a>
-                            @endforeach
-                           
-                        </div>
-                    </div>
-                </nav>
-
-                <ul class="menu">
-                    <li class="">
-                      <a href="demo22.html" class="font-weight-bold">Offer</a>
-                    </li>
-                        
-                     <li><a href="blog.html"  class="font-weight-bold">Track Order</a></li>
-                </ul>
-                
-                <div class="header-dropdowns ml-auto">
-                   
-                </div>
-            </div>
-        </div> --}}
-
         <div class="container">
             <div class="header-center">
                 <button class="mobile-menu-toggler" type="button">
@@ -241,18 +208,27 @@
                                 <span class="cart-total-price float-right totalCartAmount">{{number_format(totalCartAmount(), 2)}} tk</span>
                             </div>
                             <!-- End .dropdown-cart-total -->
-                            @if(Auth::check())
-                            <div class="dropdown-cart-action">
-                               	<a href="{{route('checkout')}}" class="btn btn-dark btn-block">Checkout</a>
+                            <div class="chekoutBtn">
+                                @include('frontend::layouts.inc.chekoutBtn')
                             </div>
-                             @else
-                               <div class="dropdown-cart-action">
-                                {{-- <a href="{{ route('registerModal', ['register-modal-open']) }}" class="btn btn-dark btn-block register-modal-lg">Checkout</a> --}}
-                                <a  class="btn w3-indigo btn-block" data-target="#modal_register"  data-toggle="modal" >
-                                    Checkout
+
+                            <div class="">
+                               <a class="btn w3-light-gray rounded my-3 py-1 text-center d-block w3-small">
+                                    <strong>
+                                    <span>Delivery in 100 min</span>
+                                    </strong>
                                 </a>
-                               </div>
-                            @endif
+
+                                <a class="btn w3-light-gray rounded my-3 py-1 text-center d-block w3-small">
+                                    <strong>
+                                    <span>Delivery time 9am to 6pm</span>
+                                    </strong>
+                                </a>
+
+                                <a href="tel:{{ $ws->contact_mobile }}" class="btn rounded my-1 py-1 text-center d-block text-white w3-deep-orange w3-small">
+                                Call For Order
+                                <i class="icon-phone-2"></i>&nbsp;{{ $ws->contact_mobile }}</a>
+                            </div>
                             <!-- End .dropdown-cart-total -->
                         </div>
                         <!-- End .dropdownmenu-wrapper -->

@@ -19,6 +19,7 @@ return [
     'order_status' => [
         'pending',
         'confirmed',
+        'delivered',
         'canceled',
     ],
 

@@ -79,17 +79,22 @@ Route::group(['middleware' => ['web']], function () {
     ]);
 
 
-    Route::get('/sitemap.xml', [
-        'uses' => 'Cp\Frontend\Controllers\FrontendController@sitemap',
-        'as' => 'sitemap'
-    ]);
-
     Route::get('/page/{slug?}', [
         'uses' => 'Cp\Frontend\Controllers\FrontendController@page',
         'as' => 'page'
     ]);
 
+
+    Route::get('/search', [
+        'uses' => 'Cp\Frontend\Controllers\FrontendController@search',
+        'as' => 'search'
+    ]);
+
    
+    Route::get('/sitemap.xml', [
+        'uses' => 'Cp\Frontend\Controllers\FrontendController@sitemap',
+        'as' => 'sitemap'
+    ]);
 
 });
 

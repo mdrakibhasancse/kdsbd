@@ -111,17 +111,18 @@
 
 <body class="loaded">
     <div class="page-wrapper">
-        <div class="top-notice bg-white">
+        <header class="header box-shadow">
+           <div class="header-top">
             <div class="container areaLocation">
                 @include('frontend::welcome.includes.areaLocation')
             </div>
-        </div>
-
-
+           </div>
+        </header>
 
 		@include('frontend::layouts.frontendHeader') 
 
         <main class="main" style="background-color: #fafafa ">
+           @include('sweetalert::alert')
            @yield('content')
         </main>
         
@@ -169,7 +170,7 @@
             </a>
             @else
             
-            <a  class="btn w3-indigo btn-block" data-target="#modal_register"  data-toggle="modal" >
+            <a  class="" data-target="#modal_register"  data-toggle="modal" >
                 <i class="icon-shopping-cart position-relative">
                     <span class="cart-count badge-circle totalCartItems">{{totalCartItems()}}</span>
                 </i>Cart
@@ -182,6 +183,10 @@
 
     @include('frontend::welcome.includes.modals.modalLg')
     @include('frontend::welcome.includes.modals.registerModal')
+
+
+    @include('frontend::welcome.includes.modals.orderModalPrice')
+
 
 
     
@@ -312,7 +317,7 @@
                     success: function(result){
                         $(".headerCart").empty().append(result.view);
                         $(".checkoutItems").empty().append(result.checkoutItems);
-
+                        $(".chekoutBtn").empty().append(result.chekoutBtn);
                         that.closest('.product-details').find(".productCartItem").empty().append(result.productCartItem);
 
                         $(".totalCartAmount").html(result.totalCartAmount);
@@ -390,6 +395,33 @@
            
         });
 
+    </script>
+
+
+
+
+    <script>
+        $(document).ready(function () {
+            $(document).on('keyup', ".search", function(e){
+                e.preventDefault();
+                var that = $(this);
+                var url = that.attr('data-url');
+                var q = that.val();
+                $.ajax({ 
+                    url: url,
+                    method: 'get',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        q : q
+                    },
+                    cache: false,
+                }).done(function(response) {
+                    that.closest('.container').find('.product-container').empty().append(response.view);
+                    var newRoute = '{{ route("search") }}';
+                    history.pushState({ path: newRoute }, '', newRoute + '?q=' + encodeURIComponent(q));
+                });
+            });
+        });
     </script>
 
 

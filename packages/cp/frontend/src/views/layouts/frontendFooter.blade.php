@@ -105,7 +105,13 @@
 
         <div class="w3-indigo py-2">
             <div class="text-center">
-                <span class="footer-copyright"> &copy; {{ date('Y')}} Copyright :  kdsbd Online All Rights Reserved. Developed By : <a class="text-white" href="https://a2sys.co/">a2sys.co</a></span>
+                @if(Agent::isDesktop())
+                     <span class="footer-copyright"> &copy; {{ date('Y')}} Copyright :  kdsbd Online All Rights Reserved. Developed By : <a class="text-white" href="https://a2sys.co/">a2sys.co</a></span>
+                @else
+                   <span class="footer-copyright"> &copy; {{ date('Y')}} Copyright :  kdsbd Online All Rights Reserved. 
+                    <br>
+                    Developed By : <a class="text-white" href="https://a2sys.co/">a2sys.co</a></span>
+                @endif
             </div>
         </div>
         <!-- End .footer-bottom -->

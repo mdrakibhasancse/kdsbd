@@ -236,14 +236,22 @@ class FrontendController extends Controller
                         'message' => 'item is added to cart!',
                         'totalCartItems' => $totalCartItems,
                         'totalCartAmount' => $totalCartAmount,
+                        
                         'view' => View('frontend::layouts.inc.headerCart', [
                             'collections' => $collections,
+                        ])->render(),
+
+                        'chekoutBtn' => View('frontend::layouts.inc.chekoutBtn', [
+                            // 'cart' =>  $cart,
+                            // 'product' =>  $product,
                         ])->render(),
 
                         'productCartItem' => View('frontend::welcome.includes.productCartItem', [
                             'cart' =>  $cart,
                             'product' =>  $product,
                         ])->render(),
+
+
                     ]);
                 }
         
@@ -291,6 +299,11 @@ class FrontendController extends Controller
                     'product' =>  $product,
                 ])->render(),
 
+                'chekoutBtn' => View('frontend::layouts.inc.chekoutBtn', [
+                    // 'cart' =>  $cart,
+                    // 'product' =>  $product,
+                ])->render(),
+
                 'checkoutItems' => View('frontend::welcome.includes.checkoutItems', [
                     'collections' => $collections,
                 ])->render(),
@@ -328,6 +341,11 @@ class FrontendController extends Controller
                     'product' => $product,
                 ])->render(),
 
+                'chekoutBtn' => View('frontend::layouts.inc.chekoutBtn', [
+                    // 'cart' =>  $cart,
+                    // 'product' =>  $product,
+                ])->render(),
+
                 'checkoutItems' => View('frontend::welcome.includes.checkoutItems', [
                     'collections' => $collections,
                 ])->render(),
@@ -338,9 +356,21 @@ class FrontendController extends Controller
 
     public function checkout()
     {
-        $data['collections'] = Cart::getCartItems();
-        $data['order'] = Auth::user()->orders()->first();  
-        return view('frontend::welcome.checkout', $data);
+        $collections = Cart::getCartItems();
+        $order = Auth::user()->orders()->first();  
+
+        $total_amount = 0;
+        foreach ($collections as $cart) {
+           $total_amount = $total_amount + ($cart->product->final_price * $cart->quantity);
+        }
+        
+        if($total_amount >= 1000){
+           return view('frontend::welcome.checkout', compact('collections','order'));
+        }else{
+            alert()->error('Orders below 1000tk are not accepted');
+            return redirect('/');
+        }
+        
     }
 
 
@@ -460,7 +490,7 @@ class FrontendController extends Controller
     }
 
 
-     public function sendOtpMatchUser(Request $request){
+    public function sendOtpMatchUser(Request $request){
 
         $cookie = $request->cookie('mobile_saved');
         if($cookie){
@@ -505,47 +535,85 @@ class FrontendController extends Controller
         ]);
 
         
-        $name = $request->cookie('area_name');
-        $area = BranchArea::where('name_en',  $name)->first();
 
-        $order = new Order();
-        $order->user_id = Auth::user()->id;
-        $order->branch_id = $area->branch_id;
-        $order->name = $request->name;
-        $order->mobile = $request->mobile;
-        $order->email = $request->email;
-        $order->address_title = $request->address_title;
-        $order->address_line = $request->address_line;
-        $order->area_name = $request->area_name;
-        $order->total_amount = totalCartAmount();
-        $order->pending_at = Carbon::now();
-        $order->addedby_id = Auth::user()->id;
-        $order->save();
-
-        $cardItems = Cart::where('user_id', Auth::user()->id)->get();
-
-        if ($cardItems) {
-            foreach ($cardItems as $cart) {
-                $orderItem = new OrderItem();
-                $orderItem->order_id = $order->id;
-                $orderItem->branch_id = $area->branch_id;
-                $orderItem->user_id = Auth::user()->id;
-                $orderItem->product_id = $cart->product_id;
-                $orderItem->product_name = $cart->product->name_en;
-                $orderItem->product_price = $cart->product->final_price;
-                $orderItem->quantity = $cart->quantity;
-                $orderItem->total_cost = $cart->product->final_price * $cart->quantity;
-                $orderItem->addedby_id = Auth::user()->id;
-                $orderItem->save();
-            }
+        $collections = Cart::getCartItems();
+        $total_amount = 0;
+        foreach ($collections as $cart) {
+           $total_amount = $total_amount + ($cart->product->final_price * $cart->quantity);
         }
 
-        Cart::where('user_id', Auth::user()->id)->delete();
-        alert()->success('Order Successfully');
-        return redirect()->back();
+        if($total_amount >= 1000){
+            $name = $request->cookie('area_name');
+            $area = BranchArea::where('name_en',  $name)->first();
+            $order = new Order();
+            $order->user_id = Auth::user()->id;
+            $order->branch_id = $area->branch_id;
+            $order->name = $request->name;
+            $order->mobile = $request->mobile;
+            $order->email = $request->email;
+            $order->address_title = $request->address_title;
+            $order->address_line = $request->address_line;
+            $order->area_name = $request->area_name;
+            $order->total_amount = totalCartAmount();
+            $order->pending_at = Carbon::now();
+            $order->addedby_id = Auth::user()->id;
+            $order->save();
+
+            $cardItems = Cart::where('user_id', Auth::user()->id)->get();
+
+            if ($cardItems) {
+                foreach ($cardItems as $cart) {
+                    $orderItem = new OrderItem();
+                    $orderItem->order_id = $order->id;
+                    $orderItem->branch_id = $area->branch_id;
+                    $orderItem->user_id = Auth::user()->id;
+                    $orderItem->product_id = $cart->product_id;
+                    $orderItem->product_name = $cart->product->name_en;
+                    $orderItem->product_price = $cart->product->final_price;
+                    $orderItem->quantity = $cart->quantity;
+                    $orderItem->total_cost = $cart->product->final_price * $cart->quantity;
+                    $orderItem->addedby_id = Auth::user()->id;
+                    $orderItem->save();
+                }
+            }
+
+            Cart::where('user_id', Auth::user()->id)->delete();
+            alert()->success('Order Successfully');
+            return redirect('/');
+        }else{
+            alert()->error('Orders below 1000tk are not accepted');
+            return redirect('/');
+        }
+
+
+       
     }
 
 
+    public function page($slug)
+    {
+        $data['page'] = Page::whereActive(true)->where('slug', $slug)->first();
+        return view('frontend::welcome.page', $data);
+    }
+
+
+
+    public function search(Request $request)
+    {
+        $q = $request->q;
+        $products = Product::where(function ($qq) use ($q) {
+            $qq->orWhere('name_en', 'like', "%" . $q . "%")
+                ->orWhere('name_bn', 'like', "%" . $q . "%");
+        })->paginate(12);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'view' => view('frontend::welcome.includes.productItems', ['products' => $products])->render(),
+            ]);
+        } else {
+            return view('frontend::welcome.search', ['products' => $products]);
+        }
+    }
 
     
     public function sitemap()
@@ -554,11 +622,7 @@ class FrontendController extends Controller
         return response()->view('frontend::welcome.sitemap')->header('Content-Type', 'text/xml');
     }
 
-    public function page($slug)
-    {
-        $data['page'] = Page::whereActive(true)->where('slug', $slug)->first();
-        return view('frontend::welcome.page', $data);
-    }
+    
 
     
 }

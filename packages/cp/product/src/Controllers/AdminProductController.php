@@ -452,6 +452,7 @@ class AdminProductController extends Controller
 
         $productCats = ProductCat::groupBy('product_category_id')->pluck('product_category_id');
        
+       
 
         foreach($productCats as $cat){
             $bc = BranchCat::where('branch_id', $branch->id)->where('category_id', $cat)->first();
@@ -464,7 +465,11 @@ class AdminProductController extends Controller
             }
         }
 
+
+
         $productSubcats = ProductSubcat::groupBy('product_subcategory_id')->pluck('product_subcategory_id');
+
+
 
         foreach($productSubcats as $subcat){
             $bsc = BranchSubcat::where('branch_id', $branch->id)->where('subcategory_id', $subcat)->first();
@@ -803,6 +808,7 @@ class AdminProductController extends Controller
 
         $product->categories()->detach();
         $product->subcategories()->detach();
+
         if ($request->categories) {
             foreach ($request->categories as $cat) {
                 $c = ProductCat::where('product_category_id', $cat)->where('product_id', $product->id)->first();
@@ -977,7 +983,7 @@ class AdminProductController extends Controller
 
 
 
-      public function productAddStock(Request $request){
+    public function productAddStock(Request $request){
 
         $stock = BranchProduct::where('branch_id', $request->branch)->where('product_id', $request->product)->first();
         if(request()->ajax())
@@ -1022,6 +1028,10 @@ class AdminProductController extends Controller
             $order->pending_at = Carbon::now();
             $order->save();
         }elseif ($request->order_status == 'confirmed') {
+            $order->order_status = $request->order_status;
+            $order->confirmed_at = Carbon::now();
+            $order->save();
+        } elseif ($request->order_status == 'delivered') {
             $order->order_status = $request->order_status;
             $order->delivered_at = Carbon::now();
             $order->save();
@@ -1105,8 +1115,6 @@ class AdminProductController extends Controller
 
     public function updateQty(Request $request)
     {
-      
-        
         $item = OrderItem::where('id', $request->item)->update(['quantity' => $request->new_qty]);
         $item  = OrderItem::find($request->item);
         $item->total_cost =  $item->product_price *  $item->quantity;
@@ -1135,7 +1143,8 @@ class AdminProductController extends Controller
         $type = $request->type;
         $order = Order::where('id',$request->order)->first();
         $branch = $order->branch;
-        $products =  $branch->products()->paginate(30);
+        $products =  $branch->products()->paginate(10);
+        $products->setPath(route('admin.branchProductSearchAjax', ['branch' => $branch->id, 'order' => $order->id]));
         if ($type == 'product-modal-open') {
             if ($request->ajax()) {
                 return Response()->json(
@@ -1166,7 +1175,11 @@ class AdminProductController extends Controller
             ->orWhere('unit', 'like', '%' . $q . '%')
             ->orWhere('final_price', 'like', '%' . $q . '%');
         })
-        ->paginate(30);
+        ->paginate(10);
+        // ->setPath("admin/branch/product/search/ajax/{$branch->id}/order/{$order->id}");
+
+        
+        
         $view = view('product::admin.orders.ajax.searchProducts', compact('branch', 'products', 'q', 'order'))->render();
         
         return response()->json([
@@ -1251,7 +1264,31 @@ class AdminProductController extends Controller
 
 
     public function branchWiseOrderManage(Branch $branch){
-        $orders = $branch->orders()->paginate(30);
+        $orders = $branch->orders()->latest()->paginate(30);
         return view('product::admin.branches.branchWiseOrderList', compact('orders','branch'));
+    }
+
+
+    public function typeOfOrder(Request $request)
+    {
+        $branch = Branch::where('id', $request->branch_id)->first();
+
+        if($branch){
+           $orders =$branch->orders()->where(function ($q) use ($request) {
+            if ($request->status) {
+                $q->where('order_status', $request->status);
+            }
+            })->latest()->paginate(30);
+            return view('product::admin.branches.branchWiseOrderList', compact('orders' , 'branch'));
+        }else{
+            $orders = Order::where(function ($q) use ($request) {
+            if ($request->status) {
+                $q->where('order_status', $request->status);
+            }
+            })->latest()->paginate(30);
+            
+            return view('product::admin.orders.orderList', compact('orders'));
+        }
+        
     }
 }

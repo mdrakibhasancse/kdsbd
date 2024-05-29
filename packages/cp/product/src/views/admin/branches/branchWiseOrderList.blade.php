@@ -11,14 +11,27 @@
         <div class="col-md-11 mx-auto">
     
             <div class="card w3-round shadow-lg">
-                <div class="card-header pl-2 py-2">
-                    <h3 class="card-title w3-small text-bold text-muted"><i class="fas fa-th text-primary pt-1"></i> All Orders ({{ $branch->name_en}})</h3>
-                    <div class="card-tools">
-                    </div>
+                <div class="card-header pl-2 py-1 d-flex">
+                    <h3 class="card-title w3-small text-bold text-muted pt-2"><i class="fas fa-th text-primary pt-1"></i> All Orders ({{ $branch->name_en}})</h3>
+                    &nbsp;&nbsp;&nbsp;
+                    <form action="{{ route('admin.typeOfOrder')}}" method="get">
+                      <input type="hidden" value="{{ $branch->id }}" name="branch_id">
+                      <div class="btn-group">
+                        <select name="status" id="status" class="round-0">
+                            <option value="">order status</option>
+                            @foreach (config('parameter.order_status') as $item)
+                                <option value="{{ $item }}" {{ $item == request()->status ? 'selected' : ' '}}>{{ ucfirst($item) }}</option>
+                            @endforeach
+                        </select>
+                        <button type="submit" class="btn text-white w3-indigo"><i class="fa fa-search"></i></button>
+                      </div> 
+                    </form>
+                  
                 </div>
                 <div class="card-body bg-light px-0 pb-0 pt-2">
                     <div class="col-sm-12">
-                        <div class="table-responsive table-responsive-sm">
+                         @include('product::admin.orders.includes.orderListPart')
+                        {{-- <div class="table-responsive table-responsive-sm">
                           <table class="table-striped table-bordered table-hover table-sm mb-1 table">
                             <thead class="text-muted thead-light">
                               <tr>
@@ -65,7 +78,7 @@
                         </div>
                         <div class="w3-small float-right pt-1">
                             {!! $orders->links() !!}
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
 

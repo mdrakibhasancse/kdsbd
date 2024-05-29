@@ -11,11 +11,10 @@
                    
                         <form action="#" method="get">
                             <div class="header-search-wrapper">
-                                <input type="search" class="form-control" name="q" id="q" placeholder="I'm searching for..." required>
+                                <input type="search" class="form-control search" data-url="{{ route('search') }}" name="q" id="q" value="{{ request()->q}}" placeholder="I'm searching for..." required>
                                 <!-- End .select-custom -->
                                 <button class="btn icon-magnifier" title="search" type="submit"></button>
                             </div>
-                            <!-- End .header-search-wrapper -->
                         </form>
                     </div>
                    
@@ -94,19 +93,27 @@
                             </div>
                             <!-- End .dropdown-cart-total -->
 
-                            @if(Auth::check())
-                            <div class="dropdown-cart-action">
-                                <a href="{{route('checkout')}}" class="btn w3-indigo btn-block">Checkout</a>
+                            <div class="chekoutBtn">
+                                @include('frontend::layouts.inc.chekoutBtn')
                             </div>
-                             @else
-                               <div class="dropdown-cart-action-">
-                                   <a  class="btn w3-indigo btn-block" data-target="#modal_register"  data-toggle="modal" >
-                                        Checkout
-                                    </a>
-                               </div>
 
-                            
-                            @endif
+                             <div class="">
+                               <a class="btn w3-light-gray rounded my-3 py-1 text-center d-block w3-small">
+                                    <strong>
+                                    <span>Delivery in 100 min</span>
+                                    </strong>
+                                </a>
+
+                                <a class="btn w3-light-gray rounded my-3 py-1 text-center d-block w3-small">
+                                    <strong>
+                                    <span>Delivery time 9am to 6pm</span>
+                                    </strong>
+                                </a>
+
+                                <a href="tel:{{ $ws->contact_mobile }}" class="btn rounded my-1 py-1 text-center d-block text-white w3-deep-orange w3-small">
+                                Call For Order
+                                <i class="icon-phone-2"></i>&nbsp;{{ $ws->contact_mobile }}</a>
+                            </div>
                             <!-- End .dropdown-cart-total -->
                         </div>
                         <!-- End .dropdownmenu-wrapper -->
@@ -218,17 +225,30 @@
                                 <span class="cart-total-price float-right totalCartAmount">{{number_format(totalCartAmount(), 2)}} tk</span>
                             </div>
                             <!-- End .dropdown-cart-total -->
-                            @if(Auth::check())
-                            <div class="dropdown-cart-action">
-                               	<a href="{{route('checkout')}}" class="btn btn-dark btn-block">Checkout</a>
+
+                            <div class="chekoutBtn">
+                                @include('frontend::layouts.inc.chekoutBtn')
                             </div>
-                            @else
-                               <div class="dropdown-cart-action">
-                                <a  class="btn w3-indigo btn-block" data-target="#modal_register"  data-toggle="modal" >
-                                        Checkout
+
+                            <div class="">
+                               <a class="btn w3-light-gray rounded my-3 py-1 text-center d-block w3-small">
+                                    <strong>
+                                    <span>Delivery in 100 min</span>
+                                    </strong>
                                 </a>
-                               </div>
-                            @endif
+
+                                <a class="btn w3-light-gray rounded my-3 py-1 text-center d-block w3-small">
+                                    <strong>
+                                    <span>Delivery time 9am to 6pm</span>
+                                    </strong>
+                                </a>
+
+                                <a href="tel:{{ $ws->contact_mobile }}" class="btn rounded my-1 py-1 text-center d-block text-white w3-deep-orange w3-small">
+                                Call For Order
+                                <i class="icon-phone-2"></i>&nbsp;{{ $ws->contact_mobile }}</a>
+                            </div>
+                            
+                           
                             <!-- End .dropdown-cart-total -->
                         </div>
                         <!-- End .dropdownmenu-wrapper -->
@@ -242,3 +262,4 @@
     </div>
 </header>
 <!-- End .header -->
+

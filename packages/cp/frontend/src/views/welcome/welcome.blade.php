@@ -18,6 +18,8 @@
     </style>
 @endpush
 @section('content')
+
+
     <section class="intro-section">
         <div class="container">
             <div class="row">
@@ -29,45 +31,11 @@
                             <img class="slide-bg" src="{{ route('imagecache', ['template' => 'cplg', 'filename' => $slider->fi_desktop()]) }}" alt="slider image">
                             <div class="banner-layer banner-layer-middle banner-layer-right">
                                 <div class="appear-animate" data-animation-name="rotateInUpLeft">
-
-                                    {{-- <h2 class="font1 ls-10 text-uppercase text-right w3-text-deep-orange m-b-4">{{$slider->title}}
-                                    </h2> --}}
-                                    {{-- <div class="coupon-sale-text">
-                                        <h4 class="m-b-2 font1 d-block text-white bg-dark skew-box">Exclusive COUPON
-                                        </h4>
-                                        <h5 class="mb-0 font1 d-inline-block bg-dark skew-box"><i class="text-dark ls-0">UP
-                                                TO</i><b class="text-white">$100</b><sub class="text-dark">OFF</sub>
-                                        </h5>
-                                    </div> --}}
-
-                                    {{-- <a href="" class="btn btn-light btn-lg ls-10 w3-text-deep-orange">View All
-                                        Now</a> --}}
                                 </div>
                             </div>
-                            {{-- <div class="banner-layer banner-layer-bottom banner-layer-right">
-                                <p class="ls-0 mb-0">* Only 200 Available</p>
-                            </div> --}}
                         </div>
                         @endforeach
-                        {{-- <div class="home-slide home-slide-2 banner">
-                            <img class="slide-bg" src="{{asset("/frontend/assets/images/demoes/demo22/slider/home_slide2.jpg")}}" alt="slider image" width="772" height="434">
-                            <div class="banner-layer banner-layer-middle banner-layer-left">
-                                <div class="appear-animate" data-animation-name="rotateInUpLeft">
-                                    <h2 class="font1 ls-10 text-uppercase m-b-4">Top Brands
-                                        <br>Smartphones</h2>
-                                    <div class="coupon-sale-text d-flex flex-column align-items-start">
-                                        <h4 class="m-b-2 font1 d-block text-uppercase text-white bg-dark skew-box">
-                                            Starting From
-                                        </h4>
-                                        <h5 class="mb-0 font1 d-inline-block bg-dark skew-box"><b class="text-white">$199</b>
-                                        </h5>
-                                    </div>
-
-                                    <a href="demo22-shop.html" class="btn btn-light btn-lg ls-10">View All
-                                        Now</a>
-                                </div>
-                            </div>
-                        </div> --}}
+                       
                     </div>
                 </div>
                 @else
@@ -100,9 +68,7 @@
                                 <a href="demo22-product.html">
                                     <img src="{{asset("/frontend/assets/images/demoes/demo22/products/featured-sale.jpg")}}" width="217" height="217" alt="product">
                                 </a>
-                                {{-- <div class="label-group">
-                                    <span class="product-label label-sale">- 34%</span>
-                                </div> --}}
+                               
                                 <div class="product-countdown-container">
                                     <span class="product-countdown-title">offer ends in:</span>
                                     <div class="product-countdown countdown-compact" data-until="2021, 10, 5" data-compact="true">
@@ -162,80 +128,6 @@
     </section>
 
    
-
-    {{-- <div class="container py-4">
-        <div class="row">
-            <div class="col-6 col-lg-2 mb-1">
-              <div class="info-box w3-white w3-border w3-border-indigo w3-hover-border-green w3-round-large py-1 px-1">
-                <i class="icon-shipping text-primary"></i>
-                <div class="info-box-content">
-                    <h4 class="font1 line-height-1 ls-10">FREE SHIPPING </h4>
-                </div>
-                <!-- End .info-box-content -->
-               </div>
-            </div>
-            <!-- End .info-box -->
-            <div class="col-6 col-lg-2 mb-1">
-                <div class="info-box w3-white w3-border w3-border-indigo w3-hover-border-green w3-round-large py-1 px-1">
-                    <i class="icon-money text-primary"></i>
-                    <div class="info-box-content">
-                        <h4 class="font1 line-height-1 ls-10">MONEY BACK GUARANTEE</h4>
-                    </div>
-                    <!-- End .info-box-content -->
-                </div>
-            </div>
-
-            <div class="col-6 col-lg-2 mb-1">
-                <div class="info-box w3-white w3-border w3-border-indigo w3-hover-border-green w3-round-large py-1 px-1">
-                    <i class="icon-support text-primary"></i>
-
-                    <div class="info-box-content">
-                        <h4 class="font1 line-height-1 ls-10">ONLINE SUPPORT</h4>
-                    </div>
-                    <!-- End .info-box-content -->
-                </div>
-            </div>
-            <!-- End .info-box -->
-            <div class="col-6 col-lg-2 mb-1">
-                <div class="info-box w3-white w3-border w3-border-indigo w3-hover-border-green w3-round-large py-1 px-1">
-                    <i class="icon-secure-payment text-primary"></i>
-
-                    <div class="info-box-content">
-                        <h4 class="font1 line-height-1 ls-10">SECURE PAYMENT</h4>
-                    </div>
-                    <!-- End .info-box-content -->
-                </div>
-            </div>
-            <!-- End .info-box -->
-
-            <div class="col-6 col-lg-2 mb-1">
-                <div class="info-box w3-white w3-border w3-border-indigo w3-hover-border-green w3-round-large py-1 px-1">
-                    <i class="icon-secure-payment text-primary"></i>
-
-                    <div class="info-box-content">
-                        <h4 class="font1 line-height-1 ls-10">SECURE PAYMENT</h4>
-                    </div>
-                    <!-- End .info-box-content -->
-                </div>
-            </div>
-            <!-- End .info-box -->
-
-            <div class="col-6 col-lg-2 mb-1">
-                <div class="info-box w3-white w3-border w3-border-indigo w3-hover-border-green w3-round-large py-1 px-1">
-                    <i class="icon-secure-payment text-primary"></i>
-
-                    <div class="info-box-content">
-                        <h4 class="font1 line-height-1 ls-10">SECURE PAYMENT</h4>
-                    </div>
-                    <!-- End .info-box-content -->
-                </div>
-            </div>
-            <!-- End .info-box -->
-
-            
-        </div>
-    </div> --}}
-
     
 
     @foreach ($categories as $category)
@@ -249,7 +141,6 @@
                     <div class="products-slider 5col owl-carousel owl-theme owl-nav-outisde show-nav-hover nav-image-center custom-nav" data-owl-options="{
                         'margin': 0,
                         'nav': true
-                        {{-- 'loop': true --}}
                     }">
 
                  
@@ -263,40 +154,8 @@
             </div>
         </section>
 
-    @endforeach
+    @endforeach 
     <br>
-
-
-    
-
-
-    {{-- <section class="brands-section pt-5">
-        <div class="container pb-3">
-            <h2 class="section-title line-height-1 ls-10 pb-4 mb-5 appear-animate" data-animation-name="fadeInUpShorter" data-animation-delay="200" data-animation-duration="400">
-                Top Brands
-            </h2>
-            <div class="brands-slider owl-carousel owl-theme images-center appear-animate" data-animation-name="fadeIn" data-animation-delay="400" data-owl-options="{
-                'margin': 30,
-                'responsive': {
-                    '991': {
-                        'items': 4
-                    },
-                    '1200': {
-                        'items': 5
-                    }
-                }
-            }">
-                <img src="{{asset("/frontend/assets/images/demoes/demo22/brands/brand1.png")}}" width="200" height="50" alt="brand">
-                <img src="{{asset("/frontend/assets/images/demoes/demo22/brands/brand2.png")}}" width="200" height="50" alt="brand">
-                <img src="{{asset("/frontend/assets/images/demoes/demo22/brands/brand3.png")}}" width="200" height="50" alt="brand">
-                <img src="{{asset("/frontend/assets/images/demoes/demo22/brands/brand4.png")}}" width="200" height="50" alt="brand">
-                <img src="{{asset("/frontend/assets/images/demoes/demo22/brands/brand5.png")}}" width="200" height="50" alt="brand">
-            </div>
-            <!-- End .brands-slider -->
-        </div>
-    </section> --}}
-
-
 
 @endsection
 
@@ -342,6 +201,8 @@
                 data   : { qty: val },
                 success: function(result){
                     $(".headerCart").empty().append(result.view);
+                    $(".chekoutBtn").empty().append(result.chekoutBtn);
+                    console.log(result.chekoutBtn);
                     that.closest('.product-details').find(".productCartItem").empty().append(result.productCartItem);
                     $(".totalCartAmount").html(result.totalCartAmount);
                     $(".totalCartItems").html(result.totalCartItems);
@@ -390,6 +251,8 @@
                 data   : { new_qty : new_qty},
                 success: function(result){
                     $(".headerCart").empty().append(result.view);
+                    $(".chekoutBtn").empty().append(result.chekoutBtn);
+                    console.log(result.chekoutBtn);
                     $(".checkoutItems").empty().append(result.checkoutItems);
                     that.closest('.product-details').find(".productCartItem").empty().append(result.productCartItem);
                     $(".totalCartAmount").html(result.totalCartAmount);

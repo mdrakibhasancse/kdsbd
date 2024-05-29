@@ -445,6 +445,7 @@
                 data   : { qty: val },
                 success: function(result){
                     $(".headerCart").empty().append(result.view);
+                    $(".chekoutBtn").empty().append(result.chekoutBtn);
                     that.closest('.product-details').find(".productCartItem").empty().append(result.productCartItem);
                     $(".totalCartAmount").html(result.totalCartAmount);
                     $(".totalCartItems").html(result.totalCartItems);
@@ -493,6 +494,7 @@
                 data   : { new_qty : new_qty},
                 success: function(result){
                     $(".headerCart").empty().append(result.view);
+                    $(".chekoutBtn").empty().append(result.chekoutBtn);
                     $(".checkoutItems").empty().append(result.checkoutItems);
                     that.closest('.product-details').find(".productCartItem").empty().append(result.productCartItem);
                     $(".totalCartAmount").html(result.totalCartAmount);

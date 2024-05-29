@@ -21,19 +21,12 @@
                             <a href="{{route('user.dashboard')}}">My Dashboard</a>
                         </li>
 
-                        {{-- @else
-                        <li>
-                            <a href="{{ route('registerModal', ['register-modal-open']) }}" class=" register-modal-lg">Checkout</a>
-                        </li>
-                        @endif --}}
-
                             @if(Auth::user()->hasRole('admin'))
                                 <li><a href="{{ route('admin.dashboard')}}" >
                                 Admin Dashboard
                                 </a>
                                 </li>
                             @endif
-
 
 
                             <li>
@@ -44,9 +37,9 @@
                                 </form>
                             </li>
 
-                            <li>
+                            {{-- <li>
                                 <a href="forgot-password.html">Forgot Password</a>
-                            </li>
+                            </li> --}}
 
 
                         @else
