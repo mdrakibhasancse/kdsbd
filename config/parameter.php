@@ -32,9 +32,7 @@ return [
         'other',
     ],
 
-    'themes' => [
-        1,2
-    ],
+    
 
 ];
 

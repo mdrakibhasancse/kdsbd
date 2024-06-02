@@ -19,12 +19,15 @@ use Cp\Product\Models\Payment;
 use Cp\Product\Models\ProductCat;
 use Cp\Product\Models\ProductSubcat;
 use Cp\Product\Models\BranchProduct;
+use Cp\Product\Models\PosModule;
+use Cp\Product\Models\ModuleItem;
 use Cp\Product\Models\Tag;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -703,6 +706,10 @@ class AdminProductController extends Controller
 
         $product->save();
 
+        // Cache::forget('products');
+        // $products = Product::all(); 
+        // Cache::put('products', $products, null); 
+
         if ($request->categories) {
             foreach ($request->categories as $cat) {
                 $c = ProductCat::where('product_category_id', $cat)->where('product_id', $product->id)->first();
@@ -804,6 +811,10 @@ class AdminProductController extends Controller
         }
 
         $product->save();
+
+        // Cache::forget('products');
+        // $products = Product::all(); 
+        // Cache::put('products', $products, null); 
 
 
         $product->categories()->detach();
@@ -1176,10 +1187,7 @@ class AdminProductController extends Controller
             ->orWhere('final_price', 'like', '%' . $q . '%');
         })
         ->paginate(10);
-        // ->setPath("admin/branch/product/search/ajax/{$branch->id}/order/{$order->id}");
-
-        
-        
+       
         $view = view('product::admin.orders.ajax.searchProducts', compact('branch', 'products', 'q', 'order'))->render();
         
         return response()->json([
@@ -1290,5 +1298,258 @@ class AdminProductController extends Controller
             return view('product::admin.orders.orderList', compact('orders'));
         }
         
+    }
+
+
+    //pos system
+
+    public function pos(Request $request, Branch $branch){
+
+        $activeModule = $branch->moduleActive();
+
+        if(!$activeModule)
+        {
+            $inactiveModule = $branch->moduleInactiveLastest();
+            if($inactiveModule)
+            {
+                $inactiveModule->active = true;
+                $inactiveModule->save();
+            }
+            else
+            {
+                $activeModule = $branch->modules()->create([
+                   'addedby_id'=> Auth::id(),
+                   'active'=> true
+                ]);
+            }
+
+        }
+
+        if ($request->ajax()) {
+            $products =  $branch->products()->simplePaginate(12);
+            return Response()->json([
+                'success' => true,
+                'view' => View('product::admin.pos.includes.productItems', [
+                    'products' => $products,
+                    'module' => $activeModule,
+                    'branch' => $branch
+                ])->render(),
+                'next_page_url' => $products->nextPageUrl()
+            ]);
+        }     
+        
+        $products = $branch->products()->simplePaginate(12);
+        return view('product::admin.pos.posIndex' , compact('products', 'branch'));
+
+    }
+
+
+    public function PosProductSearch(Request $request)
+    {
+        $branch = Branch::find($request->branch);
+        $q = $request->q;
+        $products = $branch->products()
+        ->where(function($query) use($q) {
+            $query->orWhere('name_en', 'like', '%' . $q . '%')
+            ->orWhere('unit', 'like', '%' . $q . '%')
+            ->orWhere('final_price', 'like', '%' . $q . '%');
+        })->paginate(100);
+     
+        return Response()->json([
+            'success' => true,
+            'view' => View('product::admin.pos.includes.productItems', [
+                'products' => $products,
+                'branch' => $branch,
+                'q' => $q 
+            ])->render(),
+            'next_page_url' => $products->nextPageUrl()
+        ]);
+    }
+
+
+
+    public function posModuleAnother(Request $request, Branch $branch)
+    {
+        $branch->modules()
+        ->where('addedby_id', Auth::id())
+        ->update(['active'=> false]);
+
+        $branch->modules()->create([
+            'addedby_id'=> Auth::id(),
+            'active'=>true
+        ]);
+
+        return redirect()->route('admin.pos', $branch);
+    }
+
+
+    public function posModuleMakeActive(Request $request, Branch $branch, PosModule $module)
+    {
+        $branch->modules()
+        ->where('addedby_id', Auth::id())
+        ->update(['active'=>false]);
+        $module->active = true;
+        $module->save();
+        return redirect()->route('admin.pos', $branch);
+    }
+
+
+
+    public function posModuleDelete(Request $request, Branch $branch, PosModule $module)
+    {
+
+        
+        // if($module->modules->count())
+        // {
+        //     foreach ($module->moduleItems as $item)
+        //     {
+                
+        //     }
+        // }
+
+        $module->moduleItems()->delete();
+        $module->delete();
+
+        return redirect()->route('admin.pos',$branch);
+    }
+
+
+
+    public function addModuleItem(Request $request)
+    {
+        
+        $qty = $request->quantity;
+        $moduleId = $request->module;
+        $branchId = $request->branch;
+        $productId = $request->product_id;
+        $module = PosModule::where('id', $moduleId)->first();
+        $product = Product::where('id', $productId)->first();
+        $bp = BranchProduct::where('branch_id', $branchId)->where('product_id', $productId)->first();
+     
+        if($request->ajax())
+        {
+            $moduleItem = ModuleItem::where('pos_module_id', $moduleId)->where('branch_id', $branchId)->where('branch_product_id', $bp->id)->first();
+            
+            if ($moduleItem) {
+                $moduleItem->quantity   = $moduleItem->quantity + $qty;
+                $moduleItem->total_price  = $moduleItem->unit_price * $moduleItem->quantity;
+                $moduleItem->save();
+            } else {
+                $moduleItem  = new ModuleItem();
+                $moduleItem->branch_id  = $branchId;
+                $moduleItem->branch_product_id = $bp->id;
+                $moduleItem->pos_module_id = $moduleId;
+                $moduleItem->quantity   = $qty;
+                $moduleItem->product_name  = $product->name_en;
+                $moduleItem->unit_price  = $product->final_price;
+                $moduleItem->total_price  =  $product->final_price;
+                $moduleItem->addedby_id = Auth::id();
+                $moduleItem->save();
+            }
+
+            $subTotal = $module->moduleItemSubTotal();
+            return Response()->json([
+                'success' => true,
+                'view' => View('product::admin.pos.includes.moduleItems', [
+                    'module' => $module,
+                    'subTotal' => $subTotal,
+                ])->render(),
+            ]);
+                
+               
+        }
+
+        return back();
+    }
+
+
+    public function moduleDiscountAmount(Request $request){
+         
+        $moduleId = $request->module;
+        $discountAmount = $request->q;
+        $module = PosModule::where('id', $moduleId)->first();
+        $subTotal = $module->moduleItemSubTotal();
+        $grandTotal = $subTotal - $discountAmount;
+        
+        if($request->ajax())
+        {
+            return Response()->json([
+                'success' => true,
+                'discountAmount' => $discountAmount,
+                'grandTotal' => $grandTotal,
+            ]);
+        }else{
+          return back();
+        }
+
+    }
+
+
+    public function modulePaidAmount(Request $request){
+
+        $moduleId = $request->module;
+        $discountAmount = $request->q;
+        $module = PosModule::where('id', $moduleId)->first();
+        $subTotal = $module->moduleItemSubTotal();
+        $grandTotal = $subTotal - $discountAmount;
+        
+        if($request->ajax())
+        {
+            return Response()->json([
+                'success' => true,
+                'discountAmount' => $discountAmount,
+                'grandTotal' => $grandTotal,
+            ]);
+        }else{
+          return back();
+        }
+
+    }
+
+
+
+    public function moduleUpdateItemQty(Request $request)
+    {
+        $moduleId = $request->module;
+        $module = PosModule::where('id', $moduleId)->first();
+        $item = ModuleItem::where('id', $request->item)->update(['quantity' => $request->new_qty]);
+        $item  = ModuleItem::find($request->item);
+        $item->total_price =  $item->unit_price *  $item->quantity;
+        $item->save();
+
+        $subTotal = $module->moduleItemSubTotal();
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => true,
+                'view' => View('product::admin.pos.includes.moduleItems', [
+                  'module' => $module,
+                  'subTotal' => $subTotal,
+                ])->render(),
+            ]);
+        }else{
+          return back();
+        }
+    }
+
+
+
+    public function moduleItemDelete(Request $request)
+    {
+        $item = ModuleItem::find($request->item);
+        $item->delete();
+        $moduleId = $request->module;
+        $module = PosModule::where('id', $moduleId)->first();
+        $subTotal = $module->moduleItemSubTotal();
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => true,
+                'view' => View('product::admin.pos.includes.moduleItems', [
+                  'module' => $module,
+                  'subTotal' => $subTotal,
+                ])->render(),
+            ]);
+        }else{
+          return back();
+        }
     }
 }

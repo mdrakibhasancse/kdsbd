@@ -320,4 +320,68 @@ Route::group(['middleware' => ['web', 'auth', 'role:admin'], 'prefix' => 'admin'
     ]);
 
 
+    //pos system
+
+    Route::group(['prefix' => 'pos'], function () {
+
+        Route::get('branch/{branch}/module', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@pos',
+            'as' => 'admin.pos'
+        ]);
+
+
+        Route::get('product/search/ajax/branch/{branch}', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@PosProductSearch',
+            'as' => 'admin.PosProductSearch'
+        ]);
+
+
+        Route::get('branch/{branch}/another/module', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@posModuleAnother',
+            'as' => 'admin.posModuleAnother'
+        ]);
+
+        Route::get('branch/{branch}/module/{module}/make/active', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@posModuleMakeActive',
+            'as' => 'admin.posModuleMakeActive'
+        ]);
+
+        Route::get('branch/{branch}/module/{module}/delete', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@posModuleDelete',
+            'as' => 'admin.posModuleDelete'
+        ]);
+
+        Route::post('add/module/item/{module}/branch/{branch}', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@addModuleItem',
+            'as' => 'admin.addModuleItem'
+        ]);
+
+
+        Route::get('module/{module}/update/item/{item}/quantity', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@moduleUpdateItemQty',
+            'as' => 'admin.moduleUpdateItemQty'
+        ]);
+
+
+        Route::get('module/{module}/item/{item}/delete', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@moduleItemDelete',
+            'as' => 'admin.moduleItemDelete'
+        ]);
+
+
+        Route::get('module/discount/amount/{module}', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@moduleDiscountAmount',
+            'as' => 'admin.moduleDiscountAmount'
+        ]);
+
+
+        Route::get('module/paid/amount/{module}', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@modulePaidAmount',
+            'as' => 'admin.modulePaidAmount'
+        ]);
+
+    });
+
+
+
 });

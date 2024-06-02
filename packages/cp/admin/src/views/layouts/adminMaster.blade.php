@@ -36,7 +36,11 @@
 
 </head>
 {{-- <body class="hold-transition sidebar-mini"> --}}
-<body class="sidebar-mini hold-transition  layout-fixed layout-navbar-fixed text-sm">
+
+
+  
+<body class="sidebar-mini hold-transition layout-fixed layout-navbar-fixed text-sm
+{{ str_contains(url()->current(), 'admin/pos') ? 'sidebar-collapse' : '' }} ">
 <!-- Site wrapper -->
 <div class="wrapper">
   @include('admin::layouts.adminHeader')

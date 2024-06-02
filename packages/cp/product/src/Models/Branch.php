@@ -4,10 +4,12 @@ namespace Cp\Product\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Branch extends Model
 {
     use HasFactory;
+
 
     public function division()
     {
@@ -51,4 +53,37 @@ class Branch extends Model
     {
         return $this->hasMany(Order::class, 'branch_id');
     }
+
+
+    public function modules()
+    {
+        return $this->hasMany(PosModule::class, 'branch_id');
+    }
+ 
+
+    public function saleModuleAuth()
+    {
+        return $this->modules()
+        ->where('addedby_id', Auth::id())
+        ->get();
+    }
+    
+
+    public function moduleActive()
+    {
+        return $this->modules()
+        ->whereActive(1)
+        ->where('addedby_id', Auth::id())
+        ->first();
+    }
+
+    public function moduleInactiveLastest()
+    {
+        return $this->modules()
+        ->whereActive(0)
+        ->where('addedby_id', Auth::id())
+        ->latest()
+        ->first();
+    }
+
 }

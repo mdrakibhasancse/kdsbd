@@ -79,12 +79,12 @@
                             </figure>
                             <div class="product-details">
                                 <h3 class="product-title">
-                                    <a href="demo22-product.html">1080p Wifi IP Camera</a>
+                                    <a href="">1080p Wifi IP Camera</a>
                                 </h3>
 
                                 <div class="price-box">
-                                    <span class="old-price">$596.00</span>
-                                    <span class="product-price">$299.00</span>
+                                    {{-- <span class="old-price">tk. 15296.00</span> --}}
+                                    <span class="product-price">tk. 15299.00</span>
                                 </div>
                                 <!-- End .price-box -->
                             </div>
@@ -109,13 +109,13 @@
                             </figure>
                             <div class="product-details">
                                 <h3 class="product-title">
-                                    <a href="demo22-product.html">HD Camera</a>
+                                    <a href="">HD Camera</a>
                                 </h3>
 
 
                                 <div class="price-box">
-                                    <span class="old-price">$299.00</span>
-                                    <span class="product-price">$199.00</span>
+                                    {{-- <span class="old-price">tk. 15299.00</span> --}}
+                                    <span class="product-price">tk. 15299.00</span>
                                 </div>
                                 <!-- End .price-box -->
                             </div>

@@ -30,11 +30,12 @@
                      <a href="{{ route('admin.branchWiseProductManage', $branch)}}" class="btn btn-outline-primary mr-1 my-1 rounded btn-sm {{ str_contains(url()->current(), 'product/manage') ? 'active' : '' }}">
                     <i class="fas fa-plus-square"></i> Product Manage</a>
                     
-                    {{-- <a class="btn btn-outline-primary mr-1 my-1 rounded btn-sm " href="http://cp.test/my/blog-details/2/type/edit"><i class="fas fa-cart-plus"></i>
-                        Order Manage</a> --}}
+                    <a class="btn btn-outline-primary mr-1 my-1 rounded btn-sm {{ str_contains(url()->current(), 'order/manage') ? 'active' : '' }}" href="{{ route('admin.branchWiseOrderManage', $branch)}}"><i class="fas fa-cart-plus"></i> Order Manage</a>
 
                     <a class="btn btn-outline-primary mr-1 my-1 rounded btn-sm {{ str_contains(url()->current(), 'branch/edit') ? 'active' : '' }}" href="{{route('admin.branchEdit', $branch)}}"><i class="fas fa-edit"></i>
                         Edit Branch</a>
+
+                  
                 </div>
             </div>
 

@@ -37,14 +37,9 @@
                                 </form>
                             </li>
 
-                            {{-- <li>
-                                <a href="forgot-password.html">Forgot Password</a>
-                            </li> --}}
-
-
                         @else
                         <li>
-                            <a class="btn w3-indigo btn-block" data-target="#modal_register"  data-toggle="modal" >
+                            <a class="text-white font-weight-bold" data-target="#modal_register"  data-toggle="modal">
                                 Checkout
                             </a>
                         </li>
