@@ -5,6 +5,7 @@
             <th scope="col" width="60">Action</th>
             <th scope="col">Name English</th>
             <th scope="col">Name (বাংলা)</th>
+            <th scope="col">Product Code</th>
             <th scope="col">Price</th>
             <th scope="col">Image</th>
             <th scope="col">Status</th>
@@ -38,8 +39,9 @@
 
                 <td>{{ Str::limit($product->name_en, 30) }}</td>
                 <td>{{ Str::limit($product->name_bn, 30) }}</td>
-                 <td>{{ $product->price }}</td>
-                 <td>
+                <td>{{ $product->product_code ?? '' }}</td>
+                <td>{{ $product->price }}</td>
+                <td>
                     <img width="30px" height="20px"src="{{ route('imagecache', ['template' => 'sbixs', 'filename' => $product->fi()]) }}"
                     alt="">
                 </td>

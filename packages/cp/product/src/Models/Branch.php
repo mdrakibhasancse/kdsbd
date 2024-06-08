@@ -38,6 +38,14 @@ class Branch extends Model
     }
 
 
+    public function activeProducts()
+    {
+        return $this->belongsToMany(Product::class, 'branch_products', 'branch_id', 'product_id')
+        ->withPivot('quick_pos')
+        ->wherePivot('quick_pos', true);
+    }
+
+
     public function categories()
     {
         return $this->belongsToMany(ProductCategory::class, 'branch_cats', 'branch_id', 'category_id');

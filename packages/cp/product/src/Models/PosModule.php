@@ -14,6 +14,11 @@ class PosModule extends Model
         'active',
     ];
 
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
     public function moduleItems()
     {
     	return $this->hasMany(ModuleItem::class, 'pos_module_id');

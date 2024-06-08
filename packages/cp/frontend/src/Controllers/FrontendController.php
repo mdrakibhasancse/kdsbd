@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use GuzzleHttp\Client;
 use App\Models\User;
 use Carbon\Carbon;
@@ -205,7 +206,11 @@ class FrontendController extends Controller
 
         $name = $request->cookie('area_name');
         $area = BranchArea::where('name_en',  $name)->first();
-        $product = Product::where('id', $request->product)->first();
+        // $product = Product::where('id', $request->product)->first();
+        $productId = $request->product;
+        $product = Cache::remember("product_{$productId}", null, function () use ($productId) {
+            return Product::find($productId);
+        });
 
         if($area){
            $branch = $area->branch;

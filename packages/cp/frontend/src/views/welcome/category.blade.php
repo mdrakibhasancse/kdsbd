@@ -294,14 +294,12 @@
 
 <script>
     var currentscrollHeight = 0;
-
     $(window).scroll(function() {
         const scrollHeight = $(document).height();
         const scrollPos = Math.floor($(window).height() + $(window).scrollTop());
         const isBottom = (scrollHeight - 1000) < scrollPos;
         if (isBottom && currentscrollHeight < scrollHeight) {
-            $('.tap-to-see-more').click();
-                
+            $('.tap-to-see-more').click();  
             currentscrollHeight = scrollHeight;
         }
     });

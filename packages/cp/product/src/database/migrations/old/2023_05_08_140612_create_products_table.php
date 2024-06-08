@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name_en')->nullable();
             $table->string('name_bn')->nullable();
+            $table->string('product_code')->nullable();
             $table->text('slug')->nullable();
             $table->text('excerpt_en')->nullable();
             $table->text('excerpt_bn')->nullable();

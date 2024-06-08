@@ -35,6 +35,8 @@
                     <a class="btn btn-outline-primary mr-1 my-1 rounded btn-sm {{ str_contains(url()->current(), 'branch/edit') ? 'active' : '' }}" href="{{route('admin.branchEdit', $branch)}}"><i class="fas fa-edit"></i>
                         Edit Branch</a>
 
+                    <a class="btn btn-outline-primary mr-1 my-1 rounded btn-sm" href="{{ route('admin.pos', $branch)}}"><i class="fas fa-plus-square"></i> Pos Management</a>
+
                   
                 </div>
             </div>
@@ -130,6 +132,30 @@
                     {
                         that.removeClass('badge-primary').addClass('badge-danger');
                         that.text('Inactive');
+                    }
+                    }
+                });
+            });
+
+
+            $(document).on('click', ".branchProductQuickPos", function(e){
+                e.preventDefault();
+                var that = $( this );
+                var url = that.attr('data-url');
+                $.ajax({
+                    url: url,
+                    method: "get",
+                    success: function(res)
+                    {
+                    if(res.active == true)
+                    {
+                        that.removeClass('badge-danger').addClass('badge-primary');
+                        that.text('True');
+                    }
+                    else
+                    {
+                        that.removeClass('badge-primary').addClass('badge-danger');
+                        that.text('False');
                     }
                     }
                 });

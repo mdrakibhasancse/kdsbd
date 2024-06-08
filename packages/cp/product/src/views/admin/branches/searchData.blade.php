@@ -3,10 +3,11 @@
         <tr>
             <th scope="col" width="30">SL</th>
             <th scope="col">Product Id</th>
-            <th scope="col">Status</th>
+            {{-- <th scope="col">Status</th> --}}
             <th scope="col">Name English</th>
             <th scope="col">Name (বাংলা)</th>
             <th scope="col">Price</th>
+            <th scope="col">Quick Pos</th>
             <th scope="col">Stock</th>
         </tr>
     </thead>
@@ -20,8 +21,7 @@
             <tr>
                 <td>{{ $i++ }}</td>
                 <td>{{ $product->id }}</td>
-                <td>
-                     
+                {{-- <td>
                     @if($stock->active == 1)
                     <button class="badge border-0 badge-primary branchProductStatus" data-url="{{route("admin.branchProductStatus",['product' => $product, 'branch' => $branch ])}}" >
                         Active
@@ -31,11 +31,23 @@
                         Inactive
                     </button>
                     @endif
-               
-                </td>
+                </td> --}}
                 <td>{{ Str::limit($product->name_en, 30) }}</td>
                 <td>{{ Str::limit($product->name_bn, 30) }}</td>
-                    <td>{{ $product->price }}</td>
+                <td>{{ $product->price }}</td>
+
+                 <td>
+                    @if($stock->quick_pos == 1)
+                    <button class="badge border-0 badge-primary branchProductQuickPos" data-url="{{route("admin.branchProductQuickPos",['product' => $product, 'branch' => $branch ])}}" >
+                        True
+                    </button>
+                    @else
+                    <button class="badge border-0 badge-danger branchProductQuickPos" data-url="{{route("admin.branchProductQuickPos",['product' => $product, 'branch' => $branch ])}}" >
+                        False
+                    </button>
+                    @endif
+                </td>
+
                 <td>
                     <input type="number" name="stock_qty" class="productAddStock" data-url="{{ route('admin.productAddStock', ['product' => $product, 'branch' => $branch ])}}"  value="{{ $stock->stock_qty ? $stock->stock_qty : 0}}">
                 </td>

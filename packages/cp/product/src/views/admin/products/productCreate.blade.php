@@ -43,6 +43,14 @@
                                         <input type="text" name="name_bn" value="{{old('name_bn')}}" class="form-control" placeholder="Name (বাংলা)">
                                     </div>
 
+                                    
+                                    <div class="form-group">
+                                        <label for="product_code">Product Code</label>
+                                        <input type="number" name="product_code" value="{{old('product_code')}}" class="form-control" placeholder="Enter product code">
+                                        @error('product_code')
+                                        <span style="color:red">{{ $message }}</span>
+                                        @enderror
+                                    </div>
 
                                     <div class="form-group">
                                         <label for="price">Price</label>

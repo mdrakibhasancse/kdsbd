@@ -171,6 +171,12 @@ Route::group(['middleware' => ['web', 'auth', 'role:admin'], 'prefix' => 'admin'
     ]);
 
 
+    Route::get('branch/product/quick/pos', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@branchProductQuickPos',
+        'as' => 'admin.branchProductQuickPos'
+    ]);
+
+
 
     // product route
 
@@ -357,6 +363,12 @@ Route::group(['middleware' => ['web', 'auth', 'role:admin'], 'prefix' => 'admin'
         ]);
 
 
+        Route::get('ajax/product/module/item/{module}/branch/{branch}', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@ajaxProductItemStore',
+            'as' => 'admin.ajaxProductItemStore'
+        ]);
+
+
         Route::get('module/{module}/update/item/{item}/quantity', [
             'uses' => 'Cp\Product\Controllers\AdminProductController@moduleUpdateItemQty',
             'as' => 'admin.moduleUpdateItemQty'
@@ -378,6 +390,29 @@ Route::group(['middleware' => ['web', 'auth', 'role:admin'], 'prefix' => 'admin'
         Route::get('module/paid/amount/{module}', [
             'uses' => 'Cp\Product\Controllers\AdminProductController@modulePaidAmount',
             'as' => 'admin.modulePaidAmount'
+        ]);
+
+
+        Route::post('/order/store/branch/{branch}/module/{module}', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@posOrderStore',
+            'as' => 'admin.posOrderStore'
+        ]);
+
+
+        Route::get('/orders/report', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@posOrdersReport',
+            'as' => 'admin.posOrdersReport'
+        ]);
+
+
+        Route::get('/order/details/{order}', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@posOrderDetails',
+            'as' => 'admin.posOrderDetails'
+        ]);
+
+        Route::get('/order/print/{order}', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@posOrderPrint',
+            'as' => 'admin.posOrderPrint'
         ]);
 
     });

@@ -11,14 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('branch_products', function (Blueprint $table) {
+        Schema::create('pos_order_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('branch_id')->nullable();
-            $table->unsignedBigInteger('product_id')->nullable();
-            $table->integer('stock_qty')->default(0);
-            $table->boolean('active')->default(1);
-            $table->boolean('quick_pos')->default(0);
             $table->unsignedBigInteger('addedby_id')->nullable();
+            $table->unsignedBigInteger('pos_order_id')->nullable();
+            $table->string('product_code')->nullable();
+            $table->string('product_name')->nullable();
+            $table->integer('quantity')->nullable();
+            $table->decimal('unit_price', 10, 2)->default(0);
+            $table->decimal('total_price', 10, 2)->default(0);
+            $table->unsignedBigInteger('editedby_id')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('branch_products');
+        Schema::dropIfExists('pos_order_items');
     }
 };
