@@ -19,10 +19,14 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminUserRoleController extends Controller
 {
-    public function usersAll()
+    public function usersAll(Request $request)
     {
         menuSubmenu('users', 'usersAll');
-        $data['users'] = $users = User::latest()->paginate(100);
+        if ($request->id) {
+            $data['users'] = User::where('id', $request->id)->paginate(10);
+        }else{
+            $data['users'] = $users = User::latest()->paginate(100);
+        }
         return view('userrole::admin.users.usersAll', $data);
     }
 

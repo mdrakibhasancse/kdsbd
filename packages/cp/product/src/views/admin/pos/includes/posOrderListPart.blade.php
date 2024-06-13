@@ -5,6 +5,8 @@
         <th style="width: 10px">#SL</th>
         <th>Action</th>
         <th>Id</th>
+        <th>UserId</th>
+        <th>Branch Name</th>
         <th>Date</th>
         <th>Order Status</th>
         <th>Total Amount</th>
@@ -12,11 +14,13 @@
         <th>Final Amount</th>
         <th>Payment Status</th>
         <th>Product Items</th>
+        <th>Total Orders</th>
         </tr>
     </thead>
     <tbody class="">
         <?php $i = (($orders->currentPage() - 1) * $orders->perPage() + 1); ?>
         @foreach($orders as $order)
+        {{-- @dd($order->user) --}}
         <tr>
         <td style="width: 10px">{{$i++}}</td>
         <td style="width: 80px">
@@ -30,6 +34,17 @@
                 </div>
         </td>
         <td>{{$order->id}}</td>
+        <td>
+            <a href="{{ route('admin.usersAll',['id' => $order->user_id ?? '' ])}}">
+            {{$order->user_id ?? ''}}
+            </a>
+        </td>
+        <td>
+            <a href="{{ route('admin.pos',['branch'=> $order->branch])}}">
+            {{$order->branch->name_en ?? ''}} ({{$order->branch_id}})
+            </a>
+        </td>
+
         <td>{{$order->created_at->format('d/m/Y')}}</td>
         <td>{{$order->order_status}}</td>
         <td>{{$order->total_price}}</td>
@@ -37,6 +52,18 @@
         <td>{{$order->final_price}}</td>
         <td>{{$order->payment_status}}</td>
         <td>{{$order->orderItems()->count()}}</td>
+        <td>
+           
+            @if ($order->user)
+             <a href="{{ route('admin.posOrdersReport', ['mobile' => $order->user->mobile] )}}">
+                {{$order->user->posOrders->count()}}
+             </a>
+            @else
+               0
+            @endif
+           
+            
+        </td>
         </tr>  
         @endforeach
     </tbody>

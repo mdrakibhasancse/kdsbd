@@ -25,6 +25,10 @@
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             <a href="{{ route('admin.userEdit',$user)}}" class="dropdown-item"><i class="fa fa-edit"></i> Edit</a>
 
+                            <a href="{{ route('admin.posOrdersReport', ['id' => $user->id] )}}" class="dropdown-item"><i class="fas fa-cart-plus "></i> Pos Orders</a>
+
+                            <a href="{{ route('admin.orderList', ['id' => $user->id])}}" class="dropdown-item"><i class="fas fa-cart-plus "></i> Online Orders</a>
+
                             <form action="{{ route('admin.userDelete',$user)}}" method="post" onclick="return confirm('Are you sure to delete?')">
                                 @csrf
                                 <button type="submit" class="dropdown-item"><i class="fa fa-trash"></i> Delete</button>

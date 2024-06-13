@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Cp\Product\Models\Cart;
 use Cp\Product\Models\Order;
+use Cp\Product\Models\PosOrder;
 
 class User extends Authenticatable
 {
@@ -59,6 +60,11 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function posOrders()
+    {
+        return $this->hasMany(PosOrder::class, 'user_id');
     }
 
 }

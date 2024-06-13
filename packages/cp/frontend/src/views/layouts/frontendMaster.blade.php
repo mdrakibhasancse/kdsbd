@@ -148,7 +148,7 @@
             </a>
         </div>
         <div class="sticky-info">
-            <a href="wishlist.html" class="">
+            <a href="javascript:void(0)" class="">
                 <i class="icon-wishlist-2"></i>Wishlist
             </a>
         </div>
@@ -357,6 +357,7 @@
                 var url = that.attr('action');
                 var type = that.attr('method');
                 var data = new FormData(this);
+                alert();
                 $.ajax({
                     url: url,
                     type: type,
@@ -403,24 +404,24 @@
     <script>
         $(document).ready(function () {
             $(document).on('keyup', ".search", function(e){
-                e.preventDefault();
-                var that = $(this);
-                var url = that.attr('data-url');
-                var q = that.val();
-                $.ajax({ 
-                    url: url,
-                    method: 'get',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        q : q
-                    },
-                    cache: false,
-                }).done(function(response) {
-                    that.closest('.container').find('.product-container').empty().append(response.view);
-                    var newRoute = '{{ route("search") }}';
-                    history.pushState({ path: newRoute }, '', newRoute + '?q=' + encodeURIComponent(q));
-                });
+            e.preventDefault();
+            var that = $(this);
+            var url = that.attr('data-url');
+            var q = that.val();
+            $.ajax({ 
+                url: url,
+                method: 'get',
+                data: {
+                    _token: '{{ csrf_token() }}', // Include CSRF token for security
+                    q: q
+                },
+                cache: false,
+            }).done(function(response) {
+                that.closest('.container').find('.product-container').empty().append(response.view);
+                var newRoute = '{{ route("search") }}';
+                history.pushState({ path: newRoute }, '', newRoute + '?q=' + encodeURIComponent(q));
             });
+        });
         });
     </script>
 

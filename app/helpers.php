@@ -71,52 +71,60 @@ function menuSubmenu($menu, $submenu)
 
 function bdMobile($mobile)
 {
-  $number = trim($mobile);
-  $c_code = '880';
-  $cc_count = strlen($c_code);
-
-  if (substr($number, 0, 2) == '00') {
-    $number = ltrim($number, '0');
-  }
-  if (substr($number, 0, 1) == '0') {
-    $number = ltrim($number, '0');
-  }
-  if (substr($number, 0, 1) == '+') {
-    $number = ltrim($number, '+');
-  }
-  if (substr($number, 0, $cc_count) == $c_code) {
-    $number = substr($number, $cc_count);
-  }
-  if (substr($c_code, -1) == 0) {
-    $number = ltrim($number, '0');
-  }
-  $finalNumber = $c_code . $number;
-
-  return $finalNumber;
+    $number = trim($mobile);
+    
+    $c_code = '+88';
+    
+    $cc_count = strlen($c_code);
+    
+    $number = bdMobileWithoutCode($number);
+    
+    $number = $c_code . $number;
+    return $number;
 }
 
 function bdMobileWithoutCode($mobile)
 {
   $number = trim($mobile);
-  $c_code = '0';
-  $cc_count = strlen($c_code);
-  if (substr($number, 0, 2) == '00') {
-    $number = ltrim($number, '0');
-  }
-  if (substr($number, 0, 1) == '0') {
-    $number = ltrim($number, '0');
-  }
-  if (substr($number, 0, 1) == '+') {
-    $number = ltrim($number, '+');
-  }
-  if (substr($number, 0, $cc_count) == $c_code) {
-    $number = substr($number, $cc_count);
-  }
-  if (substr($c_code, -1) == 0) {
-    $number = ltrim($number, '0');
-  }
-  $finalNumber = $c_code . $number;
-  return $finalNumber;
+    $c_code = '0';
+    $cc_count = strlen($c_code);
+    
+    if(substr($number, 0, 4) == '0088')
+    {
+        $number = ltrim($number, '0088');
+    }
+    
+    if(substr($number, 0, 3) == '880')
+    {
+        $number = ltrim($number, '880');
+    }
+    
+    if(substr($number, 0, 4) == '+880')
+    {
+        $number = ltrim($number, '+880');
+        
+    }
+
+    
+    if(substr($number, 0, 1) == '0')
+    {
+        $number = ltrim($number, '0');
+    }
+    if(substr($number, 0, 1) == '+')
+    {
+        $number = ltrim($number, '+');
+    }
+    if(substr($number, 0, $cc_count) == $c_code)
+    {
+        $number = substr($number, $cc_count);
+    }
+    if(substr($c_code, -1) == 0)
+    {
+        $number = ltrim($number, '0');
+    }
+    $finalNumber = $c_code.$number;
+
+    return $finalNumber;
 }
 
 

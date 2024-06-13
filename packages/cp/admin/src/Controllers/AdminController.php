@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Cp\Frontend\Models\ContactUs;
+use Cp\Product\Models\Branch;
 use Illuminate\Http\Request;
 use Cp\WebsiteSetting\Models\WebsiteSetting;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -18,7 +19,8 @@ class AdminController extends Controller
     public function dashboard()
     {
         menuSubmenu('dashboard', 'dashboard');
-        return view('admin::dashboard.dashboard');
+        $branches = Branch::latest()->get();
+        return view('admin::dashboard.dashboard',compact('branches'));
     }
 
 

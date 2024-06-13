@@ -135,7 +135,7 @@
             </a>
         </div>
         <div class="sticky-info">
-            <a href="wishlist.html" class="">
+            <a href="javascript:void(0)" class="">
                 <i class="icon-wishlist-2"></i>Wishlist
             </a>
         </div>

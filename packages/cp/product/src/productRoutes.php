@@ -398,6 +398,11 @@ Route::group(['middleware' => ['web', 'auth', 'role:admin'], 'prefix' => 'admin'
             'as' => 'admin.posOrderStore'
         ]);
 
+         Route::get('/order/store/and/print/branch/{branch}/module/{module}', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@posOrderStoreAndPrint',
+            'as' => 'admin.posOrderStoreAndPrint'
+        ]);
+
 
         Route::get('/orders/report', [
             'uses' => 'Cp\Product\Controllers\AdminProductController@posOrdersReport',
@@ -413,6 +418,16 @@ Route::group(['middleware' => ['web', 'auth', 'role:admin'], 'prefix' => 'admin'
         Route::get('/order/print/{order}', [
             'uses' => 'Cp\Product\Controllers\AdminProductController@posOrderPrint',
             'as' => 'admin.posOrderPrint'
+        ]);
+
+        Route::post('/get/user/branch/{branch}/module/{module}', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@getUser',
+            'as' => 'admin.getUser'
+        ]);
+
+        Route::post('/user/add/new/module/{module}', [
+            'uses' => 'Cp\Product\Controllers\AdminProductController@userAddNew',
+            'as' => 'admin.userAddNew'
         ]);
 
     });

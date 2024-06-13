@@ -30,11 +30,11 @@
                         <div class="contact-widget">
                             <div class="">
                             <h4 class="widget-title">ADDRESS:</h4>
-                            <a href="#">{{ $ws->footer_address }}</a>
+                            <a href="javascript:void(0)">{{ $ws->footer_address }}</a>
                             </div>
                             <div class="py-3">
                             <h4 class="widget-title">PHONE:</h4>
-                            <a href="#">{{ $ws->contact_mobile }}</a>
+                            <a href="javascript:void(0)">{{ $ws->contact_mobile }}</a>
                             </div>
                             <div class="">
                             <h4 class="widget-title">EMAIL:</h4>

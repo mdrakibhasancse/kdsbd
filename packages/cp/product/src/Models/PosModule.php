@@ -4,6 +4,7 @@ namespace Cp\Product\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class PosModule extends Model
 {
@@ -31,7 +32,10 @@ class PosModule extends Model
         ->sum('total_price');
     }
 
-
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
    
 
 }

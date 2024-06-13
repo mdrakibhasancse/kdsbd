@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Carbon\Carbon;
 
@@ -1050,10 +1051,58 @@ class AdminProductController extends Controller
 
 
 
-    public function orderList()
+    public function orderList(Request $request)
     {
         menuSubmenu('order', 'orderList');
-        $data['orders'] = Order::latest()->paginate(30);
+        // if ($request->id) {
+        //     $data['orders'] = Order::where('user_id', $request->id)->paginate(30);
+        // }else{
+        //    $data['orders'] = Order::latest()->paginate(30);
+        // }
+
+        
+        if($request->id){
+            $data['orders'] = Order::where('user_id', $request->id)->where(function ($q) use ($request) {
+                if ($request->date_from && $request->date_to) {
+                    $df = $request->date_from;
+                    $dt = $request->date_to;
+                    $from = $df . ' 00:00:00';
+                    $to = $dt . ' 23:59:59';
+                    $q->whereBetween('created_at', [$from, $to]);
+                }
+
+            //    dd($request->status);
+
+                if ($request->status) {
+                  $q->where('order_status', 'like', "%{$request->status}%");  
+                }
+
+                if ($request->mobile) {
+                  $q->where('mobile', 'like', "%{$request->mobile}%");  
+                }
+            })->orderBy('created_at')->paginate(100);
+
+        }else{ 
+            $data['orders'] = Order::where(function ($q) use ($request) {
+                if ($request->date_from && $request->date_to) {
+                    $df = $request->date_from;
+                    $dt = $request->date_to;
+                    $from = $df . ' 00:00:00';
+                    $to = $dt . ' 23:59:59';
+                    $q->whereBetween('created_at', [$from, $to]);
+                }
+
+                if ($request->status) {
+                  $q->where('order_status', 'like', "%{$request->status}%");  
+                }
+
+                if ($request->mobile) {
+                  $q->where('mobile', 'like', "%{$request->mobile}%");  
+                }
+            })->orderBy('created_at')->paginate(30);
+        }
+
+
         return view('product::admin.orders.orderList', $data);
     }
 
@@ -1590,9 +1639,10 @@ class AdminProductController extends Controller
     public function posOrderStore(Request $request, Branch $branch, PosModule $module)
     {
 
-        $request->merge([
-            'mobile' => $request->valid_mobile,
-        ]);
+        // dd($request->submit);
+        // $request->merge([
+        //     'mobile' => $request->valid_mobile,
+        // ]);
       
         $request->validate([
            'paid_amount' => 'required',
@@ -1605,14 +1655,14 @@ class AdminProductController extends Controller
             return redirect()->back();
         }
      
-        $gusetUser = User::where('mobile', $request->valid_mobile)->first();
+        // $gusetUser = User::where('mobile', $request->valid_mobile)->first();
 
     
         if($request->paid_amount >= $request->grand_total){
             $order = new PosOrder();
-            $order->user_id = $gusetUser->id ?? null;
-            $order->name = $gusetUser->name ?? null;
-            $order->mobile = $request->mobile ?? null;
+            $order->user_id = $module->user_id ?? null;
+            $order->name =  $module->user->name ?? null;
+            $order->mobile =  $module->mobile ?? null;
             $order->branch_id = $branch->id;
             $order->pos_module_id = $module->id;
             $order->total_price = $request->sub_total;
@@ -1639,13 +1689,6 @@ class AdminProductController extends Controller
                     $orderItem->save();
                 }
             }
-
-            // if ($order->final_price - $order->paid_amount >= 5) {
-            //     $order->payment_status = 'partial';
-            // } else {
-            //     $order->payment_status = 'paid';
-            //     $order->order_status = 'confirmed';
-            // }
 
             $order->save();
 
@@ -1772,15 +1815,62 @@ class AdminProductController extends Controller
 
 
     public function posOrdersReport(Request $request){
-        $orders = PosOrder::where('addedby_id', Auth::id())->where(function ($q) use ($request) {
-            if ($request->date_from && $request->date_to) {
-                $df = $request->date_from;
-                $dt = $request->date_to;
-                $from = $df . ' 00:00:00';
-                $to = $dt . ' 23:59:59';
-                $q->whereBetween('created_at', [$from, $to]);
-            }
-        })->orderBy('created_at')->paginate(30);
+
+        // $user = User::where('mobile', $request->mobile)->first();
+   
+        if($request->id){
+            $orders = PosOrder::where('user_id', $request->id)->where('addedby_id', Auth::id())->where(function ($q) use ($request) {
+                if ($request->date_from && $request->date_to) {
+                    $df = $request->date_from;
+                    $dt = $request->date_to;
+                    $from = $df . ' 00:00:00';
+                    $to = $dt . ' 23:59:59';
+                    $q->whereBetween('created_at', [$from, $to]);
+                }
+
+                if ($request->mobile) {
+                    $q->whereHas('user', function ($b) use ($request) {
+                        $b->where('mobile', 'like', "%{$request->mobile}%");
+                    });
+                }
+            })->orderBy('created_at')->paginate(100);
+        }else if ($request->mobile) {
+            $orders = PosOrder::where('mobile', $request->mobile)->where('addedby_id', Auth::id())->where(function ($q) use ($request) {
+                if ($request->date_from && $request->date_to) {
+                    $df = $request->date_from;
+                    $dt = $request->date_to;
+                    $from = $df . ' 00:00:00';
+                    $to = $dt . ' 23:59:59';
+                    $q->whereBetween('created_at', [$from, $to]);
+                }
+
+                if ($request->mobile) {
+                    $q->whereHas('user', function ($b) use ($request) {
+                        $b->where('mobile', 'like', "%{$request->mobile}%");
+                    });
+                }
+            })->orderBy('created_at')->paginate(100);
+        }else{ 
+            $orders = PosOrder::where('addedby_id', Auth::id())->where(function ($q) use ($request) {
+                if ($request->date_from && $request->date_to) {
+                    $df = $request->date_from;
+                    $dt = $request->date_to;
+                    $from = $df . ' 00:00:00';
+                    $to = $dt . ' 23:59:59';
+                    $q->whereBetween('created_at', [$from, $to]);
+                }
+
+                // dd('ok');
+                if ($request->cus_mobile) {
+                    
+                    $q->whereHas('user', function ($b) use ($request) {
+                        $b->where('mobile', 'like', "%{$request->cus_mobile}%");
+                    });
+
+                }
+            })->orderBy('created_at')->paginate(30);
+        }
+
         return view('product::admin.pos.posOrdersReport',compact('orders'));
 
     }
@@ -1794,5 +1884,94 @@ class AdminProductController extends Controller
     {
         return view('product::admin.pos.posOrderPrint', compact('order'));
     }
+
+
+
+
+    public function getUser(Request $request)
+    {
+
+        $user =  User::withoutGlobalScopes()->where('mobile', $request->mobile)->first();
+
+        $module = PosModule::where('id', $request->module)->first();
+        $module->mobile =  $request->mobile;
+        $module->user_id = $user->id ?? null;
+        $module->save();
+
+        if(!$user)
+        {
+            if($request->ajax())
+            {
+                return Response()->json(array(
+                'success' => false,
+                ));
+            }
+        }
+
+        if($request->ajax())
+        {
+            return Response()->json(array(
+                'success' => true,
+                'user' => $user,
+            ));
+        }
+    }
+
+
+
+    public function userAddNew(Request $request)
+    {
+
+        $validation = Validator::make($request->all(),[
+            'name' => 'required|max:30|min:3',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|min:6|string',
+        ]);
+
+        if($validation->fails())
+        {
+            return back()
+            ->withErrors($validation)
+            ->withInput()
+            ->with('error', ' Please, Try Again with Correct Password Information.');
+        }
+
+        $module = PosModule::where('id', $request->module)->first();
+
+        $user = User::where('mobile' , $module->mobile)->first();
+        
+        if(!$user){
+            $user = new User();
+            $user->name = $request->name;
+            $user->mobile = $module->mobile;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->password_temp = $request->password;
+            $user->save();
+
+            $module->user_id = $user->id;
+            $module->save();
+
+            if($request->ajax())
+            {
+                return Response()->json(array(
+                'success' => true,
+                'user' => $user,
+                ));
+            }
+            return back()->with('success', 'New user Successfully Created.');
+        }else{
+            if($request->ajax())
+            {
+                return Response()->json(array(
+                'success' => false,
+                'user' => $user,
+                ));
+            }
+        }
+
+      
+    }
+
 
 }

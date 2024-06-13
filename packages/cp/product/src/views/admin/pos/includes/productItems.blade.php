@@ -1,15 +1,15 @@
 
 @forelse($products as $product)
-<div class="col-md-3 col-sm-4 col-5">
-    <div class="w3-display-container product-container  w3-animate-zoom">
+<div class="col-md-4 col-12">
+    <div class="w3-display-container product-container w3-animate-zoom">
         <div class="card card-widget">
 
          
             <img class="img-fluid card-img-top" src="{{ route('imagecache', ['template' => 'pfism', 'filename' => $product->fi()]) }}" alt="{{$product->name_en}}">
             
             <div class="card-body p-0">
-                <h3 class="w3-small font-weight-bold pl-1 pb-0 pt-2">
-                    {{Str::Limit($product->name_en , 15 , '...')}}
+                <h3 class="w3-small font-weight-bold pl-1 pb-0 pt-2" style="min-height: 35px">
+                    {{$product->name_en}}
                 </h3>
                     
 

@@ -4,6 +4,9 @@
 @endsection
 
 @push('css')
+<style>
+   
+</style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
 @endpush
 
@@ -27,17 +30,48 @@
             
             <?php $module = $branch->moduleActive() ?>
             <div class="card-tools">
+                <form action="{{ route('admin.getUser',['branch' => $branch, 'module' => $module])}}" method="post" style="display:inline-block" class="mobile-check-form mb-0 pb-0" id="mobile-create-form">
+                    @csrf
+                    <div class="d-flex">
+                    <input type="text" class="form-control form-control-sm input-mobile" value="{{$module->mobile }}" placeholder="Enter Mobile" style="border-radius: 0px;">
+                    <input type="hidden" id="valid_mobile" name="valid_mobile" value="{{ old('valid_mobile') }}">
+                    <button class="btn btn-success btn-sm" style="border-radius: 0px;">Submit</button>
+                    </div>
+                    
+                </form>
+                
+
+                
+              
+                @if($module->user_id)
+                   <a href="{{ route('admin.usersAll', ['id' => $module->user_id]) }}" class="btn btn-sm btn-primary" id="useridHide">{{$module->user_id}}</a>
+                   <a href="{{ route('admin.posOrdersReport', ['id' => $module->user_id]) }}" class="btn btn-sm btn-primary" id="userOrdersHide">User Orders</a>
+                @elseif(!$module->user_id && $module->mobile)
+                    <a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModalLg" id="userModalHide">
+                        <i class="fa fa-user-plus"></i>
+                    </a>
+                @endif
+
+                <span id="userid"></span>
+                <span id="userOrders"></span>
+                <span id="userModal"></span>
+
+                &nbsp;
+                <a href="{{ route('admin.posOrdersReport')}}" class="btn btn-info btn-sm"><i class="fab fa-first-order"></i>&nbsp;&nbsp;Pos Orders All</a>
+                &nbsp;
+                <a href="{{ route('admin.branchArea', $branch)}}" class="btn btn-info btn-sm"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;Branch</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="{{ route('admin.posModuleDelete', ['branch'=> $branch, 'module'=> $module]) }}"><i class="fa fa-times pt-2"></i></a>
             </div>
             </div><!-- /.card-header -->
 
             <div class="card-body w3-light-gray pb-0 px-2 pt-2">
                 <div class="row">
-                    <div class="col-md-6">
-                            <div class="card">
+                    <div class="col-md-5">
+                            <div class="card" style="overflow-y: scroll;height:auto;max-height:530px;">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-9">
+                                        <div class="col-md-8">
                                             <div class="form-group">
                                                 <div class="input-group input-group-md">
                                                     <input type="search" class="form-control form-control-md pos-product-search" data-search-url="{{route('admin.PosProductSearch', ['branch'=>$branch])}}" placeholder="Search here..." aria-label="Search" name="q" autocomplete="off" autofocus="">
@@ -50,7 +84,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                             
                                         <input type="search" class="form-control form-control-md ajaxProductItemStore" data-url="{{route('admin.ajaxProductItemStore', ['branch'=>$branch ,'module'=>$module])}}" placeholder="Product Code Here..." aria-label="Search" name="q" autocomplete="off" autofocus="">
                                         
@@ -78,121 +112,81 @@
                         
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <div class="card">
-                            <div class="card-header text-right py-1">
-                                <a href="{{ route('admin.posOrdersReport')}}" class="btn btn-info btn-sm"><i class="fab fa-first-order"></i>&nbsp;Pos Orders All</a>
-                            </div>
-                            <div class="table-responsive posItemModule">
-                            <form action="{{ route('admin.posOrderStore',['branch' => $branch, 'module' => $module])}}" method="post" class="mobile-check-form" id="mobile-create-form">
-                                @csrf
-                                <table class="table table-no-pm table-condensed table-striped table-bordered">
-                                    <thead>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered shadow-lg table-sm">
+                                    <thead class="w3-small">
                                     <tr>
                                         <th>SL</th>
-                                        <th class="text-center">Product Name</th>
-                                        <th class="text-center">Code</th>
-                                        <th class="text-center">Quantity</th>
-                                        <th class="text-center">Sale Price</th>
-                                        <th class="text-center">Total Amount</th>
-                                        <th width="180">Action</th>
+                                        <th>Product Name</th>
+                                        <th class="text-center" width="75">Quantity</th>
+                                        <th class="text-center" width="75">Sale Price</th>
+                                        <th class="text-center" width="90">Total Amount</th>
+                                        <th width="20">Action</th>
                                     </tr>
                                     </thead>
-                                    <tbody class="moduleItems">
+                                    <tbody class="moduleItems w3-small">
                                         @include('product::admin.pos.includes.moduleItems')
                                     </tbody>
-
-                                    <tfoot>
-                                        <tr>
-                                        <th colspan="6" class="text-right">Sub Total (TK)</th>
-                                        <th colspan="3" class="w3-light-gray p-0">
-                                        <div class="form-group form-group-sm mb-0">
-                                        <input type="number" name="sub_total" placeholder="Sub Total" step="any" value="{{ $module->moduleItemSubTotal() }}" class="form-control sub_total" id="sub_total" readonly="">
-                                        </div>
-                                        </th>
-                                        </tr>
-
-
-                                        <tr>
-                                        <th colspan="6" class="text-right">Mobile</th>
-                                        <th colspan="3" class="w3-light-gray p-0">
-                                        <div class="form-group form-group-sm mb-0">
-                                            <input type="text" id="mobile" name="mobile" class="form-control input-mobile w3-medium" value="{{ old('mobile')}}" id="mobile" placeholder="Enter Mobile">
-                                            <span class="error_validation text-danger"></span>
-                                        </div>
-                                        <input type="hidden" id="valid_mobile" name="valid_mobile" value="{{ old('valid_mobile')  }}">
-                                        </th>
-                                        </tr>
-                                        
-                                        <tr>
-                                        <th colspan="6" class="text-right">Discount (TK)</th>
-                                        <th colspan="3" class="w3-light-gray p-0">
-                                        <div class="form-group form-group-sm mb-0 module">
-                                        <input type="number" name="discount" placeholder="Final Discount" class="form-control moduleDiscountAmount" value="" id="discount">
-                                        </div>
-                                        </th>
-                                        </tr>
-
-                                        <tr>
-                                        <th colspan="6" class="text-right">Grand Total (TK)</th>
-                                        <th colspan="3" class="w3-light-gray p-0">
-                                        <div class="form-group form-group-sm mb-0">
-                                        <input type="number" name="grand_total" placeholder="Grand Total" step="any" value="{{ $module->moduleItemSubTotal() }}" class="form-control sub_total" id="grand_total" readonly="">
-                                        </div>
-                                        </th>
-                                        </tr>
-
-                                        <tr>
-                                        <th colspan="6" class="text-right">Paid (TK)</th>
-                                        <th colspan="3" class="w3-light-gray p-0">
-                                        <div class="form-group form-group-sm mb-0">
-                                        <input type="number" name="paid_amount" placeholder="Paid Amount" min="0" step="any" class="form-control modulePaidAmount" id="paid_amount" required>
-                                        @error('paid_amount')
-                                            <span class="text-danger">{{ $message }}</span> 
-                                        @enderror
-                                         <span class="error_message text-danger"></span>
-                                        </div>
-                                        
-                                        </th>
-                                        </tr>
-
-                                        <tr>
-                                        <th colspan="6" class="text-right">Return (TK)</th>
-                                        <th colspan="3" class="w3-light-gray p-0">
-                                        <div class="form-group form-group-sm mb-0">
-                                        <input type="number" name="return_amount" placeholder="Return Amount" step="any" value="" class="form-control return_amount" id="return_amount" readonly="">
-                                        </div>
-                                        </th>
-                                        </tr>
-
-
-
-                                        <tr>
-                                        <th colspan="6" class="text-right"></th>
-                                        <th colspan="3" class="w3-light-gray p-0 text-center">
-                                        
-                                            <button type="submit" 
-                                            class="btn btn-sm px-5 save-btn btn-primary" >&nbsp;Save</button>
-
-
-                                            {{-- <a class="btn btn-sm btn-success save-and-print-btn" value="save-and-print-btn"> &nbsp;Save And Print</a> --}}
-
-                                            {{-- <a href="{{ route('admin.posOrderStoreAndPrint',['branch' => $branch, 'module' => $module])}}" class="btn btn-sm posOrderStoreAndPrint btn-success" >&nbsp;Save and Print</a> --}}
-                                    
-
-                                    
-                                        </th>
-                                        </tr>
-
-
-
-                                    </tfoot>
-                                
-                                    
-
                                 </table>
-                            </form>
                             </div>
+                        </div>
+                    </div>
+
+                     <div class="col-md-2">
+                        <div class="card">
+                        <form action="{{ route('admin.posOrderStore',['branch' => $branch, 'module' => $module])}}" method="post">
+                            @csrf
+                            <div class="card-body posItemModule">        
+                                <div class="form-group form-group-sm mb-2">
+                                <label for="" class="mb-1">Sub Total</label>
+                                <input type="number" name="sub_total" placeholder="Sub Total" step="any" value="{{ $module->moduleItemSubTotal() }}" class="form-control sub_total" id="sub_total" readonly="">
+                                </div>
+                                        
+                                {{-- <div class="form-group form-group-sm mb-2">
+                                    <label for="" class="mb-1">Mobile</label>
+                                    <input type="text" id="mobile" name="mobile" class="form-control input-mobile w3-medium getUserId" value="{{ old('mobile')}}" id="mobile" placeholder="Enter Mobile">
+                                    <span class="error_validation text-danger"></span>
+                                </div>
+                                <input type="hidden" id="valid_mobile" name="valid_mobile" value="{{ old('valid_mobile')  }}"> --}}
+                                        
+                                        
+                                        
+                                <div class="form-group form-group-sm module mb-2">
+                                <label for="" class="mb-1">Discount (TK)</label>
+                                <input type="number" name="discount" placeholder="Final Discount" class="form-control moduleDiscountAmount" value="" id="discount">
+                                </div>
+                                        
+                                    
+                                <div class="form-group form-group-sm mb-2">
+                                <label for="" class="mb-1">Grand Total (TK)</label>
+                                <input type="number" name="grand_total" placeholder="Grand Total" step="any" value="{{ $module->moduleItemSubTotal() }}" class="form-control sub_total" id="grand_total" readonly="">
+                                </div>
+                                        
+                                
+                                <div class="form-group form-group-sm mb-2">
+                                <label for="" class="mb-1">Paid (TK)</label>
+                                <input type="number" name="paid_amount" placeholder="Paid Amount" min="0" step="any" class="form-control modulePaidAmount" id="paid_amount" required>
+                                @error('paid_amount')
+                                    <span class="text-danger">{{ $message }}</span> 
+                                @enderror
+                                <span class="error_message text-danger"></span>
+                                </div>
+                                
+                                <div class="form-group form-group-sm mb-2">
+                                <label for="" class="mb-1">Return (TK)</label>
+                                <input type="number" name="return_amount" placeholder="Return Amount" step="any" value="" class="form-control return_amount" id="return_amount" readonly="">
+                                </div>
+                                        
+
+                                <button type="submit" 
+                                class="btn btn-sm px-5 save-btn btn-primary btn-block" >&nbsp;Save</button>
+
+                                {{-- <button type="submit" class="btn btn-sm btn-success btn-block" id="save-print-btn" data-url="{{ route('admin.posOrderStoreAndPrint',['branch' => $branch, 'module' => $module])}}">&nbsp;Save And Print</button> --}}
+
+                            </div>
+                        </form>
                         </div>
                     </div>
                 </div>
@@ -200,7 +194,10 @@
         
         </div>
     </section>
+    @include('product::admin.pos.modals.modalLg')
 @endsection
+
+
 
 @push('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
@@ -246,14 +243,63 @@
             var formData = that.serialize();
             var phoneNumber = phoneInput.getNumber();
             if (!phoneNumber) {
-                document.getElementById('mobile-create-form').submit();
+                alert('Invalid Mobile Number');
             } else {
                 if (phoneInput.isValidNumber()) {
-                
-                    $('#valid_mobile').val(phoneNumber);
-                    document.getElementById('mobile-create-form').submit();
+                     $.ajax({
+                        url: that.attr("action"),
+                        cache: false,
+                        type : that.attr('method'),
+                        data : { mobile : phoneInput.getNumber()},
+                        dataType: 'json',
+                        success: function(response)
+                        {
+                            if(response.user)
+                            {
+                                var user = response.user.id;
+                                var userUrl = "{{ route('admin.usersAll') }}?id=" + user;
+                                var button = $('<a>', {
+                                    href: userUrl,
+                                    class: 'btn btn-sm btn-primary',
+                                    text: response.user.id
+                                });
+
+                                $('#userid').empty().append(button);
+
+                                var user = response.user.id;
+                                var userOrderUrl = "{{ route('admin.posOrdersReport') }}?id=" + user;
+                                var button = $('<a>', {
+                                    href: userOrderUrl,
+                                    class: 'btn btn-sm btn-primary',
+                                    text: 'User Orders'
+                                });
+                              
+                                $('#userOrders').empty().append(button);
+
+                                $("#userOrders").show();
+                                $("#userid").show();
+                                $("#userModal").hide();
+                                $("#userOrdersHide").hide();
+                                $("#useridHide").hide();
+                                $("#userModalHide").hide();
+                             
+
+                            }else{
+                                $('#userModal').empty().append(`<a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModalLg">
+                                <i class="fa fa-user-plus"></i>
+                                </a>  `);
+                                $("#userModal").show();
+                                $("#userOrders").hide();
+                                $("#userid").hide();
+                                $("#userModalHide").hide();
+                                $("#userOrdersHide").hide();
+                                $("#useridHide").hide();
+                            }
+                        },
+                        error: function(){}
+                    });
                 } else {
-                    $(".error_validation").html('Invalid Mobile Number');
+                    alert('Invalid Mobile Number');
                 }
             }
         });
@@ -396,22 +442,55 @@
 
 
 
-        // $(function() {
-        //     $(document).on('click', ".save-and-print-btn", function(e) {
-        //         e.preventDefault();
-        //         var that = $(this);
-        //         var phoneNumber = phoneInput.getNumber();
-        //         alert()
+       
+
+        
+        // $(document).on("click", "#save-print-btn", function(e) {
+        //     e.preventDefault();
+        //     var form = $('.mobile-check-form');
+        //     var that = $(this);
+        //     var url = that.attr('data-url');
+        //     var formData = form.serialize();
+        //     var alldata = new FormData(this);
+        //     var phoneNumber = phoneInput.getNumber();
+           
+        //     if (!phoneNumber) {
+        //         $(".error_validation").html('Phone number is required');
+        //     } else {
+        //         // Validate the phone number
         //         if (phoneInput.isValidNumber()) {
-        //             var mobile = Number(that.closest('.posItemModule').find('#valid_mobile').val());
-                   
-        //         } 
-             
-        //         alert(mobile);
-               
-        //     });
+        //             // Set the valid phone number
+        //             $('#valid_mobile').val(phoneNumber);
+
+        //             // Perform an AJAX request instead of form submission
+        //             $.ajax({
+        //                 type: "POST",
+        //                 url: url,
+        //                 data: alldata,
+        //                 contentType: false,
+        //                 cache: false,
+        //                 processData:false,
+        //                 success: function(response) {
+                           
+        //                     console.log('Success:', response);
+        //                     // You can redirect or update the UI accordingly
+        //                 },
+        //                 error: function(error) {
+        //                     // Handle error response
+        //                     console.log('Error:', error);
+        //                     $(".error_validation").html('An error occurred while submitting the form');
+        //                 }
+        //             });
+        //         } else {
+        //             // Display error message if the phone number is invalid
+        //             $(".error_validation").html('Invalid Mobile Number');
+        //         }
+        //     }
         // });
 
+
+
+      
 
 
         $(document).on("click",".moduleUpdateItem",function(s) {
@@ -461,8 +540,80 @@
                 }
             });
             
+        }); 
+
+
+
+        $(document).on('submit','.form-new-user-create',function(s){
+            s.preventDefault();
+            var form = $(this),
+            url = form.attr('action'),
+            type = form.attr('method'),
+            alldata = new FormData( this );
+
+            $.ajax({
+                url: url,
+                type: type,
+                data: alldata,
+                contentType: false,
+                cache: false,
+                processData:false,
+    
+            }).done(function(response){
+        
+                if(response.success == true)
+                {
+                
+                    $("#myModalLg").modal('hide');
+
+                    if(response.user){
+                         var user = response.user.id;
+                        var userUrl = "{{ route('admin.usersAll') }}?id=" + user;
+                        var button = $('<a>', {
+                            href: userUrl,
+                            class: 'btn btn-sm w3-blue',
+                            text: response.user.id
+                        });
+
+                        $('#userid').empty().append(button);
+
+                        var user = response.user.id;
+                        var userOrderUrl = "{{ route('admin.posOrdersReport') }}?id=" + user;
+                        var button = $('<a>', {
+                            href: userOrderUrl,
+                            class: 'btn btn-sm w3-blue',
+                            text: 'User Orders'
+                        });
+                        $('#userOrders').empty().append(button);
+
+                        $("#userOrders").show();
+                        $("#userid").show();
+
+                        $("#userModal").hide();
+                        
+                        
+
+                    }else{
+                        $('#userModal').empty().append(`<a type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModalLg">
+                        <i class="fa fa-user-plus"></i>
+                        </a>`);
+                        $("#userModal").show();
+                        $("#userOrders").hide();
+                        $("#userid").hide();
+                    }
+
+                    location.reload();
+
+                }
+                
+
+            }).fail(function(){
+                alert('error');
+            });
         });
 
+
+        
 
     });
 </script>

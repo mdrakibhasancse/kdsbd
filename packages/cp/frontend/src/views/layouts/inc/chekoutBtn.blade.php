@@ -4,6 +4,7 @@
         <a href="{{route('checkout')}}" class="btn w3-indigo btn-block">Checkout</a>
     </div>
     @else
+
     <div class="dropdown-cart-action-">
         <div class="card text-center mb-1">
          <div class="card-body">
@@ -15,7 +16,7 @@
     </div>
     @endif
 
-    @else
+@else
     <div class="dropdown-cart-action-">
         <a  class="btn w3-indigo btn-block" data-target="#modal_register" data-toggle="modal">
             Checkout

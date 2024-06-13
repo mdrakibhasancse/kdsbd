@@ -618,7 +618,12 @@ class FrontendController extends Controller
         } else {
             return view('frontend::welcome.search', ['products' => $products]);
         }
+
+
     }
+
+
+    
 
     
     public function sitemap()

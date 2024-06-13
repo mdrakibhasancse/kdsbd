@@ -26,6 +26,13 @@
                                     <input type="date" name="date_to" class="form-control" id="date_to" value="{{ request()->date_to }}" placeholder="Date To">
                                 </div>
 
+                                @if(!request()->id)
+                                <div class="form-group input-group-sm col-md-3">
+                                    <label for="mobile">Customer Mobile</label>
+                                    <input type="text" name="cus_mobile" class="form-control" id="cus_mobile" value="{{ request()->cus_mobile }}" placeholder="Customer mobile">
+                                </div>
+                                @endif
+
 
                                 <div class="form-group input-group-sm col-md-2 ">
                                     <br class="d-none d-md-block">

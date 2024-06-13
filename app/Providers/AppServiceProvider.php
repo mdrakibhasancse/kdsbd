@@ -68,14 +68,7 @@ class AppServiceProvider extends ServiceProvider
             View::share('ws', $ws);
 
 
-            // $collections = cache()->remember('collections', $seconds, function () {
-            //     return $collections = Cart::getCartItems();
-            // });
-            // View::share('collections', $collections);
-
            View::share('cats', $cats = ProductCategory::whereActive(true)->latest()->take(7)->get());
-
-           
 
             View::share('collections', $collections = Cart::getCartItems());
 

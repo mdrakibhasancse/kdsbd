@@ -5,6 +5,8 @@
         <th style="width: 10px">#SL</th>
         <th>Action</th>
         <th>Id</th>
+        <th>UserId</th>
+        <th>Branch Name</th>
         <th>Date</th>
         <th>Order Status</th>
         <th>Amount</th>
@@ -33,6 +35,17 @@
                 </div>
         </td>
         <td>{{$order->id}}</td>
+        <td>
+            <a href="{{ route('admin.usersAll',['id' => $order->user_id ?? '' ])}}">
+            {{$order->user_id ?? ''}}
+            </a>
+        </td>
+        <td>
+            <a href="{{ route('admin.pos',['branch'=> $order->branch])}}">
+            {{$order->branch->name_en ?? ''}} ({{$order->branch_id}})
+            </a>
+        </td>
+        
         <td>{{$order->created_at->format('d/m/Y')}}</td>
         <td>{{$order->order_status}}</td>
         <td>{{$order->total_amount}}</td>

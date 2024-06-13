@@ -18,8 +18,7 @@
     </style>
 @endpush
 @section('content')
-
-
+ 
     <section class="intro-section">
         <div class="container">
             <div class="row">
@@ -65,7 +64,7 @@
                             <h3 class="product-name text-white">Deals of the week!</h3>
                             
                             <figure class="w3-deep-orange">
-                                <a href="demo22-product.html">
+                                <a href="javascript:void(0)">
                                     <img src="{{asset("/frontend/assets/images/demoes/demo22/products/featured-sale.jpg")}}" width="217" height="217" alt="product">
                                 </a>
                                
@@ -95,7 +94,7 @@
                                 Deals of the week!
                             </h3>
                             <figure class="w3-deep-orange">
-                                <a href="demo22-product.html">
+                                <a href="javascript:void(0)">
                                     <img src="{{asset("/frontend/assets/images/demoes/demo22/products/featured-sale-2.jpg")}}" width="217" height="217" alt="product">
                                 </a>
                                 
@@ -127,9 +126,6 @@
         </div>
     </section>
 
-   
-    
-
     @foreach ($categories as $category)
         <section class="most-viewed-products appear-animate py-4" data-animation-name="fadeInUpShorter" data-animation-delay="200">
             <div class="container">
@@ -156,7 +152,6 @@
 
     @endforeach 
     <br>
-
 @endsection
 
 @push('js')

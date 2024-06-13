@@ -7,7 +7,7 @@
     <div class="container py-5">
         <div class="row">
             <div class="col-12 main-content">
-                <div class="row product-container">
+                <div class="row searchResults">
                     @include('frontend::welcome.includes.productItems')
                 </div>
             </div>
@@ -34,7 +34,7 @@
                 cache: false,
             }).done(function(response) {
                 that.closest('.container').find('.product-container').empty().append(response.view);
-                var newRoute = '{{ route("search") }}'; // Adjust route name as needed
+                var newRoute = '{{ route("search") }}';
                 history.pushState({ path: newRoute }, '', newRoute + '?q=' + encodeURIComponent(q));
             });
         });
