@@ -66,8 +66,6 @@
                     <div class="featured-products-slider owl-carousel owl-theme dot-inside dots-small" data-owl-options="{
                         'loop': true
                     }" style="border: 2px solid #FF5722">
-
-                  
                         @if($deals->count() > 0)
                         @php
                             $deal = $deals->first();
@@ -149,8 +147,6 @@
                             
                         </div>
                         @endif
-                    
-                    
                     </div>
                 </div>
             </div>
@@ -191,7 +187,6 @@
         }
     });
     $( document ).ready(function() {
-
 
         $(document).on('change', '.areaChange', function(e) {
             e.preventDefault();
@@ -301,10 +296,6 @@
                 }
             });
         });
-
-
-        
-
     });
 </script>
 

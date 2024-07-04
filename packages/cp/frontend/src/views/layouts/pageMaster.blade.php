@@ -125,7 +125,7 @@
 
     <div class="sticky-navbar">
         <div class="sticky-info">
-            <a href="demo22.html">
+            <a href="{{url('/')}}">
                 <i class="icon-home"></i>Home
             </a>
         </div>
@@ -377,24 +377,25 @@
     <script>
         $(document).ready(function () {
             $(document).on('keyup', ".search", function(e){
-                e.preventDefault();
-                var that = $(this);
-                var url = that.attr('data-url');
-                var q = that.val();
-                $.ajax({ 
-                    url: url,
-                    method: 'get',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        q : q
-                    },
-                    cache: false,
-                }).done(function(response) {
-                    that.closest('.container').find('.product-container').empty().append(response.view);
-                    var newRoute = '{{ route("search") }}'; // Adjust route name as needed
-                    history.pushState({ path: newRoute }, '', newRoute + '?q=' + encodeURIComponent(q));
-                });
+            e.preventDefault();
+            var that = $(this);
+            var url = that.attr('data-url');
+            var q = that.val();
+            $.ajax({ 
+                url: url,
+                method: 'get',
+                data: {
+                    _token: '{{ csrf_token() }}', // Include CSRF token for security
+                    q: q
+                },
+                cache: false,
+            }).done(function(response) {
+                that.closest('.container').find('.searchResults').empty().append(response.view);
+                var newRoute = '{{ route("search") }}';
+                history.pushState({ path: newRoute }, '', newRoute + '?q=' + encodeURIComponent(q));
+                location.reload();
             });
+        });
         });
     </script>
 
@@ -426,7 +427,7 @@
             });
 
         });
-    </script> --}}
+    </> --}}
 
     @stack('js')
 </body>

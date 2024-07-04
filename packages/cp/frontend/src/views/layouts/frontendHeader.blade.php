@@ -11,7 +11,7 @@
                    
                         <form action="#" method="get">
                             <div class="header-search-wrapper">
-                                <input type="search" class="form-control search" data-url="{{ route('search') }}" name="q" id="q" value="{{ request()->q}}" placeholder="I'm searching for..." required>
+                                <input type="search" class="form-control search" data-url="{{ route('search') }}" name="q" id="q" value="{{ request()->q }}" placeholder="I'm searching for..." required>
                                 <!-- End .select-custom -->
                                 <button class="btn icon-magnifier" title="search" type="submit"></button>
                             </div>

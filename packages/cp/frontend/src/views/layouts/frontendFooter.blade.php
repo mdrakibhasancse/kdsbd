@@ -106,11 +106,11 @@
         <div class="w3-indigo py-2">
             <div class="text-center">
                 @if(Agent::isDesktop())
-                     <span class="footer-copyright"> &copy; {{ date('Y')}} Copyright :  kdsbd Online All Rights Reserved. Developed By : <a class="text-white" href="https://a2sys.co/">a2sys.co</a></span>
+                     <span class="footer-copyright"> &copy; {{ date('Y')}} Copyright : kdsbd Online All Rights Reserved. Developed By : <a class="text-white" href="https://a2sys.co/" target="_blank">a2sys.co</a></span>
                 @else
-                   <span class="footer-copyright"> &copy; {{ date('Y')}} Copyright :  kdsbd Online All Rights Reserved. 
+                   <span class="footer-copyright"> &copy; {{ date('Y')}} Copyright : kdsbd Online All Rights Reserved. 
                     <br>
-                    Developed By : <a class="text-white" href="https://a2sys.co/">a2sys.co</a></span>
+                    Developed By : <a class="text-white" href="https://a2sys.co/" target="_blank">a2sys.co</a></span>
                 @endif
             </div>
         </div>

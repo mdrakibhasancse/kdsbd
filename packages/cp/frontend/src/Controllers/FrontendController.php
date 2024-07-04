@@ -637,7 +637,7 @@ class FrontendController extends Controller
         $products = Product::where(function ($qq) use ($q) {
             $qq->orWhere('name_en', 'like', "%" . $q . "%")
                 ->orWhere('name_bn', 'like', "%" . $q . "%");
-        })->paginate(12);
+        })->paginate(100);
 
         if ($request->ajax()) {
             return response()->json([

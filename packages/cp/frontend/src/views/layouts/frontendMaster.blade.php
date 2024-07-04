@@ -417,9 +417,10 @@
                 },
                 cache: false,
             }).done(function(response) {
-                that.closest('.container').find('.product-container').empty().append(response.view);
+                that.closest('.container').find('.searchResults').empty().append(response.view);
                 var newRoute = '{{ route("search") }}';
                 history.pushState({ path: newRoute }, '', newRoute + '?q=' + encodeURIComponent(q));
+                location.reload();
             });
         });
         });
