@@ -82,7 +82,7 @@
                             </div>
                             <!-- End .cart-product -->
 
-                            <div class="dropdown-cart-total">
+                            <div class="dropdown-cart-total mb-0">
                                 <span>SUBTOTAL:</span>
 
                                  <span class="cart-total-price float-right totalCartAmount">{{number_format(totalCartAmount(), 2)}} tk</span>
@@ -202,7 +202,7 @@
 							</div>
                             <!-- End .cart-product -->
 
-                            <div class="dropdown-cart-total">
+                            <div class="dropdown-cart-total mb-0">
                                 <span>SUBTOTAL:</span>
 
                                 <span class="cart-total-price float-right totalCartAmount">{{number_format(totalCartAmount(), 2)}} tk</span>

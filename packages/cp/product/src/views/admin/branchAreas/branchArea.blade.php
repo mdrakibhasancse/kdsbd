@@ -35,6 +35,9 @@
                     <a class="btn btn-outline-primary mr-1 my-1 rounded btn-sm {{ str_contains(url()->current(), 'branch/edit') ? 'active' : '' }}" href="{{route('admin.branchEdit', $branch)}}"><i class="fas fa-edit"></i>
                         Edit Branch</a>
 
+                    
+                    <a class="btn btn-outline-primary mr-1 my-1 rounded btn-sm" href="{{ route('admin.dealsAll', $branch)}}"><i class="fas fa-plus-square"></i> Deals</a>
+
                     <a class="btn btn-outline-primary mr-1 my-1 rounded btn-sm" href="{{ route('admin.pos', $branch)}}"><i class="fas fa-plus-square"></i> Pos Management</a>
 
                 </div>
@@ -47,7 +50,7 @@
                         <input type="hidden" value="{{ $branch->id }}" name="branch_id">
                         <div class="card-body">
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-3">
                                 <label for="title">Name English</label>
                                 <input type="text" name="name_en" value="{{ old('name_en') }}" id="name_en" placeholder="Name English" class="form-control" required>
                                 @error('name_en')
@@ -55,9 +58,14 @@
                                 @enderror
                                 </div>
 
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-3">
                                     <label for="title">Name (বাংলা)</label>
                                     <input type="text" name="name_bn" value="{{ old('name_bn') }}" id="name_bn" placeholder="Name (বাংলা)" class="form-control">
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label for="title">Delivery Charge</label>
+                                    <input type="number" name="delivery_charge" value="{{ old('delivery_charge') }}" id="delivery_charge" placeholder="Delivery charge" class="form-control">
                                 </div>
 
 

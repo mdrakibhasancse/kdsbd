@@ -10,6 +10,9 @@
             <div class="card-body p-0">
                 <h3 class="w3-small font-weight-bold pl-1 pb-0 pt-2" style="min-height: 35px">
                     {{$product->name_en}}
+                    @if($product->product_code)
+                    (<span>{{ $product->product_code }}</span>)
+                    @endif
                 </h3>
                     
 

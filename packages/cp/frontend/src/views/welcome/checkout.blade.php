@@ -42,28 +42,7 @@
                                 </tbody>
 
 
-                                <tfoot>
-                                    {{-- <tr>
-                                        <td colspan="5" class="clearfix">
-                                            <div class="float-left">
-                                                <div class="cart-discount">
-                                                    <form action="#">
-                                                        <div class="input-group">
-                                                            <input type="text" class="form-control form-control-sm"
-                                                                placeholder="Coupon Code" required>
-                                                            <div class="input-group-append">
-                                                                <button class="btn btn-sm" type="submit">Apply
-                                                                    Coupon</button>
-                                                            </div>
-                                                        </div><!-- End .input-group -->
-                                                    </form>
-                                                </div>
-                                            </div><!-- End .float-left -->
-
-                                            
-                                        </td>
-                                    </tr> --}}
-                                </tfoot>
+                              
                             </table>
                         </div>
                                                 
@@ -72,13 +51,16 @@
             </div>
 
             <div class="card">
-                <div class="card-body font-weight-bold">
+                <div class="card-body checkoutItemsCalculate">
+                    @include('frontend::welcome.includes.checkoutItemsCalculate')
+                </div>
+                {{-- <div class="card-body font-weight-bold">
                     <table class="table table-bordered bg-gray">
                             <tr>
-                                <td>Σ (Qty x Price)</td>
+                                <td>Sub Total</td>
                                 <td>
-                                    tk. <span class="totalOriginalCartAmount">
-                                        {{ number_format((totalCartAmount() + totalDiscountCartAmount()), 2) }}
+                                    <span class="totalOriginalCartAmount">
+                                        {{ number_format((totalCartAmount() + totalDiscountCartAmount()), 2) }} tk
                                     </span>
                                 </td>
                             </tr>
@@ -86,24 +68,36 @@
                             <tr>
                                 <td>Discount</td>
                                 <td>
-                                    tk. <span class="totalDiscountCartAmount"> 
-                                    {{ number_format(totalDiscountCartAmount(), 2) }}
+                                    <span class="totalDiscountCartAmount"> 
+                                    - {{ number_format(totalDiscountCartAmount(), 2) }} tk
                                     </span>
                                 </td>
                             </tr>
+
+
+
+                            <tr>
+                                <td>Delivery charge</td>
+                                <td>
+                                    <span class="totalDiscountCartAmount"> 
+                                    + {{ $area->delivery_charge }} tk
+                                    </span>
+                                </td>
+                            </tr>
+
                             <tr>
                                 <td>
-                                    <h4>Total</h4>
+                                    <h4>Amount Payable</h4>
                                 </td>
 
                                 <td class="price-col">
-                                    tk. <span class="totalCartAmount w3-large">
-                                        {{ number_format(totalCartAmount(), 2) }}
+                                    <span class="totalCartAmount w3-large">
+                                        {{ number_format((totalCartAmount() + $area->delivery_charge), 2) }} tk
                                     </span>
                                 </td>
                             </tr>
                     </table>
-                </div>
+                </div> --}}
             </div>
     
         </div><!-- End .col-lg-8 -->
@@ -270,11 +264,13 @@
                     $(".headerCart").empty().append(result.view);
                     $(".chekoutBtn").empty().append(result.chekoutBtn);
                     $(".checkoutItems").empty().append(result.checkoutItems);
+                    $(".checkoutItemsCalculate").empty().append(result.checkoutItemsCalculate);
                     that.closest('.product-details').find(".productCartItem").empty().append(result.productCartItem);
                     $(".totalCartAmount").html(result.totalCartAmount);
                     $(".totalDiscountCartAmount").html(result.totalDiscountCartAmount);
                     $(".totalOriginalCartAmount").html(result.totalOriginalCartAmount);
                     $(".totalCartItems").html(result.totalCartItems);
+                    $(".grandTotalAmount").html(result.grandTotalAmount);
 
                     const Toast = Swal.mixin({
                         toast: true,

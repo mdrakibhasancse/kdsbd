@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cp\Product\Models\OrderItem;
+use Cp\Product\Models\BranchDeal;
 
 class Product extends Model
 {
@@ -60,6 +61,22 @@ class Product extends Model
     {
        return (bool) $this->items()->where('branch_id', $branch)->where('order_id', $order)->count();
     }
+
+    public function deals()
+    {
+        return $this->belongsToMany(BranchDeal::class, 'branch_deal_items', 'product_id', 'deal_id');
+    }
+
+    public function hasDealItem($branchId, $dealId)
+    {
+        return (bool) $this->deals()
+            ->wherePivot('branch_id', $branchId)
+            ->wherePivot('deal_id', $dealId)
+            ->count();
+    }
+
+
+    
 
    
 }

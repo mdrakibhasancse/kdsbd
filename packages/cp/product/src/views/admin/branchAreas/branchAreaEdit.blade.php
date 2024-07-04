@@ -25,7 +25,7 @@
                         @csrf
                     <div class="card-body">
                         <div class="row">
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-3">
                             <label for="title">Name English</label>
                             <input type="text" name="name_en" value="{{ $brancharea->name_en ?? old('name_en') }}" id="name_en" placeholder="Name English" class="form-control" required>
                             @error('name_en')
@@ -33,9 +33,14 @@
                             @enderror
                             </div>
 
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-3">
                                 <label for="title">Name (বাংলা)</label>
                                 <input type="text" name="name_bn" value="{{ $brancharea->name_bn ?? old('name_bn') }}" id="name_bn" placeholder="Name (বাংলা)" class="form-control">
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label for="title">Delivery Charge</label>
+                                <input type="number" name="delivery_charge" value="{{ $brancharea->delivery_charge ?? old('delivery_charge') }}" id="delivery_charge" placeholder="Delivery charge" class="form-control">
                             </div>
 
 

@@ -240,8 +240,75 @@ Route::group(['middleware' => ['web', 'auth', 'role:admin'], 'prefix' => 'admin'
     ]);
 
 
+
+    // Deal Route
+
+    Route::get('deals/all/branch/{branch}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@dealsAll',
+        'as' => 'admin.dealsAll'
+    ]);
+
+    Route::post('deal/store', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@dealStore',
+        'as' => 'admin.dealStore'
+    ]);
+
+    Route::get('deal/edit/{deal}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@dealEdit',
+        'as' => 'admin.dealEdit'
+    ]);
+
+    Route::post('deal/update/{deal}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@dealUpdate',
+        'as' => 'admin.dealUpdate'
+    ]);
+
+    Route::post('deal/delete/{deal}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@dealDelete',
+        'as' => 'admin.dealDelete'
+    ]);
+
+    Route::get('deal/status/{deal}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@dealStatus',
+        'as' => 'admin.dealStatus'
+    ]);
    
 
+    
+    Route::get('deal/details/{deal}/branch/{branch}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@dealDetails',
+        'as' => 'admin.dealDetails'
+    ]);
+
+
+    Route::get('deal/product/modal/open/{deal}/branch/{branch}/type/{type?}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@dealProductModalOpen',
+        'as' => 'admin.dealProductModalOpen'
+    ]);
+
+
+    
+    Route::get('branch/product/search/ajax/{branch}/deal/{deal}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@branchDealProductSearchAjax',
+        'as' => 'admin.branchDealProductSearchAjax'
+    ]);
+
+
+    Route::get('select/branch/{branch}/product/{product}/deal/{deal}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@selectbranchDealProduct',
+        'as' => 'admin.selectbranchDealProduct'
+    ]);
+
+    Route::get('un_select/branch/{branch}/product/{product}/deal/{deal}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@unSelectbranchDealProduct',
+        'as' => 'admin.unSelectbranchDealProduct'
+    ]);
+
+
+    Route::get('deal/product/delete/{product}/deal/{deal}/branch/{branch}', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@dealProductDelete',
+        'as' => 'admin.dealProductDelete'
+    ]);
 
     // order route
 

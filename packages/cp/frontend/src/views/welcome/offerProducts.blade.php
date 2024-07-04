@@ -116,6 +116,7 @@
                     that.closest('.product-details').find(".productCartItem").empty().append(result.productCartItem);
                     $(".totalCartAmount").html(result.totalCartAmount);
                     $(".totalCartItems").html(result.totalCartItems);
+                    $(".grandTotalAmount").html(result.grandTotalAmount);
 
                     const Toast = Swal.mixin({
                         toast: true,
@@ -164,6 +165,7 @@
                     that.closest('.product-details').find(".productCartItem").empty().append(result.productCartItem);
                     $(".totalCartAmount").html(result.totalCartAmount);
                     $(".totalCartItems").html(result.totalCartItems);
+                    $(".grandTotalAmount").html(result.grandTotalAmount);
 
                     const Toast = Swal.mixin({
                         toast: true,

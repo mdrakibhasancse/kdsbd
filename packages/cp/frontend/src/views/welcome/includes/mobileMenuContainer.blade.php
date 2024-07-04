@@ -10,6 +10,8 @@
                         @foreach ($cats as $cat)
                         <li><a href="{{ route('category', $cat->slug)}}">{{$cat->name_en}}</a></li>
                         @endforeach
+                        <li><a href="{{ route('categoriesAll')}}">VIEW ALL <i></i></a></li>
+                        
                     </ul>
                 </li>
                 

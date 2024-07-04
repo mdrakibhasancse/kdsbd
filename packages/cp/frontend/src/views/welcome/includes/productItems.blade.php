@@ -4,7 +4,7 @@
             <figure>
                 <a href="{{route('product', ['slug' => $product->slug, 'id' => $product->id])}}">
                     <img src="{{ route('imagecache', ['template' => 'pfimd', 'filename' => $product->fi()]) }}" alt="product">
-                    <img src="{{ route('imagecache', ['template' => 'pfimd', 'filename' => $product->fi()]) }}"  alt="product">
+                    {{-- <img src="{{ route('imagecache', ['template' => 'pfimd', 'filename' => $product->fi()]) }}"  alt="product"> --}}
                 </a>
 
                 <div class="label-group">

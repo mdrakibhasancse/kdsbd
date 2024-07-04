@@ -2,6 +2,7 @@
 
 @push('css')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+
     <style>
         .owl-carousel.nav-image-center .owl-nav button {
             top: 50% !important;
@@ -27,11 +28,13 @@
                     <div class="home-slider slide-animate owl-carousel owl-theme custom-nav" data-owl-options="{'items': 1, 'loop': true, 'dots': false, 'autoplay': true}">
                         @foreach ($sliders as $slider)
                         <div class="home-slide home-slide-1 banner">
+                            <a href="{{ $slider->link ?? '' }}">
                             <img class="slide-bg" src="{{ route('imagecache', ['template' => 'cplg', 'filename' => $slider->fi_desktop()]) }}" alt="slider image">
                             <div class="banner-layer banner-layer-middle banner-layer-right">
                                 <div class="appear-animate" data-animation-name="rotateInUpLeft">
                                 </div>
                             </div>
+                           </a>
                         </div>
                         @endforeach
                        
@@ -44,11 +47,13 @@
                          @foreach ($sliders as $slider)
                         <div>
                             <div class="img-thumbnail border-0 p-0 d-block">
+                                <a href="{{ $slider->link ?? '' }}">
                                 <img
                                 class="img-fluid border-radius-0"
                                 src="{{ route('imagecache', ['template' => 'cpsm', 'filename' => $slider->fi_mobile()]) }}"
-                                alt=""
-                                />
+                                alt=""/>
+                                </a>
+
                             </div>
                         </div>
                          @endforeach
@@ -56,70 +61,96 @@
                 </div>
                 @endif
 
+
                 <div class="col-lg-3 mb-2">
                     <div class="featured-products-slider owl-carousel owl-theme dot-inside dots-small" data-owl-options="{
                         'loop': true
                     }" style="border: 2px solid #FF5722">
-                        <div class="product-default count-down">
-                            <h3 class="product-name text-white">Deals of the week!</h3>
-                            
-                            <figure class="w3-deep-orange">
-                                <a href="javascript:void(0)">
-                                    <img src="{{asset("/frontend/assets/images/demoes/demo22/products/featured-sale.jpg")}}" width="217" height="217" alt="product">
-                                </a>
+
+                  
+                        @if($deals->count() > 0)
+                        @php
+                            $deal = $deals->first();
+                        @endphp
+                        @foreach($deals as $item)
+                            <div class="product-default count-down mb-0">
+                                <h3 class="w3-deep-orange w3-large py-3 mb-0">Deals of the week!
+                                    {{-- <div id="countdown">
+                                        <div id="timer">
+                                            <span>Ends In:</span>
+                                            <span id="days">00</span>
+                                            <span>:</span>
+                                            <span id="hours">00</span>
+                                            <span>:</span>
+                                            <span id="minutes">00</span>
+                                            <span>:</span>
+                                            <span id="seconds">00</span>
+                                        </div>
+                                    </div> --}}
                                
-                                <div class="product-countdown-container">
-                                    <span class="product-countdown-title">offer ends in:</span>
-                                    <div class="product-countdown countdown-compact" data-until="2021, 10, 5" data-compact="true">
-                                    </div>
-                                    <!-- End .product-countdown -->
-                                </div>
-                                <!-- End .product-countdown-container -->
-                            </figure>
-                            <div class="product-details">
-                                <h3 class="product-title">
-                                    <a href="">1080p Wifi IP Camera</a>
                                 </h3>
-
-                                <div class="price-box">
-                                    {{-- <span class="old-price">tk. 15296.00</span> --}}
-                                    <span class="product-price">tk. 15299.00</span>
-                                </div>
-                                <!-- End .price-box -->
-                            </div>
-                            <!-- End .product-details -->
-                        </div>
-                        <div class="product-default count-down">
-                            <h3 class="product-name text-white">
-                                Deals of the week!
-                            </h3>
-                            <figure class="w3-deep-orange">
-                                <a href="javascript:void(0)">
-                                    <img src="{{asset("/frontend/assets/images/demoes/demo22/products/featured-sale-2.jpg")}}" width="217" height="217" alt="product">
-                                </a>
                                 
-                                <div class="product-countdown-container">
-                                    <span class="product-countdown-title">offer ends in: </span>
-                                    <div class="product-countdown countdown-compact" data-until="2021, 10, 5" data-compact="true">
+                                
+                                <figure class="p-0 m-0">
+                                    <a href="{{ route('dealOfTheWeek',$item)}}">
+                                        <img src="{{ route('imagecache', ['template' => 'pfimd', 'filename' => $item->fi()]) }}" alt="deal">
+                                    </a>
+
+                                
+
+                                    
+                                    {{-- <div class="product-countdown-container" style=" bottom: -8.8rem;">
+                                        <div class="product-countdown countdown-compact" data-until="{{ now()}}" data-compact="true">
+                                        </div>
+                                        <!-- End .product-countdown -->
+                                    </div> --}}
+                                    <!-- End .product-countdown-container -->
+                                </figure>
+
+
+                                <div class="product-details">
+                                    <h3 class="product-title pt-1">
+                                        <a href="{{ route('dealOfTheWeek',$item)}}">{{$item->title}}</a>
+                                    </h3>
+
+                                    @php
+                                    $products = $item->products()->get();
+                                    $total_price = 0;
+                                    $total_final_price = 0;
+                                    @endphp
+
+                                    @foreach($products as $product)
+                                    @php
+                                        $total_price += $product->price;
+                                        $total_final_price += $product->total_final_price;
+                                    @endphp
+                                    @endforeach
+                                    <div class="price-box">
+                                        <span class="old-price w3-small">Tk. {{$total_price}}</span>
+                                        <span class="product-price w3-small font-weight-bold">Tk .{{ $total_price }}</span>
                                     </div>
-                                    <!-- End .product-countdown -->
+                                
                                 </div>
-                                <!-- End .product-countdown-container -->
-                            </figure>
-                            <div class="product-details">
-                                <h3 class="product-title">
-                                    <a href="">HD Camera</a>
-                                </h3>
-
-
-                                <div class="price-box">
-                                    {{-- <span class="old-price">tk. 15299.00</span> --}}
-                                    <span class="product-price">tk. 15299.00</span>
-                                </div>
-                                <!-- End .price-box -->
+                                <!-- End .product-details -->
                             </div>
-                            <!-- End .product-details -->
+                        @endforeach
+                        @else
+                        <div class="product-default count-down mb-0">
+                            <h3 class="w3-deep-orange w3-large py-3 mb-0">Deals of the week!
+                                
+                            </h3>
+                            
+                            <figure class="p-0 m-0">
+                                <a href="javascript:void(0)">
+                                    <img src="{{ route('imagecache', ['template' => 'pfimd', 'filename' => 'no_deals.webp']) }}" alt="deal">
+                                </a>
+                            </figure>
+
+                            
                         </div>
+                        @endif
+                    
+                    
                     </div>
                 </div>
             </div>
@@ -138,13 +169,9 @@
                         'margin': 0,
                         'nav': true
                     }">
-
-                 
                         @foreach($category->activeBranchProducts()  as $product)
                             @include('frontend::welcome.includes.productPart')
                         @endforeach
-                        
-                    
                     </div>
                 </div>
             </div>
@@ -156,6 +183,7 @@
 
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 <script>
     $.ajaxSetup({
         headers: {
@@ -201,7 +229,7 @@
                     that.closest('.product-details').find(".productCartItem").empty().append(result.productCartItem);
                     $(".totalCartAmount").html(result.totalCartAmount);
                     $(".totalCartItems").html(result.totalCartItems);
-
+                    $(".grandTotalAmount").html(result.grandTotalAmount);
                     const Toast = Swal.mixin({
                         toast: true,
                         position: "top",
@@ -252,7 +280,7 @@
                     that.closest('.product-details').find(".productCartItem").empty().append(result.productCartItem);
                     $(".totalCartAmount").html(result.totalCartAmount);
                     $(".totalCartItems").html(result.totalCartItems);
-
+                    $(".grandTotalAmount").html(result.grandTotalAmount);
                     const Toast = Swal.mixin({
                         toast: true,
                         position: "top",
@@ -274,6 +302,44 @@
             });
         });
 
+
+        
+
     });
 </script>
+
+<script>
+    // Set the date we're counting down to
+    var countDownDate = new Date("{{ $deal->expired_date }}").getTime();
+
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+
+        // Get today's date and time
+        var now = new Date().getTime();
+
+        // Find the distance between now and the count down date
+        var distance = countDownDate - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Output the result in an element with id="timer"
+        document.getElementById("days").innerHTML = days;
+        document.getElementById("hours").innerHTML = hours;
+        document.getElementById("minutes").innerHTML = minutes;
+        document.getElementById("seconds").innerHTML = seconds;
+
+        // If the count down is over, write some text 
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("timer").innerHTML = "EXPIRED";
+        }
+    }, 1000);
+</script>
+
+
 @endpush

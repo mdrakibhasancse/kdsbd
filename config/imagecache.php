@@ -55,6 +55,7 @@ return [
         public_path('storage/project_image'),
         public_path('storage/team'),
         public_path('storage/services'),
+        public_path('storage/deals'),
 
     ],
 

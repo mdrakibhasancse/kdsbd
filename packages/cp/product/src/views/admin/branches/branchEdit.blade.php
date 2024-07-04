@@ -35,6 +35,8 @@
                     <a class="btn btn-outline-primary mr-1 my-1 rounded btn-sm {{ str_contains(url()->current(), 'branch/edit') ? 'active' : '' }}" href="{{route('admin.branchEdit', $branch)}}"><i class="fas fa-edit"></i>
                         Edit Branch</a>
 
+                    <a class="btn btn-outline-primary mr-1 my-1 rounded btn-sm" href="{{ route('admin.dealsAll', $branch)}}"><i class="fas fa-plus-square"></i> Deals</a>
+
                     <a class="btn btn-outline-primary mr-1 my-1 rounded btn-sm" href="{{ route('admin.pos', $branch)}}"><i class="fas fa-plus-square"></i> Pos Management</a>
                 </div>
             </div>
@@ -63,10 +65,11 @@
                       <span class="text-danger">{{ $message }}</span>
                       @enderror
                     </div>
-                    
-                  
 
-                      <div class="form-group row">
+                    
+                    
+
+                    <div class="form-group row">
                         <label for="division" class="col-sm-2 col-form-label text-left">{{ __('Division') }}
                             <span class="text-danger"></span>
                         </label>

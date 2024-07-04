@@ -9,6 +9,7 @@ use Cp\Product\Models\ProductCategory;
 use Cp\Product\Models\ProductSubCategory;
 use Cp\Product\Models\Branch;
 use Cp\Product\Models\BranchArea;
+use Cp\Product\Models\BranchDeal;
 use Cp\Product\Models\Order;
 use Cp\Product\Models\OrderItem;
 use Cp\Menupage\Models\Page;
@@ -38,19 +39,30 @@ class FrontendController extends Controller
         $area = BranchArea::where('name_en',  $name)->first();
         if($area){
            $branch = $area->branch;
+           $deals = $branch->deals()
+           ->whereHas('products')
+           ->where('active', 1)
+           ->where('expired_date', '>', Carbon::now())
+           ->latest()
+           ->get();
+
+
            $categories = $branch->categories()->whereHas('products', function($q){
               $q->whereActive(true);
            })->whereActive(true)->latest()->get();
            $sliders = Slider::whereActive(true)->latest()->take(4)->get();
-           return view('frontend::welcome.welcome',compact('categories', 'branch', 'sliders'));
-         
+           return view('frontend::welcome.welcome',compact('categories', 'branch', 'sliders','deals'));
         }else{
-        //    $branch = Branch::inRandomOrder()->first();
+           $branch = Branch::inRandomOrder()->first();
+           $deals = BranchDeal::whereHas('products')
+           ->where('active', 1)
+           ->where('expired_date', '>', Carbon::now())
+           ->take(2)->get();
            $categories = ProductCategory::whereHas('products', function($q){
               $q->whereActive(true);
            })->whereActive(true)->latest()->get();
            $sliders = Slider::whereActive(true)->latest()->take(4)->get();
-           return view('frontend::welcome.welcome',compact('categories', 'sliders'));
+           return view('frontend::welcome.welcome',compact('categories', 'sliders', 'deals'));
         }
   
        
@@ -234,6 +246,7 @@ class FrontendController extends Controller
 
                 $totalCartAmount = totalCartAmount();
                 $totalCartItems = totalCartItems();
+                $grandTotalAmount = totalCartAmount() + $area->delivery_charge;
                 if ($request->ajax()) {
                     $collections = Cart::getCartItems();
                     return Response()->json([
@@ -241,7 +254,7 @@ class FrontendController extends Controller
                         'message' => 'item is added to cart!',
                         'totalCartItems' => $totalCartItems,
                         'totalCartAmount' => $totalCartAmount,
-                        
+                        'grandTotalAmount' => $grandTotalAmount,
                         'view' => View('frontend::layouts.inc.headerCart', [
                             'collections' => $collections,
                         ])->render(),
@@ -275,6 +288,8 @@ class FrontendController extends Controller
     {
         $cart = Cart::find($request->cart);
         $product = $cart->product;
+        $name = $request->cookie('area_name');
+        $area = BranchArea::where('name_en',  $name)->first();
         if($request->new_qty == 0){
             $cart->delete();
         }
@@ -283,6 +298,7 @@ class FrontendController extends Controller
         $totalCartItems = totalCartItems();
         $totalDiscountCartAmount = totalDiscountCartAmount();
         $totalOriginalCartAmount = totalCartAmount() + totalDiscountCartAmount();
+        $grandTotalAmount = totalCartAmount() + $area->delivery_charge;
 
         if ($request->ajax()) {
             
@@ -293,8 +309,8 @@ class FrontendController extends Controller
                 'totalCartAmount' => $totalCartAmount,
                 'totalCartItems' => $totalCartItems,
                 'totalDiscountCartAmount' => $totalDiscountCartAmount,
-                'totalOriginalCartAmount' => $totalOriginalCartAmount,
-
+                'grandTotalAmount' => $grandTotalAmount,
+                
                 'view' => View('frontend::layouts.inc.headerCart', [
                     'collections' => $collections,
                 ])->render(),
@@ -311,6 +327,13 @@ class FrontendController extends Controller
 
                 'checkoutItems' => View('frontend::welcome.includes.checkoutItems', [
                     'collections' => $collections,
+                ])->render(),
+
+                'checkoutItemsCalculate' => View('frontend::welcome.includes.checkoutItemsCalculate', [
+                    'totalCartAmount' => $totalCartAmount,
+                    'totalDiscountCartAmount' => $totalDiscountCartAmount,
+                    'grandTotalAmount' => $grandTotalAmount,
+                    'area' => $area,
                 ])->render(),
 
                 
@@ -359,7 +382,7 @@ class FrontendController extends Controller
     }
 
 
-    public function checkout()
+    public function checkout(Request $request)
     {
         $collections = Cart::getCartItems();
         $order = Auth::user()->orders()->first();  
@@ -368,13 +391,18 @@ class FrontendController extends Controller
         foreach ($collections as $cart) {
            $total_amount = $total_amount + ($cart->product->final_price * $cart->quantity);
         }
+
+        $name = $request->cookie('area_name');
+        $area = BranchArea::where('name_en',  $name)->first();
+       
         
-        if($total_amount >= 1000){
-           return view('frontend::welcome.checkout', compact('collections','order'));
-        }else{
-            alert()->error('Orders below 1000tk are not accepted');
-            return redirect('/');
-        }
+        // if($total_amount >= 1000){
+
+        return view('frontend::welcome.checkout', compact('collections','order' ,'area'));
+        // }else{
+        //     alert()->error('Orders below 1000tk are not accepted');
+        //     return redirect('/');
+        // }
         
     }
 
@@ -623,7 +651,114 @@ class FrontendController extends Controller
     }
 
 
+    public function dealOfTheWeek(Request $request, BranchDeal $deal){
+        $name = $request->cookie('area_name');
+        $area = BranchArea::where('name_en',  $name)->first();
+        if($area){
+            $branch = $area->branch;
+            $data['deals'] = $branch->deals()
+            ->whereHas('products')
+            ->where('active', 1)
+            ->where('expired_date', '>', Carbon::now())
+            ->latest()
+            ->get();
+
+        }else{
+            $data['deals'] = BranchDeal::whereHas('products')
+           ->where('active', 1)
+           ->where('expired_date', '>', Carbon::now())
+           ->take(2)->get();
+        }
+        $data['deal'] = $deal;
+        return view('frontend::welcome.dealOfTheWeek', $data);
+    }
+
+
+    public function addToCartDealProduct(Request $request)
+    {
+
+        $session_id = Session::get('session_id');
+        if(empty($session_id)){
+            $session_id = Session::getId();
+            Session::put('session_id', $session_id);
+        }
+
+        if (Auth::check()) {
+            $user_id = Auth::user()->id;
+        } else {
+            $user_id = 0;
+        }
+
+        $name = $request->cookie('area_name');
+        $area = BranchArea::where('name_en',  $name)->first();
+        $dealId = $request->deal;
+        $deal = BranchDeal::find($dealId);
+        $products =  $deal->products()->get();
+
+        
+       
+        if($area){
+            $branch = $area->branch;
+            if($branch){
+                foreach($products as $product){
+                    $cart = Cart::where('product_id', $product->id)->where('session_id', $session_id)->where('user_id', $user_id)->where('branch_id', $branch->id)->first();
+                
+                    if ($cart) {
+                        $cart->quantity   = $cart->quantity + $request->qty;
+                        $cart->save();
+                    } else {
+                        $cart             = new Cart();
+                        $cart->product_id = $product->id;
+                        $cart->session_id = $session_id;
+                        $cart->user_id    = $user_id;
+                        $cart->branch_id  = $branch->id;
+                        $cart->quantity   = 1;
+                        $cart->addedby_id = $user_id;
+                        $cart->save();
+                    }
+                }
     
+                $totalCartAmount = totalCartAmount();
+                $totalCartItems = totalCartItems();
+                $grandTotalAmount = totalCartAmount() + $area->delivery_charge;
+                if ($request->ajax()) {
+                    $collections = Cart::getCartItems();
+                    return Response()->json([
+                        'status' => true,
+                        'message' => 'Deal products is added to cart!',
+                        'totalCartItems' => $totalCartItems,
+                        'totalCartAmount' => $totalCartAmount,
+                        'grandTotalAmount' => $grandTotalAmount,
+                        'view' => View('frontend::layouts.inc.headerCart', [
+                            'collections' => $collections,
+                        ])->render(),
+
+                        'chekoutBtn' => View('frontend::layouts.inc.chekoutBtn', [
+                            // 'cart' =>  $cart,
+                            // 'product' =>  $product,
+                        ])->render(),
+
+
+                    ]);
+                
+                }
+            }else{
+                abort(404);
+            }
+              
+             
+        }
+
+
+
+        // $product = Cache::remember("product_{$productId}", null, function () use ($productId) {
+        //     return Product::find($productId);
+        // });
+
+     
+
+        
+    }
 
     
     public function sitemap()

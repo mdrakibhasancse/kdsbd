@@ -79,6 +79,12 @@ Route::group(['middleware' => ['web']], function () {
     ]);
 
 
+    Route::post('add-to-cart-deal-product/{deal}', [
+        'uses' => 'Cp\Frontend\Controllers\FrontendController@addToCartDealProduct',
+        'as' => 'addToCartDealProduct'
+    ]);
+
+
     Route::get('/page/{slug?}', [
         'uses' => 'Cp\Frontend\Controllers\FrontendController@page',
         'as' => 'page'
@@ -90,6 +96,11 @@ Route::group(['middleware' => ['web']], function () {
         'as' => 'search'
     ]);
 
+
+    Route::get('/deal-of-the-week/{deal}', [
+        'uses' => 'Cp\Frontend\Controllers\FrontendController@dealOfTheWeek',
+        'as' => 'dealOfTheWeek'
+    ]);
    
     Route::get('/sitemap.xml', [
         'uses' => 'Cp\Frontend\Controllers\FrontendController@sitemap',

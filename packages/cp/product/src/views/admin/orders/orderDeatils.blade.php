@@ -162,7 +162,7 @@
 
                                                 <datalist id="payment_methods">
                                                     @foreach (config('parameter.payment_method') as $item)
-                                                        <option value="{{ $item }}" {{ old('payment_method') == $item  ? 'selected' : ' '}}>{{ $item }}</option>
+                                                        <option value="{{ $item }}" {{ old('payment_method') == $item  ? 'selected' : ' '}}>{{ ucfirst($item) }}</option>
                                                     @endforeach
                                                 </datalist>
                                             </div>

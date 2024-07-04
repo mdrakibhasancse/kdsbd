@@ -5,6 +5,7 @@ namespace Cp\Product\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Cp\Product\Models\Product;
 
 class Branch extends Model
 {
@@ -92,6 +93,18 @@ class Branch extends Model
         ->where('addedby_id', Auth::id())
         ->latest()
         ->first();
+    }
+
+    
+    public function deals()
+    {
+        return $this->hasMany(BranchDeal::class, 'branch_id');
+    }
+
+    
+    public function activedeals()
+    {
+        return $this->deals()->where('active', 1)->get();
     }
 
 }

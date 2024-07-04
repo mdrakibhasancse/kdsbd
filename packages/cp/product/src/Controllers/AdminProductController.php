@@ -23,6 +23,8 @@ use Cp\Product\Models\PosModule;
 use Cp\Product\Models\ModuleItem;
 use Cp\Product\Models\PosOrder;
 use Cp\Product\Models\PosOrderItem;
+use Cp\Product\Models\BranchDeal;
+use Cp\Product\Models\BranchDealItem;
 use Cp\Product\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -569,6 +571,7 @@ class AdminProductController extends Controller
         $area =  new BranchArea();
         $area->name_en = $request->name_en;
         $area->name_bn = $request->name_bn;
+        $area->delivery_charge = $request->delivery_charge ?? 0.00;
         $area->Branch_id = $branch->id;
         $area->division_id = $branch->division_id;
         $area->district_id = $branch->district_id;
@@ -608,6 +611,7 @@ class AdminProductController extends Controller
 
         $brancharea->name_en = $request->name_en;
         $brancharea->name_bn = $request->name_bn;
+        $brancharea->delivery_charge = $request->delivery_charge ?? 0.00;
         $brancharea->active = $request->active ? 1 : 0;
         $brancharea->editedby_id = Auth::id();
         $brancharea->save();
@@ -648,6 +652,239 @@ class AdminProductController extends Controller
     }
 
 
+    // deal start
+
+    public function dealsAll(Branch $branch)
+    {
+        $deals = BranchDeal::where('branch_id', $branch->id)->latest()->paginate(30);
+        return view('product::admin.branches.deals.dealsAll', compact('deals', 'branch'));
+    }
+
+
+    public function dealStore(Request $request)
+    {
+        $validation = Validator::make(
+            $request->all(),
+            [
+                'title' => 'required',
+                'expired_date' => 'required',
+                'image' => 'required|image',
+            ]
+        );
+
+        if ($validation->fails()) {
+            toast('Something Went Wrong!', 'error');
+            return back()->withErrors($validation)->withInput();
+        }
+
+        $deal =  new BranchDeal();
+        $deal->title = $request->title;
+        $deal->excerpt = $request->excerpt;
+        $deal->expired_date = $request->expired_date;
+        $deal->branch_id = $request->branch;
+        $deal->addedby_id = Auth::id();
+        if ($request->hasFile('image')) {
+            $file = $request->image;
+            $ext = "." . $file->getClientOriginalExtension();
+            $imageName = time() . $ext;
+            Storage::disk('public')->put('deals/' . $imageName, File::get($file));
+            $deal->image = $imageName;
+        }
+        $deal->save();
+        cache()->flush();
+        toast('Deal successfully Created', 'success');
+        return redirect()->back();
+    }
+
+
+    public function dealEdit(BranchDeal $deal)
+    {
+        $data['deal'] = $deal;
+        return view('product::admin.branches.deals.dealEdit', $data);
+    }
+
+
+    public function dealUpdate(Request $request, BranchDeal $deal)
+    {
+        $validation = Validator::make(
+            $request->all(),
+            [
+                'title' => 'required',
+                'expired_date' => 'required',
+            ]
+        );
+        if ($validation->fails()) {
+            toast('Something Went Wrong!', 'error');
+            return back()->withErrors($validation)->withInput();
+        }
+        
+        $deal->title = $request->title;
+        $deal->excerpt = $request->excerpt;
+        $deal->expired_date = $request->expired_date;
+        $deal->active = $request->active ? 1 : 0;
+        $deal->addedby_id = Auth::id();
+        if ($request->hasFile('image')) {
+            $old_file = 'deals/' . $deal->image;
+            if (Storage::disk('public')->exists($old_file)) {
+                Storage::disk('public')->delete($old_file);
+            }
+            $file = $request->image;
+            $ext = "." . $file->getClientOriginalExtension();
+            $imageName = time() . $ext;
+            Storage::disk('public')->put('deals/' . $imageName, File::get($file));
+            $deal->image = $imageName;
+        }
+        $deal->save();
+        cache()->flush();
+        toast('Deal successfully update', 'success');
+        return redirect()->back();
+    }
+
+
+    public function dealDelete(BranchDeal $deal)
+    {
+        $deal->delete();
+        cache()->flush();
+        toast('Deal successfully deleted', 'success');
+        return redirect()->back();
+    }
+
+
+    public function dealStatus(Request $request)
+    {
+        $deal = BranchDeal::find($request->deal);
+        if (($deal->active == 0)) {
+            $deal->active =  1;
+            $active = true;
+        } else {
+            $deal->active =  0;
+            $active = false;
+        }
+        $deal->save();
+        return response()->json([
+            'success' => true,
+            'active' => $active
+        ]);
+    }
+
+
+    public function dealDetails(BranchDeal $deal, Branch $branch)
+    {
+        return view('product::admin.branches.deals.dealDetails', compact('deal', 'branch'));
+    }
+
+
+    public function dealProductModalOpen(Request $request)
+    {
+        $type = $request->type;
+        $deal = BranchDeal::where('id',$request->deal)->first();
+        $branch = Branch::where('id',$request->branch)->first();
+        $products =  $branch->products()->paginate(10);
+        $products->setPath(route('admin.branchDealProductSearchAjax', ['branch' => $branch->id, 'deal' => $deal->id]));
+        if ($type == 'deal-product-modal-open') {
+            if ($request->ajax()) {
+                return Response()->json(
+                    View('product::admin.branches.deals.modals.addDealProductModal', [
+                        'products' =>  $products,
+                        'branch' => $branch,
+                        'deal' => $deal,
+                    ])->render(),
+                );
+            }
+            return back();
+        }
+    }
+
+
+    public function branchDealProductSearchAjax(Request $request)
+    {
+        $branch = Branch::find($request->branch);
+        $deal = BranchDeal::find($request->deal);
+        $q = $request->q;
+        $products = $branch->products()
+        ->where(function($query) use($q) {
+            $query->where('product_id', 'like', '%' . $q . '%')
+            ->orWhere('name_en', 'like', '%' . $q . '%')
+            ->orWhere('unit', 'like', '%' . $q . '%')
+            ->orWhere('final_price', 'like', '%' . $q . '%');
+        })
+        ->paginate(10);
+       
+        $view = view('product::admin.branches.deals.ajax.searchProducts', compact('branch', 'products', 'q', 'deal'))->render();
+        
+        return response()->json([
+            'success' => true,
+            'view' => $view
+        ]);
+    }
+
+
+    public function selectbranchDealProduct(Request $request)
+    {
+        $branch = Branch::find($request->branch);
+        $product = Product::find($request->product);
+        $deal = BranchDeal::find($request->deal);
+        
+        $bdp = BranchDealItem::where('branch_id', $branch->id)->where('product_id', $product->id)->where('deal_id', $deal->id)->first();
+        if (!$bdp) {
+            $bdp = new BranchDealItem();
+            $bdp->branch_id =  $branch->id;
+            $bdp->product_id = $product->id;
+            $bdp->deal_id = $deal->id;
+            $bdp->addedby_id = Auth::id();
+            $bdp->save();
+        }
+        
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => true,
+                'view' => View('product::admin.branches.deals.includes.items', [
+                    'deal' => $deal,
+                    'product' => $product,
+                    'branch' => $branch,
+                ])->render(),
+            ]);
+        }
+
+    }
+
+
+    public function unSelectbranchDealProduct(Request $request)
+    {
+        $branch = Branch::find($request->branch);
+        $product = Product::find($request->product);
+        $deal = BranchDeal::find($request->deal);
+        $dealItem = BranchDealItem::where('branch_id', $branch->id)->where('product_id', $product->id)->where('deal_id', $deal->id)->first();
+        if($dealItem){
+            $dealItem->delete();
+        }
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => true,
+                'view' => View('product::admin.branches.deals.includes.items', [
+                    'deal' => $deal,
+                    'product' => $product,
+                    'branch' => $branch,
+                ])->render(),
+            ]);
+        }
+
+    }
+
+
+    public function dealProductDelete(Product $product, BranchDeal $deal, Branch $branch){
+        $dealItem = BranchDealItem::where('branch_id', $branch->id)->where('product_id', $product->id)->where('deal_id', $deal->id)->first();
+        if($dealItem){
+            $dealItem->delete();
+            toast('Deal Item successfully deleted', 'success');
+            return redirect()->back();
+        }else{
+            return back();
+        }
+
+    }
+
+    // deal end
 
 
     public function productsAll()
