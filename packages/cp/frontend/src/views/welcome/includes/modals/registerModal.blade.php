@@ -22,6 +22,14 @@
                     <div class="form-group">
                         <label  for="mobile">Otp Code</label>
                         <input type="text" id="code" name="code" class="form-control w3-medium" value="{{ old('code')}}" placeholder="Enter code">
+                        {{-- <div id="countdown">
+                            <div id="timer">
+                                <span>:</span>
+                                <span id="minutes">00</span>
+                                <span>:</span>
+                                <span id="seconds">00</span>
+                            </div>
+                        </div> --}}
                     </div>
                     <button type="submit" class="btn w3-medium btn-block btn-primary btn-first-next py-3">{{ __('Check Otp') }}</button>
                   </div>

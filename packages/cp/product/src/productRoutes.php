@@ -392,6 +392,11 @@ Route::group(['middleware' => ['web', 'auth', 'role:admin'], 'prefix' => 'admin'
         'as' => 'admin.typeOfOrder'
     ]);
 
+    Route::get('branch/{branch}/order/report', [
+        'uses' => 'Cp\Product\Controllers\AdminProductController@branchOrderReport',
+        'as' => 'admin.branchOrderReport'
+    ]);
+
 
     //pos system
 

@@ -357,7 +357,7 @@
                 var url = that.attr('action');
                 var type = that.attr('method');
                 var data = new FormData(this);
-                alert();
+                // alert();
                 $.ajax({
                     url: url,
                     type: type,
@@ -428,6 +428,7 @@
 
 
    
+
   
 
     {{-- <script type="text/javascript">

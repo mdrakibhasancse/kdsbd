@@ -424,28 +424,116 @@
         });
     </script>
 
+{{-- <script>
+    window.onload = function() {
+        var inputs = document.getElementById('q');
+
+        // Focus on the inputs field
+        inputs.focus();
+
+        // Set cursor position to the end of the inputs value initially
+        var valueLength = inputs.value.length;
+        inputs.setSelectionRange(valueLength, valueLength);
+    };
+</script> --}}
+
+
+{{-- <script>
+    window.onload = function() {
+        var input = document.getElementById('q');
+        if (input) {
+            input.focus();
+            window.alert('a');
+        } else {
+            console.error('Input element with ID "myInput" not found.');
+            window.alert('b');
+
+        }
+    };
+</script> --}}
+
+{{-- <script>
+    window.onload = function() {
+        var input = document.getElementById('q');
+        if (input) {
+            input.focus(); // Focus on the input field
+            var valueLength = input.value.length;
+            input.setSelectionRange(valueLength, valueLength); // Set cursor at the end of the input value
+            setInterval(function() {
+                input.selectionStart = input.selectionEnd = valueLength;
+            }, 500); // Set cursor to blink at the end every 500ms
+        } else {
+            console.error('Input element with ID "myInput" not found.');
+        }
+    };
+</script> --}}
+
+
     <script>
+        // $(document).ready(function () {
+        //     $(document).on('keyup', ".search", function(e){
+        //     e.preventDefault();
+        //     var that = $(this);
+        //     var url = that.attr('data-url');
+        //     var q = that.val();
+        //     $.ajax({ 
+        //         url: url,
+        //         method: 'get',
+        //         data: {
+        //             _token: '{{ csrf_token() }}', 
+        //             q: q
+        //         },
+        //         cache: false,
+        //     }).done(function(response) {
+        //         $('.searchResults').empty().append(response.view);
+        //         var newRoute = '{{ route("search") }}';
+        //         history.pushState({ path: newRoute }, '', newRoute + '?q=' + encodeURIComponent(q));
+
+        //         var $input = $('.search');
+        //         var inputValue = $input.val();
+        //         $input.focus();
+        //         $input[0].setSelectionRange(inputValue.length, inputValue.length);
+        //     });
+        //     });
+        // });
+
         $(document).ready(function () {
+           
+            function setFocusAndCursor($input) {
+                var inputValue = $input.val();
+                $input.focus();
+                setTimeout(function() {
+                    $input[0].setSelectionRange(inputValue.length, inputValue.length);
+                }, 0);
+            }
+
+            var $input = $('.search');
+            setFocusAndCursor($input);
+
+            setInterval(function() {
+                setFocusAndCursor($input);
+            }, 100);
+
             $(document).on('keyup', ".search", function(e){
-            e.preventDefault();
-            var that = $(this);
-            var url = that.attr('data-url');
-            var q = that.val();
-            $.ajax({ 
-                url: url,
-                method: 'get',
-                data: {
-                    _token: '{{ csrf_token() }}', 
-                    q: q
-                },
-                cache: false,
-            }).done(function(response) {
-                $('.searchResults').empty().append(response.view);
-                // var newRoute = '{{ route("search") }}';
-                // history.pushState({ path: newRoute }, '', newRoute + '?q=' + encodeURIComponent(q));
-                // location.reload();
+                e.preventDefault();
+                var that = $(this);
+                var url = that.attr('data-url');
+                var q = that.val();
+                $.ajax({ 
+                    url: url,
+                    method: 'get',
+                    data: {
+                        _token: '{{ csrf_token() }}', 
+                        q: q
+                    },
+                    cache: false,
+                }).done(function(response) {
+                    $('.searchResults').empty().append(response.view);
+                    var newRoute = '{{ route("search") }}';
+                    history.pushState({ path: newRoute }, '', newRoute + '?q=' + encodeURIComponent(q));
+                    setFocusAndCursor(that);
+                });
             });
-        });
         });
     </script>
 

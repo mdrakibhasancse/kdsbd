@@ -22,7 +22,8 @@
 
             <div class="card mb-2">
                 <div class="card-body p-2">
-               
+                    @include('product::admin.branchAreas.branchBtn')
+                    {{--                     
                     <a href="{{route('admin.branchArea', $branch)}}" class="btn btn-outline-primary mr-1 my-1 rounded btn-sm {{ str_contains(url()->current(), 'brancharea') ? 'active' : '' }}">
                         <i class="fas fa-plus-square"></i> Area Manage
                     </a>
@@ -37,7 +38,7 @@
 
                     <a class="btn btn-outline-primary mr-1 my-1 rounded btn-sm" href="{{ route('admin.dealsAll', $branch)}}"><i class="fas fa-plus-square"></i> Deals</a>
 
-                    <a class="btn btn-outline-primary mr-1 my-1 rounded btn-sm" href="{{ route('admin.pos', $branch)}}"><i class="fas fa-plus-square"></i> Pos Management</a>
+                    <a class="btn btn-outline-primary mr-1 my-1 rounded btn-sm" href="{{ route('admin.pos', $branch)}}"><i class="fas fa-plus-square"></i> Pos Management</a> --}}
                 </div>
             </div>
 

@@ -180,8 +180,18 @@
                                 </div>
                                         
 
-                                <button type="submit" 
-                                class="btn btn-sm px-5 save-btn btn-primary btn-block" >&nbsp;Save</button>
+                                {{-- <button type="submit" 
+                                class="btn btn-sm px-5 save-btn btn-primary btn-block" >&nbsp;Save</button> --}}
+
+                                {{-- <input type="submit" name="submit" class="btn btn-sm px-5 save-btn btn-primary btn-block" value="Save">
+
+                                <input type="submit" class="btn btn-sm px-5 save-btn btn-success btn-block" name="submit" value="save_and_print"> --}}
+
+                                <button type='submit' name="submit" value="save"  id="print" class="btn btn-sm px-5 btn-primary btn-block"> Save
+                                </button> 
+    
+                                <button type='submit' name="submit" value="save_and_print"  id="export" class="btn btn-info btn-sm btn-block"> Save And Print
+                                </button>
 
                                 {{-- <button type="submit" class="btn btn-sm btn-success btn-block" id="save-print-btn" data-url="{{ route('admin.posOrderStoreAndPrint',['branch' => $branch, 'module' => $module])}}">&nbsp;Save And Print</button> --}}
 

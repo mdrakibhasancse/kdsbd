@@ -66,7 +66,7 @@
          
         @empty
             <tr>
-                <td colspan="7" class="text-danger h5 text-center">No Product Found</td>
+                <td colspan="8" class="text-danger h5 text-center">No Product Found</td>
             </tr>
         @endforelse
     </tbody>

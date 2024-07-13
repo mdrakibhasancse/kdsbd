@@ -4,6 +4,7 @@
             <th scope="col" width="30">SL</th>
             <th scope="col" width="60">Action</th>
             <th scope="col">Title</th>
+            <th scope="col">Product Items</th>
             <th scope="col">Excerpt</th>
             <th scope="col">Status</th>
         </tr>
@@ -36,6 +37,7 @@
                
 
                 <td>{{ Str::limit($deal->title, 30) }}</td>
+                <td>{{ $deal->products()->count() }}</td>
                 <td>{{ Str::limit($deal->excerpt, 30) }}</td>
                 <td scope="col">
                     @if($deal->active == 1)

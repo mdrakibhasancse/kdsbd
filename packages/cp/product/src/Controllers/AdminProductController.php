@@ -1179,6 +1179,7 @@ class AdminProductController extends Controller
                 $qq->orWhere('name_en', 'like', "%" . $q . "%")
                     ->orWhere('name_bn', 'like', "%" . $q . "%")
                     ->orWhere('price', 'like', "%" . $q . "%")
+                    ->orWhere('product_code', 'like', "%" . $q . "%")
                     ->orWhere('id', 'like', "%" . $q . "%");
             })->orderBy('name_en')
                 ->paginate(100);
@@ -1588,6 +1589,36 @@ class AdminProductController extends Controller
 
 
 
+
+    //branch order report
+
+
+
+    public function branchOrderReport(Request $request, Branch $branch)
+    {
+        $orders = $branch->orders()->where(function ($q) use ($request) {
+            if ($request->date_from && $request->date_to) {
+                $df = $request->date_from;
+                $dt = $request->date_to;
+                $from = $df . ' 00:00:00';
+                $to = $dt . ' 23:59:59';
+                $q->whereBetween('created_at', [$from, $to]);
+            }
+
+            if ($request->status) {
+                $q->where('order_status', 'like', "%{$request->status}%");  
+            }
+
+            if ($request->mobile) {
+                $q->where('mobile', 'like', "%{$request->mobile}%");  
+            }
+        })->orderBy('created_at')->paginate(30);
+        
+
+
+        return view('product::admin.branches.orderReport', compact('branch', 'orders'));
+    }
+
     public function branchWiseOrderManage(Branch $branch){
         $orders = $branch->orders()->latest()->paginate(30);
         return view('product::admin.branches.branchWiseOrderList', compact('orders','branch'));
@@ -1655,7 +1686,7 @@ class AdminProductController extends Controller
         //     ]);
         // }     
         
-        $products = $branch->activeProducts()->take(2000)->get();
+        $products = $branch->activeProducts()->take(200)->get();
         return view('product::admin.pos.posIndex' , compact('products', 'branch'));
 
     }
@@ -1876,14 +1907,11 @@ class AdminProductController extends Controller
     public function posOrderStore(Request $request, Branch $branch, PosModule $module)
     {
 
-        // dd($request->submit);
-        // $request->merge([
-        //     'mobile' => $request->valid_mobile,
-        // ]);
-      
+
+
         $request->validate([
-           'paid_amount' => 'required',
-        ]);
+            'paid_amount' => 'required',
+         ]);
 
 
         if(!$module->moduleItems->count())
@@ -1891,73 +1919,148 @@ class AdminProductController extends Controller
             alert()->error('Please, add items, then try again!');
             return redirect()->back();
         }
+
+        if($request->submit === 'save'){
+            if($request->paid_amount >= $request->grand_total){
+                $order = new PosOrder();
+                $order->user_id = $module->user_id ?? null;
+                $order->name =  $module->user->name ?? null;
+                $order->mobile =  $module->mobile ?? null;
+                $order->branch_id = $branch->id;
+                $order->pos_module_id = $module->id;
+                $order->total_price = $request->sub_total;
+                $order->total_discount = $request->discount ?? '0.00';
+                $order->final_price = $request->grand_total;
+                $order->paid_amount = $request->paid_amount;
+                $order->order_status = 'confirmed';
+                $order->payment_status = 'paid';
+                $order->trans_date = Carbon::now();
+                $order->addedby_id = Auth::id();
+                $order->save();
+                $orderItems = $module->moduleItems()->get();
+                if ($orderItems) {
+                    foreach ($orderItems as $item) {
+                        $orderItem = new PosOrderItem();
+                        $orderItem->pos_order_id = $order->id;
+                        $orderItem->branch_id = $branch->id;
+                        $orderItem->addedby_id = Auth::id();
+                        $orderItem->product_code = null;
+                        $orderItem->product_name = $item->product_name;
+                        $orderItem->unit_price = $item->unit_price;
+                        $orderItem->quantity = $item->quantity;
+                        $orderItem->total_price = $item->total_price;
+                        $orderItem->save();
+                    }
+                }
+    
+                $order->save();
+    
+                $module->moduleItems()->delete();
+                $module->delete();
+    
+                $activeModule = $branch->moduleActive();
+                if(!$activeModule)
+                {
+                    $inactiveModule = $branch->moduleInactiveLastest();
+                    if($inactiveModule)
+                    {
+                        $inactiveModule->active = true;
+                        $inactiveModule->save();
+                    }
+                    else
+                    {
+                        $activeModule = $branch->modules()->create([
+                        'addedby_id'=> Auth::id(),
+                        'active'=> true
+                        ]);
+                    }
+    
+                }
+                
+                alert()->success('Pos Order Successfully');
+                return redirect()->back();
+            
+            }else{
+              alert()->error('Please, select currect grand total amount!');
+              return redirect()->back(); 
+            }
+        }else if($request->submit === 'save_and_print'){
+
+            if($request->paid_amount >= $request->grand_total){
+                $order = new PosOrder();
+                $order->user_id = $module->user_id ?? null;
+                $order->name =  $module->user->name ?? null;
+                $order->mobile =  $module->mobile ?? null;
+                $order->branch_id = $branch->id;
+                $order->pos_module_id = $module->id;
+                $order->total_price = $request->sub_total;
+                $order->total_discount = $request->discount ?? '0.00';
+                $order->final_price = $request->grand_total;
+                $order->paid_amount = $request->paid_amount;
+                $order->order_status = 'confirmed';
+                $order->payment_status = 'paid';
+                $order->trans_date = Carbon::now();
+                $order->addedby_id = Auth::id();
+                $order->save();
+                $orderItems = $module->moduleItems()->get();
+                if ($orderItems) {
+                    foreach ($orderItems as $item) {
+                        $orderItem = new PosOrderItem();
+                        $orderItem->pos_order_id = $order->id;
+                        $orderItem->branch_id = $branch->id;
+                        $orderItem->addedby_id = Auth::id();
+                        $orderItem->product_code = null;
+                        $orderItem->product_name = $item->product_name;
+                        $orderItem->unit_price = $item->unit_price;
+                        $orderItem->quantity = $item->quantity;
+                        $orderItem->total_price = $item->total_price;
+                        $orderItem->save();
+                    }
+                }
+    
+                $order->save();
+    
+                $module->moduleItems()->delete();
+                $module->delete();
+    
+                $activeModule = $branch->moduleActive();
+                if(!$activeModule)
+                {
+                    $inactiveModule = $branch->moduleInactiveLastest();
+                    if($inactiveModule)
+                    {
+                        $inactiveModule->active = true;
+                        $inactiveModule->save();
+                    }
+                    else
+                    {
+                        $activeModule = $branch->modules()->create([
+                        'addedby_id'=> Auth::id(),
+                        'active'=> true
+                        ]);
+                    }
+    
+                }
+                return redirect()->route('admin.posOrderPrint', $order);
+            
+            }else{
+              alert()->error('Please, select currect grand total amount!');
+              return redirect()->back(); 
+            }
+        }else{
+            return redirect()->back();
+        }
+        
+      
+       
+
+
+        
      
         // $gusetUser = User::where('mobile', $request->valid_mobile)->first();
 
     
-        if($request->paid_amount >= $request->grand_total){
-            $order = new PosOrder();
-            $order->user_id = $module->user_id ?? null;
-            $order->name =  $module->user->name ?? null;
-            $order->mobile =  $module->mobile ?? null;
-            $order->branch_id = $branch->id;
-            $order->pos_module_id = $module->id;
-            $order->total_price = $request->sub_total;
-            $order->total_discount = $request->discount ?? '0.00';
-            $order->final_price = $request->grand_total;
-            $order->paid_amount = $request->paid_amount;
-            $order->order_status = 'confirmed';
-            $order->payment_status = 'paid';
-            $order->trans_date = Carbon::now();
-            $order->addedby_id = Auth::id();
-            $order->save();
-            $orderItems = $module->moduleItems()->get();
-            if ($orderItems) {
-                foreach ($orderItems as $item) {
-                    $orderItem = new PosOrderItem();
-                    $orderItem->pos_order_id = $order->id;
-                    $orderItem->branch_id = $branch->id;
-                    $orderItem->addedby_id = Auth::id();
-                    $orderItem->product_code = null;
-                    $orderItem->product_name = $item->product_name;
-                    $orderItem->unit_price = $item->unit_price;
-                    $orderItem->quantity = $item->quantity;
-                    $orderItem->total_price = $item->total_price;
-                    $orderItem->save();
-                }
-            }
-
-            $order->save();
-
-            $module->moduleItems()->delete();
-            $module->delete();
-
-            $activeModule = $branch->moduleActive();
-            if(!$activeModule)
-            {
-                $inactiveModule = $branch->moduleInactiveLastest();
-                if($inactiveModule)
-                {
-                    $inactiveModule->active = true;
-                    $inactiveModule->save();
-                }
-                else
-                {
-                    $activeModule = $branch->modules()->create([
-                    'addedby_id'=> Auth::id(),
-                    'active'=> true
-                    ]);
-                }
-
-            }
-            
-            alert()->success('Pos Order Successfully');
-            return redirect()->back();
-        
-        }else{
-          alert()->error('Please, select currect grand total amount!');
-          return redirect()->back(); 
-        }
+       
     
        
     }

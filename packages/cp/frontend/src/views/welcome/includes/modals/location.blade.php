@@ -13,7 +13,6 @@
                         <div class="text-center justify-content-center">
                             <img  src="{{ route('imagecache', ['template' => 'cpxxxs', 'filename' => $ws->logo_alt()]) }}" alt="" style="display: inline-block;">
                         
-
                             <h2 class="mt-2 mb-2 w3-large w3-text-green font-weight-bold">Select Delivery Area</h2>
                             <form class="mb-0" action="#">
                                 <div class="form-group">
