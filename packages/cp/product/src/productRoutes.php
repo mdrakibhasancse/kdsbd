@@ -397,6 +397,7 @@ Route::group(['middleware' => ['web', 'auth', 'role:admin'], 'prefix' => 'admin'
         'as' => 'admin.branchOrderReport'
     ]);
 
+   
 
     //pos system
 

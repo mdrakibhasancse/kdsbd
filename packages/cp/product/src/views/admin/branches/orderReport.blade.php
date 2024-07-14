@@ -40,9 +40,16 @@
 
 
 
-                        <div class="form-group input-group-sm col-md-2 ">
+                        <div class="form-group input-group-sm col-md-2">
                             <br class="d-none d-md-block">
                             <button class="btn btn-warning btn-sm btn-block mt-2"> Search</button>
+                        </div>
+
+                      
+                        <div class="form-group input-group-sm col-md-2">
+                            <br class="d-none d-md-block">
+                            <button type='submit' name="submit" value="print"  id="print" class="btn btn-primary btn-sm text-right mt-2 px-5"> <i class="fas fa-print"></i>  Print
+                            </button> 
                         </div>
 
                     </div>
@@ -57,7 +64,11 @@
             <div class="card w3-round shadow-lg">
                  <div class="card-header pl-2 py-2">
                     <h3 class="card-title w3-medium text-bold text-muted pt-2"><i class="fas fa-th text-primary"></i> Order Reports</h3>
-                    &nbsp;&nbsp;&nbsp;
+                    <div class="card-tools">
+                        <div class="card-tools w3-small">
+                
+                        </div>
+                    </div>
                 </div>
 
                 <div class="card-body bg-light px-0 pb-0 pt-2">

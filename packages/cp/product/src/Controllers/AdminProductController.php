@@ -1614,9 +1614,18 @@ class AdminProductController extends Controller
             }
         })->orderBy('created_at')->paginate(30);
         
-
+        if ($request->submit === 'print') {
+            return $this->branchOrderPrint($orders);
+        }
 
         return view('product::admin.branches.orderReport', compact('branch', 'orders'));
+    }
+
+
+    public function branchOrderPrint($tasks)
+    {
+        $bladeAsHTML = view('product::admin.branches.branchOrderPrint', ['orders' => $tasks])->render();
+        return $bladeAsHTML;
     }
 
     public function branchWiseOrderManage(Branch $branch){

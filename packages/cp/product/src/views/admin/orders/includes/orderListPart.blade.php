@@ -13,6 +13,7 @@
         <th>Payment Status</th>
         <th>Product Items</th>
         </tr>
+        
     </thead>
     <tbody class="">
         <?php $i = (($orders->currentPage() - 1) * $orders->perPage() + 1); ?>
@@ -53,6 +54,18 @@
         <td>{{$order->orderItems()->count()}}</td>
         </tr>  
         @endforeach
+        <tr> 
+            {{-- <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th> --}}
+            <th colspan="7" class="text-right w3-medium">Total Amount</th>
+            <th class="w3-medium">{{ number_format($orders->sum('total_amount'), 2,);}}</th>
+            <th></th>
+            <th></th>
+        </tr>
     </tbody>
     </table>
 </div>
